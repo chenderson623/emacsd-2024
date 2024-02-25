@@ -1,0 +1,14 @@
+;;; `(file-name-nondirectory buffer-file-name)` --- ${2:description} -*- lexical-binding: t; -*-
+;;
+;; Author: `user-full-name` <`user-mail-address`>
+;; Created: `(format-time-string "%d %b %Y")`
+;;
+;;
+;;; Commentary:
+;;
+;;; Code:
+
+$0
+
+(provide '`(file-name-base buffer-file-name)`)
+;;; `(file-name-nondirectory buffer-file-name)` ends here

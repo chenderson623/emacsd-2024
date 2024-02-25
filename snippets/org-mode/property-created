@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: CREATED Property
+# key: created
+# --
+CREATED: `(format-time-string (org-time-stamp-format t t) nil)`
+
+  

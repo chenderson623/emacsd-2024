@@ -1,0 +1,15 @@
+# -*- mode: snippet -*-
+# name: task header
+# key: taskhead
+# --
+** Task ${1:TASK ID$(upcase yas-text)} ${2:TASK TITLE}
+CREATED: `(format-time-string (org-time-stamp-format t t) nil)`
+
+jira: https://jira.swift.com/browse/$1
+task branch: Task-$1-${2:$(my>org-filename-from-title yas-text)}
+story: 
+story branch: 
+MR:
+
+workspace:
+

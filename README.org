@@ -1,0 +1,97 @@
+* .emacs.d
+
+** Naming conventions (adopted from https://git.sr.ht/~northyear/dotemacs)
+
+A symbol prefixed with my: indicates it is a function.
+
+A symbol prefixed with my> indicates it is an interactive command.
+
+A symbol prefixed with my$ indicates it is a variable.
+
+A symbol prefixed with my% indicates it is a macro.
+  - A symbol prefixed with my* indicates it is generated via closure or macro.
+  - A symbol prefixed with my>> indicates an interactive function generated via closure or macro.
+
+A symbol prefixed with my@ indicates it is a hook.
+    
+A symbol prefixed with my~ indicates it is a mode.
+
+(This also means that the derivative variables defined by a mode are also prefixed with my~, e.g. my~foo-mode-hook).
+
+A symbol prefixed with my& indicates it is a special symbol like faces.
+
+** Functionalized filepaths
+
+user-home*filepath    ~/
+user-state*filepath   ~/.local/state 
+user-cache*filepath   ~/.cache
+user-config*filepath  ~/.config 
+
+emacsd*filepath              ~/.emacs.d 
+emacsd-local-config*filepath ~/.config/emacs 
+emacs-state*filepath         ~/.local/state/emacs 
+emacs-cache*filepath         ~/.cache/emacs 
+emacs-config*filepath        ~/.config/emacs 
+
+** use-package patterns
+
+Using straight https://github.com/radian-software/straight.el
+- my-use-package-form-isnt-working-properly: https://github.com/radian-software/straight.el?tab=readme-ov-file#my-use-package-form-isnt-working-properly
+
+#+begin_quote
+You should remove any code that relates to package.el; for example, references to package-initialize, package-archives, and (if you're using use-package) :ensure or use-package-always-ensure.
+#+end_quote
+
+#+begin_quote
+To help avoid you shooting yourself in the foot by using both :ensure and :straight at the same time in a use-package form (which would cause the same package to be installed twice using two different package managers), straight.el will helpfully disable :ensure whenever you include :straight in a use-package form.
+#+end_quote
+
+Always use :straight in use-package (never use :ensure):
+
+#+begin_src emacs-lisp
+(use-package isearch 
+  :straight (:type built-in)
+)
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package rg
+  :straight t
+)
+#+end_src
+*** after-init hook
+#+begin_src emacs-lisp
+(use-package
+  vertico
+  :pin melpa
+  :straight (:files (:defaults "extensions/*"))
+  :hook (after-init . vertico-mode)
+  )
+#+end_src
+
+*** multiple key maps
+
+#+begin_src emacs-lisp
+(use-package avy
+  :straight t
+  :bind
+  (("C-:" .   avy-goto-char-timer)
+   ("C-." .   avy-goto-word-1)
+   ("C-c C-j" .   avy-resume)
+   :map isearch-mode-map
+   ("C-'" . avy-isearch)
+   :map goto-map
+   ("M-g" . avy-goto-line)
+   :map search-map
+   ("M-s" . avy-goto-word-1)))
+#+end_src
+
+*** lazy load init
+
+This allows me to put the hydra definition in another file that does not need to load at init. Could put the hydra definition in a :config block, but this way it does not need to be compiles in the use-package macro
+#+begin_src emacs-lisp
+(use-package ui/hydra/editing-mark
+  :straight nil
+  :bind ("C-c s" . hydra-mark/body)
+)
+#+end_src>
