@@ -230,7 +230,7 @@
   :hook (after-init . show-paren-mode)
   :custom
   (show-paren-delay 0)
-  (show-paren-style 'mixed)
+  (show-paren-style `parenthesis)
   (show-paren-when-point-inside-paren t)
   (show-paren-when-point-in-periphery t))
 

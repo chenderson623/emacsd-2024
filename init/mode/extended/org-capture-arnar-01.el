@@ -6,30 +6,45 @@
 (defun my:setup-org-protocol-capture-frame ()
   (require 'org-protocol)
   (require 'org-capture)
-    
-  (defadvice org-switch-to-buffer-other-window
+  
+  ;; 2024-02-29 this was changed from org-switch-to-buffer-other-window (obsolete function)
+  (defadvice switch-to-buffer-other-window
       (after suppress-window-splitting activate)
     "Delete the extra window if we are in a capture frame"
-    (if (equal "*Org Capture*" (frame-parameter nil 'name))
+    (if (equal my$org-protocol-capture-frame-name (frame-parameter nil 'name))
         (delete-other-windows)))
-          
+
   (defadvice org-capture-finalize
       (after delete-capture-frame activate)
     "Advise capture-finalize to close the frame"
-    (if (equal "*Org Capture*" (frame-parameter nil 'name))
-        (delete-frame)))
-          
+    (when (and (equal my$org-protocol-capture-frame-name (frame-parameter nil 'name))
+               (not (eq this-command 'org-capture-refile)))
+      (delete-frame)))
+
+  (defadvice org-capture-destroy
+      (after delete-capture-frame activate)
+    "Advise capture-finalize to close the frame"
+    (when (and (equal my$org-protocol-capture-frame-name (frame-parameter nil 'name))
+               (not (eq this-command 'org-capture-refile)))
+      (delete-frame)))
+
+  (defadvice org-capture-refile
+      (after delete-capture-frame activate)
+    "Advise capture-finalize to close the frame"
+    (when (equal my$org-protocol-capture-frame-name (frame-parameter nil 'name))
+      (delete-frame)))
+  
   (defun make-capture-frame (&optional capture-url)
     "Create a new frame and run org-capture. Call with emacsclient -ne '(make-capture-frame)'"
     (interactive)
-    (make-frame-on-display ":0" '((name . "*Org Capture*")
+    (make-frame-on-display ":0" `((name . ,my$org-protocol-capture-frame-name)
                                   (width . 120)
                                   (height . 30)))
-    (select-frame-by-name "*Org Capture*")
+    (select-frame-by-name my$org-protocol-capture-frame-name)
     (condition-case err
         (if capture-url (org-protocol-capture capture-url) (org-capture))
       (error (message (format "Caught exception: [%s]" err))
-             (when (equal "*Org Capture*" (frame-parameter nil 'name))
+             (when (equal my$org-protocol-capture-frame-name (frame-parameter nil 'name))
                ;; Delete the frame if there was an error, which is the case in particular
                ;; if you pressed "q" in the template selection.
                                         ;(delete-frame)

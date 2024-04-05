@@ -67,6 +67,8 @@
 (filepath%functionalize-path user-home (xdg--dir-home "HOME" "~"))
 ;; create function user-state*filepath
 (filepath%functionalize-path user-state (xdg-state-home))
+;; create function user-shared*filepath
+(filepath%functionalize-path user-shared (xdg-data-home))
 ;; create function user-cache*filepath
 (filepath%functionalize-path user-cache (xdg-cache-home))
 ;; create function user-config*filepath
@@ -76,6 +78,8 @@
 (filepath%functionalize-path emacsd emacsd$dir)
 ;; create function emacsd-local-config*filepath
 (filepath%functionalize-path emacsd-local-config emacsd-local$config-dir)
+;; create function emacs-shared*filepath, const filepath$$emacs-shared
+(filepath%functionalize-path emacs-shared (user-shared*filepath "emacs") t)
 ;; create function emacs-state*filepath, const filepath$$emacs-state
 (filepath%functionalize-path emacs-state (user-state*filepath "emacs") t)
 ;; create function emacs-cache*filepath
@@ -121,7 +125,7 @@
 ;;
 ;;;;; Setup straight
 ;;
-(setq straight-base-dir filepath$$emacs-state)  ; set base directory for straight
+(setq straight-base-dir filepath$$emacs-shared)  ; set base directory for straight
 
 ;;;;; Bootstrap straight
 (defvar bootstrap-version)
@@ -196,8 +200,9 @@
                                 ui/keybindings
 				                mode/dired
 				                mode/filetype-modes
-				                mode/org-NEW
+				                mode/org
                                 mode/extended/org-capture-arnar-01
+                                ;;mode/extended/org-capture-leoc
                                 mode/extended/org-folding
 				                mode/prog
 				                feature/completion-at-point

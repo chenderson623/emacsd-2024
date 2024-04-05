@@ -1,8 +1,8 @@
 ;;; -*- lexical-binding: t; -*-
 
 (use-package magit
-  :straight (:type built-in)
-  :commands magit-status
+  :straight t
+  :commands (magit magit-status)
 )
 
 (provide 'feature/vcs)

@@ -38,7 +38,7 @@
 
 (require 'dash)
 (require 'cl-lib)
-(require 'cl)
+;;(require 'cl)
 
 ;;;###autoload
 (defun ha-org-subtree-metadata ()
@@ -51,7 +51,7 @@ of the start and end of the subtree."
       (org-previous-visible-heading 1))
 
     (let* ((context (org-element-context))
-           (attrs   (second context))
+           (attrs   (cl-second context))
            (props   (org-entry-properties)))
 
       (list :region     (list (plist-get attrs :begin) (plist-get attrs :end))
@@ -71,7 +71,7 @@ of the start and end of the subtree."
       cdr
       substring-no-properties
       (s-split ":")
-      (--filter (not (equalp "" it))))))
+      (--filter (not (cl-equalp "" it))))))
 
 (defvar ha-org-get-subtree-tags-inherited t
   "Returns a subtree's tags, and all tags inherited (from tags
@@ -86,13 +86,13 @@ of the start and end of the subtree."
       (string-match-p "^:[A-Z]+$" (symbol-name sym))))
 
   (defun convert-tuple (tup)
-    (let ((key (first tup))
-          (val (second tup)))
+    (let ((key (cl-first tup))
+          (val (cl-second tup)))
       (list (substring (symbol-name key) 1) val)))
 
   (->> attributes
        (-partition 2)                         ; Convert plist to list of tuples
-       (--filter (symbol-upcase? (first it))) ; Remove lowercase tuples
+       (--filter (symbol-upcase? (cl-first it))) ; Remove lowercase tuples
        (-map 'convert-tuple)))
 
 (defun ha-org-get-subtree-content (attributes)
@@ -105,8 +105,8 @@ of the start and end of the subtree."
     ;; Walk down past the properties, etc.
     (while
         (let* ((cntx (org-element-context))
-               (elem (first cntx))
-               (props (second cntx)))
+               (elem (cl-first cntx))
+               (props (cl-second cntx)))
           (when (member elem header-components)
             (goto-char (plist-get props :end)))))
 
@@ -143,7 +143,7 @@ pre-populated with the HEADER, BODY and any associated TAGS."
   (when properties
     (goto-char (point-min))
     (or (re-search-forward "^\s*$" nil t) (point-max))
-    (--map (insert (format "#+PROPERTY: %s %s" (first it) (second it))) properties))
+    (--map (insert (format "#+PROPERTY: %s %s" (cl-first it) (cl-second it))) properties))
 
   ;; My auto-insert often adds an initial headline for a subtree, and in this
   ;; case, I don't want that... Yeah, this isn't really globally applicable,

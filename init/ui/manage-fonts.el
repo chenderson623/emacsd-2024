@@ -116,11 +116,13 @@
   (add-hook 'after-enable-theme-hook
             (lambda ()
               (fontaine-set-preset fontaine-current-preset)
-              (my-setup-org-fonts)
+              ;;(my-setup-org-fonts)
               )))
 
+;; TODO this belongs in the org use-package definition
 (defun my-setup-org-fonts()
   (let* ((variable-tuple
+
           (cond ((x-list-fonts "Iosevka Comfy")   '(:font "Iosevka Comfy"))
                 ((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
                 ((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
@@ -128,6 +130,7 @@
                 ((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))
                 (nil (warn "Cannot find a Sans Serif Font.  Install Source Sans Pro."))))
          (headline `( :weight bold)))
+
 
     (custom-theme-set-faces
      'user
@@ -139,9 +142,34 @@
      `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.2))))
      `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.3))))
      `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.4))))
-     `(org-document-title ((t (,@headline ,@variable-tuple :height 1.5 :underline nil)))))))
+     `(org-document-title ((t (,@headline ,@variable-tuple :height 1.5 :underline nil))))
+        
+     )))
 
 (if (display-graphic-p)
     (init-fontaine))
 
 (provide 'ui/manage-fonts)
+
+;; (custom-theme-set-faces
+;;      'user
+;;      `(org-level-8 ((t (,@headline ,@variable-tuple))))
+;;      `(org-level-7 ((t (,@headline ,@variable-tuple))))
+;;      `(org-level-6 ((t (,@headline ,@variable-tuple))))
+;;      `(org-level-5 ((t (,@headline ,@variable-tuple))))
+;;      `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.1))))
+;;      `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.2))))
+;;      `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.3))))
+;;      `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.4))))
+;;      `(org-document-title ((t (,@headline ,@variable-tuple :height 1.5 :underline nil))))
+
+;;      ;; `(org-level-1 ((t (:foreground "yellow"))))
+;;      ;; `(org-level-2 ((t (:foreground "blue"))))
+;;      ;; `(org-level-3 ((t (:foreground "magenta"))))
+;;      ;; `(org-level-4 ((t (:foreground ,green))))
+;;      ;; `(org-level-5 ((t (:foreground ,purple+1))))
+;;      ;; `(org-level-6 ((t (:foreground ,orange+1))))
+;;      ;; `(org-level-7 ((t (:foreground ,red+1))))
+;;      ;; `(org-level-8 ((t (:foreground ,blue+1))))
+     
+;;      )

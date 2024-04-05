@@ -86,6 +86,19 @@ Always use :straight in use-package (never use :ensure):
    ("M-s" . avy-goto-word-1)))
 #+end_src
 
+*** with prefix key
+
+#+begin_src emacs-lisp
+  (use-package org-super-links
+    :straight (org-super-links :type git :host github :repo "toshism/org-super-links" :branch "develop")
+    :bind (
+           :prefix-map my-superlinks-map
+           :prefix "C-c s"
+           ("s" . org-super-links-link)
+           ("l" . org-super-links-store-link)
+           ("C-l" . org-super-links-insert-link)))
+#+end_src
+
 *** lazy load init
 
 This allows me to put the hydra definition in another file that does not need to load at init. Could put the hydra definition in a :config block, but this way it does not need to be compiles in the use-package macro

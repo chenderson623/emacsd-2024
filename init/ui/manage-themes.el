@@ -168,8 +168,17 @@
       (modus-themes-diffs 'bg-only)
       (modus-themes-mode-line '(borderless accented))
       (modus-themes-org-blocks 'tinted-background)
-      (modus-themes-headings '((t . (rainbow))))
+      (modus-themes-headings
+      '((0 . (1.5))
+        (1 . (1.3))
+        (2 . (1.3))
+        (3 . (1.2))
+        (t . (rainbow semibold 1.1))))
       (modus-themes-markup '(bold italic intense))
+      (modus-themes-common-palette-overrides
+      '((fg-heading-1 blue-warmer)
+        (fg-heading-2 yellow-cooler)
+        (fg-heading-3 cyan-cooler)))
       (modus-themes-bold-constructs t)
       (modus-themes-syntax '(alt-syntax))
       (modus-themes-prompts '(intense background))
@@ -314,6 +323,7 @@
 
 (add-hook 'emacsd-init@modules-loaded-hook
 	      (lambda ()
+            (message "SELECT THEME")
             (if (display-graphic-p)
                 (manage-themes>select-theme manage-themes/theme-name)
               (manage-themes>select-theme "terminal"))
