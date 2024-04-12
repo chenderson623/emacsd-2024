@@ -18,30 +18,34 @@
   :commands (dired)
   :hook
   ((dired-mode . hl-line-mode)
-    ;; omit files whose filenames match regexp ‘dired-omit-files’,
-    ;; files ending with extensions in ‘dired-omit-extensions’,
-    ;; or files listed on lines matching ‘dired-omit-lines’
-    (dired-mode . dired-omit-mode)
-    ;; When this minor mode is enabled, details such as file ownership and permissions are hidden from view.
-    (dired-mode . dired-hide-details-mode))
+   ;; omit files whose filenames match regexp ‘dired-omit-files’,
+   ;; files ending with extensions in ‘dired-omit-extensions’,
+   ;; or files listed on lines matching ‘dired-omit-lines’
+   (dired-mode . dired-omit-mode)
+   ;; When this minor mode is enabled, details such as file ownership and permissions are hidden from view.
+   (dired-mode . dired-hide-details-mode))
   ;; auto refresh dired when file changes
   (dired-mode . auto-revert-mode)
   :bind
   (:map
-    dired-mode-map ("-" . dired-up-directory)
-    ;;("e" . wdired-change-to-wdired-mode)
-    ("(" . dired-details-toggle) (")" . dired-details-toggle))
-  ("s-d" . make-directory)
-  ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired-and-Find.html
-  ("s-f" . find-name-dired)
-  ("s-g" . find-grep-dired)
-  :custom (dired-listing-switches "-aghoA --group-directories-first")
+   dired-mode-map ("-" . dired-up-directory)
+   ;;("e" . wdired-change-to-wdired-mode)
+   ("(" . dired-details-toggle)
+   (")" . dired-details-toggle))
+  :custom
+  ;; -a :: all
+  ;; -g :: like -l, but do not list owner
+  ;; -h :: print sizes like 1K 234M 2G etc.
+  ;; -o :: like -l, but do not list group information
+  ;; -A :: do not list implied . and ..
+  (dired-listing-switches "-aho --group-directories-first")
   ;; prevent opening extra dired buffers
   (dired-kill-when-opening-new-dired-buffer t)
   ;; If there are two dired open side by side, copy destination is the other.
   ;; M-n shows other candidates including the current directory.
   (dired-dwim-target t)
-  :config (message "config dired"))
+  :config
+  (message "config dired"))
 
 ;;; dired-aux.el
 ;; https://github.com/emacs-mirror/emacs/blob/master/lisp/dired-aux.el
@@ -50,9 +54,9 @@
   :commands (dired-do-async-shell-command dired-isearch-filenames)
   :bind
   (:map
-    dired-mode-map
-    ("M-s M-s" . dired-do-async-shell-command)
-    ("C-s" . dired-isearch-filenames)))
+   dired-mode-map
+   ("M-s M-s" . dired-do-async-shell-command)
+   ("C-s" . dired-isearch-filenames)))
 
 ;;;; dired-hide-dotfiles
 ;; https://github.com/mattiasb/dired-hide-dotfiles
@@ -87,17 +91,19 @@
 ;; call `dired-preview-mode`
 (use-package dired-preview
   :straight (dired-preview
-    :type git
-    :host github
-    :repo "protesilaos/dired-preview"
-    :branch "main")
+             :type git
+             :host github
+             :repo "protesilaos/dired-preview"
+             :branch "main")
   :after dired)
 
 (use-package disk-usage
   :straight t
   :after dired
-  :bind (:map dired-mode-map ("C-c d S" . disk-usage-here)) ;; <---- TODO C-c d is a good dired mode map?
-  :init (setq disk-usage--format-files 'file-name-nondirectory))
+  :bind
+  (:map dired-mode-map ("C-c d S" . disk-usage-here)) ;; <---- TODO C-c d is a good dired mode map?
+  :init
+  (setq disk-usage--format-files 'file-name-nondirectory))
 
 ;;;
 ;;; dired-recent.el
