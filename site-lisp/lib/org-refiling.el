@@ -3,7 +3,6 @@
 (require 'dash)
 (require 'ha-boxes-extra)
 (require 'cl-lib)
-(require 'cl)
 
 ;; This is modified from ha-org-refile-subtree-to-file to send whole body
 ;; credit to: https://howardism.org/Technical/Emacs/getting-even-more-boxes-done.html
@@ -19,7 +18,9 @@ the subtree's properties and other features to the new file."
          (tags       (plist-get props :tags))
          (properties (plist-get props :properties))
          (area       (plist-get props :region))
-         (filename   (my>org-filename-from-title head))
+         (filename   (concat
+		      (format-time-string "%Y%m%dT%H%M%S" (org-read-date t t (org-entry-get nil "CREATED" t)))
+		      "--"         
          (filepath   (format "%s/%s.org" dir filename))
          (body       (apply #'buffer-substring-no-properties area))
 	 )
@@ -37,7 +38,9 @@ the subtree's properties and other features to the new file."
          (tags       (plist-get props :tags))
          (properties (plist-get props :properties))
          (area       (plist-get props :region))
-         (filename   (my>org-filename-from-title head))
+         (filename   (concat
+		      (format-time-string "%Y%m%dT%H%M%S" (org-read-date t t (org-entry-get nil "CREATED" t)))
+		      "--"         
          (filepath   (format "%s/%s.org" dir filename))
          (body       (apply #'buffer-substring-no-properties area))
 	 )
@@ -57,7 +60,7 @@ the subtree's properties and other features to the new file."
     (when properties
       (goto-char (point-min))
       (or (re-search-forward "^\s*$" nil t) (point-max))
-      (--map (insert (format "#+PROPERTY: %s %s" (first it) (second it))) properties))
+      (--map (insert (format "#+PROPERTY: %s %s \n" (cl-first it) (cl-second it))) properties))
 
     ;; My auto-insert often adds an initial headline for a subtree, and in this
     ;; case, I don't want that... Yeah, this isn't really globally applicable,

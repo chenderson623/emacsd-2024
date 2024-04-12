@@ -1,5 +1,9 @@
 ;;; early-init.el --- early init file  -*- lexical-binding: t; -*-
 
+;; Uncomment this to debug.
+(setq init-file-debug t)
+(setq messages-buffer-max-lines 100000)
+
 ;; Measure startup time
 (defconst emacs-start-time (current-time))
 (add-hook 'emacs-startup-hook
@@ -14,7 +18,7 @@
 ;;;; Native compilation settings
 ;;
 (when (featurep 'native-compile)
-  ;; Silence native comp warnings popping up 
+  ;; Silence native comp warnings popping up
   (customize-set-variable 'native-comp-async-report-warnings-errors nil)
   ;; Optimization level for native compilation, a number between -1 and 3
   (customize-set-variable 'native-comp-speed -1)

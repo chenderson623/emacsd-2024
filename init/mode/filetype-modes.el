@@ -9,6 +9,8 @@
 
 (add-to-list 'org-mode-hook 'flyspell-mode)
 
+(use-package ini-mode :mode "\\.ini\\'")
+
 ;;;; json
 ;; https://github.com/json-emacs/json-mode
 (use-package json-mode

@@ -9,7 +9,7 @@
 
 ;;; Org
 (use-package org
-  :straight (:type built-in)
+  :straight t
   :commands (org-mode)
   :mode (("\\.org$" . org-mode))
   :bind (
@@ -22,18 +22,7 @@
          :prefix "C-c l"
          ("l" . org-insert-link)
          ("s" . org-store-link)
-         :map org-mode-map
-         ;; easily emphasize text
-         ("s-b" . (lambda ()
-                    (interactive)
-                    (org-emphasize-dwim ?*)))
-         ("s-i" . (lambda ()
-                    (interactive)
-                    (org-emphasize-dwim ?/)))
-         ("s-M-`" . org-emphasize-with-verbatim-dwim)
-         ("s-M-~" . org-emphasize-with-code-dwim)
-         ;; better pasting behavior in org-mode
-         ("s-v" . org-yank))
+         )
 
   :init
   ;; Org-Emphasis-Regex settings. Set regex boundaries for emphasis.
@@ -54,7 +43,7 @@
     )
 
   (add-hook 'after-init-hook 'init-org-mode)
-  
+
   :custom
   ;; Aesthetics & UI
   (org-catch-invisible-edits 'smart)     ;; prevent editing invisible area
@@ -86,7 +75,7 @@
 
   ;; Wrapping
   (org-startup-truncated nil) ;; wrap lines
-  
+
   ;; Insertion/Yanking
   (org-insert-heading-respect-content t) ;; insert new headings after subtree
   (org-M-RET-may-split-line '((default . t))) ;; don't split line when creating a new headline, list item, or table field
@@ -231,5 +220,5 @@
 ;;   (org-id-method 'ts) ;; use timestamp for id
 ;;   (org-id-link-to-org-use-id 'create-if-interactive)) ;; create ids
 
-(provide 'mode/org-NEW)
+(provide 'mode/org)
 ;;; org.el ends here

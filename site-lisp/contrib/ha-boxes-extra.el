@@ -38,7 +38,6 @@
 
 (require 'dash)
 (require 'cl-lib)
-;;(require 'cl)
 
 ;;;###autoload
 (defun ha-org-subtree-metadata ()
@@ -143,7 +142,7 @@ pre-populated with the HEADER, BODY and any associated TAGS."
   (when properties
     (goto-char (point-min))
     (or (re-search-forward "^\s*$" nil t) (point-max))
-    (--map (insert (format "#+PROPERTY: %s %s" (cl-first it) (cl-second it))) properties))
+    (--map (insert (format "#+PROPERTY: %s %s \n" (cl-first it) (cl-second it))) properties))
 
   ;; My auto-insert often adds an initial headline for a subtree, and in this
   ;; case, I don't want that... Yeah, this isn't really globally applicable,

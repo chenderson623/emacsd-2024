@@ -6,6 +6,10 @@
   :hook (after-init . yas-minor-mode)
   :init (setq yas-verbosity 2)
   :config
+  (setq yas-snippet-dirs
+      (list (emacsd*filepath "snippets")
+        (emacsd-local-config*filepath "local-snippets")
+        ))
   (setq yasnippet-snippets-dir (emacsd*filepath "snippets"))
   (yas-global-mode 1))
 

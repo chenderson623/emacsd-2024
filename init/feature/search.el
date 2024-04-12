@@ -48,6 +48,10 @@
   (setq rg-group-result t)
   (setq rg-show-columns t)
   (setq rg-command-line-flags '("--hidden"))
+
+  (autoload 'wgrep-rg-setup "wgrep-rg")
+  (add-hook 'rg-mode-hook 'wgrep-rg-setup)
+
   (rg-define-toggle "--context 3" (kbd "C"))
   (rg-define-toggle "-A 5" (kbd "A"))
 

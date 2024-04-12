@@ -32,10 +32,13 @@ For instance, given the string:    What's all this then?
   (interactive "s")
   (let* ((no-letters (rx (one-or-more (not alphanumeric))))
          (init-try (->> title
-                        downcase
+                        capitalize
                         (replace-regexp-in-string "'" "")
                         (replace-regexp-in-string no-letters "-"))))
     (string-trim init-try "-+" "-+")))
+
+(defun my>org-tagsafe (tag-text)
+  (upcase (replace-regexp-in-string "-" "" tag-text)))
 
 (provide 'lib/org-functions)
 

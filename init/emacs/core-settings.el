@@ -201,6 +201,12 @@
   ;;;; enable view-mode for read-only files
   (view-read-only t))
 
+;;;; help-at-pt
+(use-package help-at-pt
+  :straight (:type built-in)
+  :custom
+  (help-at-pt-display-when-idle t))
+
 ;;;; elec-pair
 ;; Toggle automatic parens pairing (Electric Pair mode).
 ;; [[help:electric-pair-mode]]
