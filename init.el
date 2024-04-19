@@ -114,6 +114,10 @@
    (list
     (emacsd*filepath "site-lisp/contrib"))
    (emacsd*filepath "site-lisp/autoloads-contrib.el"))
+(autoloads:define
+   (list
+    (emacsd*filepath "site-lisp/lib"))
+   (emacsd*filepath "site-lisp/autoloads-lib.el"))
 
 ;;
 ;;;; Setup package manager
@@ -203,7 +207,7 @@
 				                mode/org
                                 mode/extended/org-capture-arnar-01
                                 ;;mode/extended/org-capture-leoc
-                                mode/extended/org-folding
+                                ;;mode/extended/org-folding
 				                mode/prog
 				                feature/completion-at-point
                                 feature/completing-read

@@ -37,6 +37,7 @@ For instance, given the string:    What's all this then?
                         (replace-regexp-in-string no-letters "-"))))
     (string-trim init-try "-+" "-+")))
 
+;;;###autoload
 (defun my>org-tagsafe (tag-text)
   (upcase (replace-regexp-in-string "-" "" tag-text)))
 

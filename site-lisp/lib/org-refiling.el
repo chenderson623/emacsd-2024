@@ -1,7 +1,7 @@
 ;;; -*- lexical-binding: t; -*-
 
 (require 'dash)
-(require 'ha-boxes-extra)
+(require 'contrib/ha-boxes-extra)
 (require 'cl-lib)
 
 ;; This is modified from ha-org-refile-subtree-to-file to send whole body
@@ -21,6 +21,7 @@ the subtree's properties and other features to the new file."
          (filename   (concat
 		      (format-time-string "%Y%m%dT%H%M%S" (org-read-date t t (org-entry-get nil "CREATED" t)))
 		      "--"         
+		      (my>org-filename-from-title head)))
          (filepath   (format "%s/%s.org" dir filename))
          (body       (apply #'buffer-substring-no-properties area))
 	 )
@@ -41,6 +42,7 @@ the subtree's properties and other features to the new file."
          (filename   (concat
 		      (format-time-string "%Y%m%dT%H%M%S" (org-read-date t t (org-entry-get nil "CREATED" t)))
 		      "--"         
+		      (my>org-filename-from-title head)))
          (filepath   (format "%s/%s.org" dir filename))
          (body       (apply #'buffer-substring-no-properties area))
 	 )

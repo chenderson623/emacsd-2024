@@ -10,7 +10,6 @@
       (list (emacsd*filepath "snippets")
         (emacsd-local-config*filepath "local-snippets")
         ))
-  (setq yasnippet-snippets-dir (emacsd*filepath "snippets"))
   (yas-global-mode 1))
 
 (use-package autoinsert
