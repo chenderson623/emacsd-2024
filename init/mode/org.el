@@ -9,7 +9,10 @@
 
 ;;; Org
 (use-package org
-  :straight t
+  ;;  :straight t
+  :straight (:type built-in)
+  :ensure nil
+  :demand t
   :commands (org-mode)
   :mode (("\\.org$" . org-mode))
   :bind (
@@ -102,7 +105,7 @@
   (org-special-ctrl-a/e t)    ;; better movement in headers
 
   ;; Searching
-  (org-imenu-depth 8)   ;; scan to depth 8 w/imenu
+  (org-imenu-depth 4)   ;; scan to depth 8 w/imenu
   (imenu-auto-rescan t) ;; make sure imenu refreshes
 
   ;; Source block settings
