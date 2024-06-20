@@ -38,49 +38,42 @@
     ;;                                        '((http . t)))))
 
 ;; lazy-load?
-  ;; (org-babel-do-load-languages
-  ;;  (quote org-babel-load-languages)
-  ;;  (quote ((emacs-lisp . t)
-  ;;          (scheme . t)
-  ;;          (dot . t)
-  ;;          (ditaa . t)
-  ;;          (python . t)
-  ;;          (gnuplot . t)
-  ;;          (shell . t)
-  ;;          (ledger . t)
-  ;;          (org . t)
-  ;;          (plantuml . t)
-  ;;          (latex . t))))
+  (org-babel-do-load-languages
+   (quote org-babel-load-languages)
+   (quote ((emacs-lisp . t)
+           (shell . t)
+           (sql . t)
+           (org . t))))
 
-  ;; (defadvice org-babel-execute-src-block (around load-language nil activate)
-  ;;   "Load language if needed"
-  ;;   (let ((language (org-element-property :language (org-element-at-point))))
-  ;;     (unless (cdr (assoc (intern language) org-babel-load-languages))
-  ;;       (add-to-list 'org-babel-load-languages (cons (intern language) t))
-  ;;       (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages))
-  ;;     ad-do-it))
-
+  (defadvice org-babel-execute-src-block (around load-language nil activate)
+    "Load language if needed"
+    (let ((language (org-element-property :language (org-element-at-point))))
+      (unless (cdr (assoc (intern language) org-babel-load-languages))
+        (add-to-list 'org-babel-load-languages (cons (intern language) t))
+        (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages))
+      ad-do-it))
+;; 
 
 
 ;;;  Lazy load languages
-;; (use-package ob-core
-;;   :after org
-;;   :config
-;;   (defun my/org-babel-execute-src-block (&optional _arg info _params)
-;;     "Load language if needed"
-;;     (let* ((lang (nth 0 info))
-;;            (sym (if (member (downcase lang) '("c" "cpp" "c++")) 'C (intern lang)))
-;;            (backup-languages org-babel-load-languages))
-;;       (unless (assoc sym backup-languages)
-;;         (condition-case err
-;;             (progn
-;;               (org-babel-do-load-languages 'org-babel-load-languages (list (cons sym t)))
-;;               (setq-default org-babel-load-languages (append (list (cons sym t)) backup-languages)))
-;;           (file-missing
-;;            (setq-default org-babel-load-languages backup-languages)
-;;            err)))))
-;;   (advice-add 'org-babel-execute-src-block :before 'my/org-babel-execute-src-block)
-;;   (setq org-confirm-babel-evaluate nil))
+(use-package ob-core
+  :after org
+  :config
+  (defun my/org-babel-execute-src-block (&optional _arg info _params)
+    "Load language if needed"
+    (let* ((lang (nth 0 info))
+           (sym (if (member (downcase lang) '("c" "cpp" "c++")) 'C (intern lang)))
+           (backup-languages org-babel-load-languages))
+      (unless (assoc sym backup-languages)
+        (condition-case err
+            (progn
+              (org-babel-do-load-languages 'org-babel-load-languages (list (cons sym t)))
+              (setq-default org-babel-load-languages (append (list (cons sym t)) backup-languages)))
+          (file-missing
+           (setq-default org-babel-load-languages backup-languages)
+           err)))))
+  (advice-add 'org-babel-execute-src-block :before 'my/org-babel-execute-src-block)
+  (setq org-confirm-babel-evaluate nil))
 
 
-(provide 'org-ob)
+(provide 'mode/extended/org-ob)

@@ -15,7 +15,7 @@
   ;; (org-visibility-include-paths `(,(file-truename "~/.emacs.d/init-emacs.org")
   ;;                                 ,(file-truename "~/org")))
   ;; persist all org files regardless of location
-  (org-visibility-include-regexps '("\\.org\\'"))
+  ;; (org-visibility-include-regexps '("\\.org\\'"))
   ;; list of directories and files to not persist and restore visibility state of
   ;;(org-visibility-exclude-paths `(,(file-truename "~/org/old")))
   ;; optionally set maximum number of files to keep track of

@@ -1,5 +1,6 @@
 ;;; -*- lexical-binding: t; -*-
 
+(straight-use-package 'ts)
 (require 'ts)
 
 (defun this-week-range (&optional week-num)

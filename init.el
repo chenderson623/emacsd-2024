@@ -209,6 +209,7 @@
                                 mode/extended/org-capture-arnar-01
                                 ;;mode/extended/org-capture-leoc
                                 ;;mode/extended/org-folding
+                                mode/extended/org-ob
 				                mode/prog
 				                feature/completion-at-point
                                 feature/completing-read

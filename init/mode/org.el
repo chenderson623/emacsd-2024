@@ -8,6 +8,15 @@
 (setq org-publish-timestamp-directory  (emacs-state*filepath "org-timestamps"))
 
 ;;; Org
+(use-package org-super-links
+  :straight (org-super-links :type git :host github :repo "toshism/org-super-links" :branch "develop")
+  :bind (
+         :prefix-map my-org-superlinks-map
+         :prefix "C-c L"
+         ("s" . org-super-links-link)
+         ("l" . org-super-links-store-link)
+         ("C-l" . org-super-links-insert-link)))
+
 (use-package org
   ;;  :straight t
   :straight (:type built-in)
@@ -19,7 +28,6 @@
          :map global-map
          ("C-c a" . org-agenda)
          ("C-c c" . org-capture)
-         ("C-c l" . org-store-link)
          ("C-c o" . org-open-at-point-global)
          :prefix-map my-org-link-map
          :prefix "C-c l"
@@ -112,7 +120,7 @@
   (org-src-fontify-natively t)         ;; use lang-specific fontification
   (org-src-window-setup 'other-window) ;; edit source in other window
   (org-src-tab-acts-natively t)        ;; use lang bindings
-  (org-confirm-babel-evaluate t)       ;; confirm evaluation
+  (org-confirm-babel-evaluate nil)       ;; confirm evaluation
 
   ;; TODOS
   (org-use-fast-todo-selection 'expert) ;; don't use popup window for todos
