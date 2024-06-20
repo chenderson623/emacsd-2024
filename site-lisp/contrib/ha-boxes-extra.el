@@ -38,6 +38,7 @@
 
 (require 'dash)
 (require 'cl-lib)
+(require 'which-func)
 
 ;;;###autoload
 (defun ha-org-subtree-metadata ()

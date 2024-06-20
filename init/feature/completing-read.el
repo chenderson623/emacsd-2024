@@ -85,10 +85,20 @@
 ;; Consult enhancements for `project.el`
 (use-package consult-project-extra)
 
+(use-package embark
+  :defer 1
+  :straight t
+  :bind
+  ("C->" . embark-act)
+  ("C-M->" . embark-dwim)
+  ("C-h B" . embark-bindings)
+  :init
+  (setq prefix-help-command #'embark-prefix-help-command))
+
 ;; Consult enhancements for `embark.el`
 (use-package embark-consult
+  :straight t
   :after (embark consult)
-  :demand t
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
 

@@ -76,6 +76,10 @@
    ("S-<prior>" . vertico-repeat-previous)
    ("S-<next>" . vertico-repeat-next)))
 
+(use-package vertico-multiform
+  :ensure nil
+  :after vertico)
+
 ;;;; Orderless
 ;; https://github.com/minad/orderless
 ;; Emacs completion style that matches multiple regexps in any order
