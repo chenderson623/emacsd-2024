@@ -203,6 +203,7 @@
 				                ui/pulsar
                                 ui/keybindings
 				                mode/dired
+                                mode/ibuffer
 				                mode/filetype-modes
 				                mode/org
                                 mode/extended/org-capture-arnar-01
