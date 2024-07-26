@@ -82,7 +82,7 @@
   (org-adapt-indentation t)            ;; adapt indentation
   (org-startup-indented t)             ;; start with indentation of headlines
   (org-indent-indentation-per-level 4) ;; indent 4 spaces
-  (org-src-preserve-indentation nil) ;; If non-nil preserve leading whitespace characters on export.
+  (org-src-preserve-indentation t) ;; If non-nil preserve leading whitespace characters on export. This fixes src block indentation issues
 
   ;; Wrapping
   (org-startup-truncated nil) ;; wrap lines
@@ -177,6 +177,13 @@
   :straight t
   :after org
   :bind ("C-c t" . org-transclusion-add))
+
+;; https://github.com/alphapapa/org-ql
+(use-package org-ql
+  :straight t
+  :commands (org-ql-search org-ql-view org-ql-find)
+  :bind
+  ("M-g o" . org-ql-find))
 
 (use-package org-refile
   :after org
