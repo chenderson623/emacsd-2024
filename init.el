@@ -148,7 +148,9 @@
 ;;;;; Load use-package
 ;; Good documentation on use-package keywords: https://jwiegley.github.io/use-package/keywords/
 (straight-use-package 'use-package)
-(setq straight-use-package-by-default nil) ; use use-package
+(use-package straight
+  :custom
+  (straight-use-package-by-default nil)) ;; use straight by default
 
 ;; Use-Package Settings
 (use-package use-package

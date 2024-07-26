@@ -54,7 +54,7 @@
 
 ;; In Emacs 27+, package initialization occurs before `user-init-file' is
 ;; loaded, but after `early-init-file'.
-(setq-default package-enable-at-startup nil)   ;; using straight
+(setq package-enable-at-startup nil)   ;; using straight
 (advice-add #'package--ensure-init-file :override #'ignore)
 
 ;; Unset `file-name-handler-alist' too (temporarily). Every file opened and
