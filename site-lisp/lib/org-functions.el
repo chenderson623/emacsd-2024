@@ -1,6 +1,7 @@
 ;;;-*- lexical-binding: t; -*-
 
 ;; adopted from https://emacs.stackexchange.com/questions/10707/in-org-mode-how-to-remove-a-link
+;; TODO move to actions (org+-action>delete-url-from-link)
 ;;;###autoload
 (defun org-link-delete-link ()
   "Remove the link part of an org-mode link at point and keep
@@ -17,12 +18,14 @@ only the description"
                 (delete-region link-begin link-end)
                 (insert content)))))))
 
+;; TODO move to actions (org+-action>copy-org-id)
 ;; copy property
 (defun copy-id-property ()
   "copy the id property of current heading"
   (interactive)
   (kill-new (org-entry-get (point) "ID")))
 
+;; TODO moved to org+
 ;;;###autoload
 (defun my>org-filename-from-title
     (title)
@@ -37,6 +40,7 @@ For instance, given the string:    What's all this then?
                         (replace-regexp-in-string no-letters "-"))))
     (string-trim init-try "-+" "-+")))
 
+;; TODO moved to org+
 ;;;###autoload
 (defun my>org-tagsafe (tag-text)
   (upcase (replace-regexp-in-string "-" "" tag-text)))

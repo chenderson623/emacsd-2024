@@ -172,7 +172,7 @@
         recentf-max-menu-items 25
         recentf-max-saved-items 100
         recentf-auto-cleanup 300
-        recentf-exclude '(".pdf$")))
+        recentf-exclude '("~/collections/")))
 
 ;;;; file backups and autosaves
 (use-package files

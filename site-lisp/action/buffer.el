@@ -2,7 +2,7 @@
 
 ;; based on http://emacsredux.com/blog/2013/04/03/delete-file-and-buffer/
 ;;;###autoload
-(defun my>buffer-delete-file-and-buffer ()
+(defun buffer-action>delete-file-and-buffer ()
   "Kill the current buffer and deletes the file it is visiting."
   (interactive)
   (let ((filename (buffer-file-name)))
@@ -16,7 +16,7 @@
 
 ;; based on https://stackoverflow.com/questions/17829619/rename-current-buffer-and-related-file-in-emacs
 ;;;###autoload
-(defun my>buffer-rename-file-and-buffer ()
+(defun buffer-action>rename-file-and-buffer ()
   "Rename the current buffer and file it is visiting."
   (interactive)
   (let ((filename (buffer-file-name)))

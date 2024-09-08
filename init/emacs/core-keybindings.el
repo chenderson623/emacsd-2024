@@ -8,7 +8,7 @@
 
 (global-set-key  "\C-a"	'crux-move-beginning-of-line)   ; 'move-beginning-of-line
 
-(global-set-key (kbd "M-/") 'hippie-expand)
+;;(global-set-key (kbd "M-/") 'hippie-expand)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "M-z") 'zap-up-to-char)
 
@@ -16,6 +16,9 @@
 (global-set-key (kbd "C-r") 'isearch-backward-regexp)
 (global-set-key (kbd "C-M-s") 'isearch-forward)
 (global-set-key (kbd "C-M-r") 'isearch-backward)
+
+(global-set-key (kbd "C-x k") 'kill-this-buffer)
+(global-set-key (kbd "C-x K") 'kill-buffer)
 
 ;;;;; Scale Text
 (global-set-key (kbd "s-=") 'text-scale-increase)

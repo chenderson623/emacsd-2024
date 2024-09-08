@@ -5,7 +5,8 @@
   :config
   (progn
     (require 'org-protocol)
-
+    ;;(require 'org-protocol-capture-html)
+    (load-file (expand-file-name "site-lisp/contrib/org-protocol-capture-html.el" emacsd$dir))
     (defun leoc/org-protocol-capture-p ()
       "Return true if this capture was initiated via org-protocol."
       (equal "emacs-capture" (frame-parameter nil 'name)))

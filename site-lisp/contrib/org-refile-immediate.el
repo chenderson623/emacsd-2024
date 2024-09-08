@@ -1,6 +1,7 @@
 ;;; -*- lexical-binding: t; -*-
 
 (require 'dash)
+(require 'cl-lib)
 
 ;; adopted from: https://stackoverflow.com/questions/7509463/how-to-move-a-subtree-to-another-subtree-in-org-mode-emacs
 
@@ -52,7 +53,7 @@ recent entry in `org-refile-targets' that matches
     (setq org-refile-immediate (unless arg t))
     (make-local-variable 'org-refile-targets)
     (let* ((components (org-heading-components))
-           (level (first components))
+           (level (cl-first components))
            (heading (nth 4 components))
            (string (substring-no-properties heading)))
       (add-to-list 'org-refile-targets
