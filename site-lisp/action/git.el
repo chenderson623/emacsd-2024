@@ -5,7 +5,7 @@
 ;; adopted from: https://xenodium.com/emacs-clone-git-repo-from-clipboard/
 ;; change to prompt for a target directory and to name the target directory author~project
 ;;;###autoload
-(defun git-clone-clipboard-url ()
+(defun git-action>clone-clipboard-url ()
   "Clone git URL in clipboard asynchronously and open in dired when finished."
   (interactive)
   (cl-assert (string-match-p "^\\(http\\|https\\|ssh\\)://" (current-kill 0)) nil "No URL in clipboard")

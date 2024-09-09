@@ -30,6 +30,7 @@
   ;; Mimic Vim
   (lazy-highlight-cleanup nil))
 
+;; https://github.com/dajva/rg.el
 (use-package rg
   :if (executable-find "rg") 
   :straight t

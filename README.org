@@ -3,6 +3,8 @@
 ** Naming conventions (adopted from https://git.sr.ht/~northyear/dotemacs)
 
 A symbol prefixed with my: indicates it is a function.
+- maybe better? my/
+- "my" should be something that hints where function is located
 
 A symbol prefixed with my> indicates it is an interactive command.
 

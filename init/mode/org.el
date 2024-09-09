@@ -148,6 +148,8 @@
   :ensure nil
   :requires org
   :commands (org-capture)
+  :config
+  (load-file (expand-file-name "site-lisp/contrib/org-protocol-capture-html.el" emacsd$dir))
 )
 
 (use-package org-protocol
@@ -173,6 +175,7 @@
       (push template org-structure-template-alist)))
   )
 
+;; https://github.com/nobiot/org-transclusion
 (use-package org-transclusion
   :straight t
   :after org
