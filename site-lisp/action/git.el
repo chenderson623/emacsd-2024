@@ -3,7 +3,7 @@
 (require 'lib/git-url)
 
 ;; adopted from: https://xenodium.com/emacs-clone-git-repo-from-clipboard/
-;; change to prompt for a target directory and to name the target directory author~project
+;; changed to prompt for a target directory and to name the target directory author~project
 ;;;###autoload
 (defun git-action>clone-clipboard-url ()
   "Clone git URL in clipboard asynchronously and open in dired when finished."
@@ -41,5 +41,5 @@
                                      (user-error (format "%s\n%s" command output))))))
     (set-process-filter proc #'comint-output-filter)))
 
-(provide 'action/git-clone)
+(provide 'action/git)
 

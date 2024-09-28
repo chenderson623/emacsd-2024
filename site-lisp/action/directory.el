@@ -1,6 +1,7 @@
-;;; directory-functions.el --- description -*- lexical-binding: t; -*-
+;;; -*- lexical-binding: t; -*-
 
-(defun create-timestamped-directory (directory-name)
+;;;###autoload
+(defun directory-action/create-timestamped-directory (directory-name)
   "Create a new directory with a timestamp prefix and sanitized name."
   (interactive "sEnter directory name: ")
   (let* ((sanitized-name (replace-regexp-in-string "[^A-Za-z0-9_-]" "-" (replace-regexp-in-string " " "_" directory-name)))
@@ -9,6 +10,5 @@
     (make-directory new-directory)
     (message "Created directory: %s" new-directory)))
 
-
-(provide 'lib/directory-functions)
+(provide 'action/directory)
 ;;; directory-functions.el ends here

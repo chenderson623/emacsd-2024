@@ -202,6 +202,7 @@
     (delq nil
           (mapcar (lambda (x)
                     (if (and (buffer-file-name x)
+                             (not (string= "refile.org" (buffer-file-name x)))
                              (string-match "\\.org$"
                                            (buffer-file-name x)))
                         (buffer-file-name x)))

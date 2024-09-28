@@ -235,8 +235,9 @@
   :no-require t
   :hook (after-init . show-paren-mode)
   :custom
-  (show-paren-delay 0)
-  (show-paren-style `parenthesis)
+  (show-paren-delay 0.1)
+  (show-paren-highlight-openparen t)
+  (show-paren-style `mixed)
   (show-paren-when-point-inside-paren t)
   (show-paren-when-point-in-periphery t))
 

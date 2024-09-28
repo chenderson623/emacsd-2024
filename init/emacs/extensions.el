@@ -1,5 +1,10 @@
 ;;; -*- lexical-binding: t; -*-
 
+(use-package persist
+  :straight t
+  :custom
+  (persist--directory-location (emacs-state*filepath "persist")))
+
 ;; https://github.com/bbatsov/crux
 (use-package crux
   :straight t

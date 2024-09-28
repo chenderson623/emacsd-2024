@@ -11,7 +11,6 @@
 
 (use-package windresize
   :straight t
-  ;;:bind-keymap (("C-c m w" . windresize-map))
   :commands windresize)
 
 (use-package windmove

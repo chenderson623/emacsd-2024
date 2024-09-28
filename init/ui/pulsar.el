@@ -1,7 +1,7 @@
 
+;; https://protesilaos.com/emacs/pulsar
 (use-package pulsar
-  ;; A little bit of visual feedback.  See
-  ;; https://protesilaos.com/codelog/2022-03-14-emacs-pulsar-demo/
+  :defer 5
   :straight (pulsar :host gitlab :repo "protesilaos/pulsar")
   :hook
   (consult-after-jump . pulsar-recenter-top)
@@ -20,5 +20,6 @@
     (interactive "P")
     (if (car parg)
 	(pulsar--pulse nil nil (point) (mark))
-      (pulsar-pulse-line)))
-  :bind (("C-l" . jf/pulse)))
+    (pulsar-pulse-line)))
+  )
+  

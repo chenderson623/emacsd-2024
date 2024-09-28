@@ -1,5 +1,6 @@
 ;;; -*- lexical-binding: t; -*-
 
+;;;###autoload
 (defun org-capture>make-frame (&optional capture-url)
   "Create a new frame and run org-capture."
   (interactive)

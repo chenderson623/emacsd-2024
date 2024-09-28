@@ -1,6 +1,4 @@
-* .emacs.d
-
-** Naming conventions (adopted from https://git.sr.ht/~northyear/dotemacs)
+* Naming conventions (adopted from https://git.sr.ht/~northyear/dotemacs)
 
 A symbol prefixed with my: indicates it is a function.
 - maybe better? my/
@@ -22,7 +20,7 @@ A symbol prefixed with my~ indicates it is a mode.
 
 A symbol prefixed with my& indicates it is a special symbol like faces.
 
-** Functionalized filepaths
+* Functionalized filepaths
 
 user-home*filepath    ~/
 user-state*filepath   ~/.local/state 
@@ -35,7 +33,29 @@ emacs-state*filepath         ~/.local/state/emacs
 emacs-cache*filepath         ~/.cache/emacs 
 emacs-config*filepath        ~/.config/emacs 
 
-** use-package patterns
+* Custom Key Bindings
+
+** C-
+C-l jf/pulse
+
+** M-
+M-g o - org-ql-find
+
+** C-c
+
+C-c a - org-agenda
+C-c c - org-capture
+C-c l - my-org-link-map
+C-c L - my-org-superlinks-map
+C-c n - denote
+C-c o - org-open-at-point-global
+C-c t - org-transclusion-add (TODO this should be org-mode only)
+
+** keymaps
+
+
+
+* use-package patterns
 
 Using straight https://github.com/radian-software/straight.el
 - my-use-package-form-isnt-working-properly: https://github.com/radian-software/straight.el?tab=readme-ov-file#my-use-package-form-isnt-working-properly
@@ -61,7 +81,7 @@ Always use :straight in use-package (never use :ensure):
   :straight t
 )
 #+end_src
-*** after-init hook
+** after-init hook
 #+begin_src emacs-lisp
 (use-package
   vertico
@@ -71,7 +91,7 @@ Always use :straight in use-package (never use :ensure):
   )
 #+end_src
 
-*** multiple key maps
+** multiple key maps
 
 #+begin_src emacs-lisp
 (use-package avy
@@ -88,7 +108,7 @@ Always use :straight in use-package (never use :ensure):
    ("M-s" . avy-goto-word-1)))
 #+end_src
 
-*** with prefix key
+** with prefix key
 
 #+begin_src emacs-lisp
   (use-package org-super-links
@@ -101,7 +121,7 @@ Always use :straight in use-package (never use :ensure):
            ("C-l" . org-super-links-insert-link)))
 #+end_src
 
-*** lazy load init
+** lazy load init
 
 This allows me to put the hydra definition in another file that does not need to load at init. Could put the hydra definition in a :config block, but this way it does not need to be compiles in the use-package macro
 #+begin_src emacs-lisp

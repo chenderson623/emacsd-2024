@@ -3,10 +3,13 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        crux-move-beginning-of-line
         hydra-mark/mc/mark-next-like-this
         multiple-cursors-hydra/mc/edit-lines-and-exit
         multiple-cursors-hydra/mc/mark-all-like-this-and-exit
         multiple-cursors-hydra/mc/mark-next-like-this
+        org-delete-char
+        org-self-insert-command
         ))
 
 (setq mc/cmds-to-run-once

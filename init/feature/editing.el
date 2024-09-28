@@ -13,6 +13,7 @@
          ))
 
 (use-package ui/hydra/editing-mark
+  ;; internal init
   :bind ("C-c s" . hydra-mark/body)
 )
 
@@ -23,6 +24,7 @@
 )
 
 (use-package ui/hydra/multiple-cursors
+  ;; internal init
   :straight nil
   :commands multiple-cursors-hydra/body
   :bind ("C-c m" . editing>multiple-cursors-hydra)
