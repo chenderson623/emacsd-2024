@@ -17,8 +17,8 @@
 (global-set-key (kbd "C-M-s") 'isearch-forward)
 (global-set-key (kbd "C-M-r") 'isearch-backward)
 
-(global-set-key (kbd "C-x k") 'kill-this-buffer)
-(global-set-key (kbd "C-x K") 'kill-buffer)
+(global-set-key (kbd "C-x k") 'kill-current-buffer)
+(global-set-key (kbd "C-x C-k") 'kill-buffer)
 
 ;;;;; Scale Text
 (global-set-key (kbd "s-=") 'text-scale-increase)

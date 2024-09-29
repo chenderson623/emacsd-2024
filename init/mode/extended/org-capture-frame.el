@@ -83,4 +83,4 @@
 
 (add-hook 'emacs-startup-hook #'my:setup-org-protocol-capture-frame 101)
 
-(provide 'mode/extended/org-capture-arnar-01)
+(provide 'mode/extended/org-capture-frame)

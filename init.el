@@ -204,11 +204,12 @@
                                 mode/ibuffer
 				                mode/filetype-modes
 				                mode/org
-                                mode/extended/org-capture-arnar-01
-                                ;;mode/extended/org-capture-leoc
+                                mode/extended/org-capture-frame
                                 ;;mode/extended/org-folding
                                 mode/extended/org-ob
 				                mode/prog
+                                mode/eshell
+                                mode/treesit
 				                feature/completion-at-point
                                 feature/completing-read
 				                feature/discoverability

@@ -179,7 +179,8 @@
 (use-package org-transclusion
   :straight t
   :after org
-  :bind ("C-c t" . org-transclusion-add))
+  ;;:bind ("C-c t" . org-transclusion-add)
+  )
 
 ;; https://github.com/alphapapa/org-ql
 (use-package org-ql
