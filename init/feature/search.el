@@ -34,16 +34,7 @@
 (use-package rg
   :if (executable-find "rg") 
   :straight t
-  :defer t
-  :commands (rg rg>vc-or-dir rg>ref-in-dir emacsd-dir>rg)
-  ;; :bind (("M-s M-g" . #'rg>vc-or-dir)
-  ;;        ("M-s M-." . #'rg>ref-in-dir)
-  ;;        :map rg-mode-map
-  ;;        ("s" . #'rg>save-search-as-name)
-  ;;        ("C-n" . next-line)
-  ;;        ("C-p" . previous-line)
-  ;;        ("M-n" . rg-next-file)
-  ;;        ("M-p" . rg-prev-file))
+  :commands (rg rg>vc-or-dir rg>ref-in-dir rg>emacsd-dir)
   :config
   (setq rg-custom-type-aliases nil)
   (setq rg-group-result t)
@@ -76,7 +67,7 @@
     :confirm prefix
     :flags ("--hidden -g !.git"))
 
-  (rg-define-search emacsd-dir>rg
+  (rg-define-search rg>emacsd-dir
     "RipGrep in .emacs.d directory."
     :format regexp
     :files "everything"

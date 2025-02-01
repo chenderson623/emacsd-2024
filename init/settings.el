@@ -241,5 +241,5 @@
   (show-paren-when-point-inside-paren t)
   (show-paren-when-point-in-periphery t))
 
-(provide 'emacs/core-settings)
+(provide 'settings)
 ;;; emacs-settings.el ends here

@@ -25,11 +25,11 @@
 
 ;;;;; Define init hooks
 (defvar emacsd-init@defvars-loaded-hook nil
- "Hook called after defvars are loaded.")
+  "Hook called after defvars are loaded.")
 (defvar emacsd-init@package-manager-ready-hook nil
- "Hook called after use-package is ready.")
+  "Hook called after use-package is ready.")
 (defvar emacsd-init@modules-loaded-hook nil
- "Hook called after modules are loaded.")
+  "Hook called after modules are loaded.")
 
 ;;
 ;;;;; Load local init file early
@@ -88,7 +88,7 @@
 (filepath%functionalize-path emacs-config (user-config*filepath "emacs") t)
 
 (defun emacsd>open-init.el ()
-    (interactive)
+  (interactive)
   (find-file (emacsd*filepath "init.el")))
 
 ;;
@@ -107,13 +107,13 @@
 ;;
 (require 'lib/autoloads)
 (autoloads:define
-   (list
-    (emacsd*filepath "site-lisp/action"))
-   (emacsd*filepath "site-lisp/autoloads-action.el"))
+ (list
+  (emacsd*filepath "site-lisp/action"))
+ (emacsd*filepath "site-lisp/autoloads-action.el"))
 (autoloads:define
-   (list
-    (emacsd*filepath "site-lisp/contrib"))
-   (emacsd*filepath "site-lisp/autoloads-contrib.el"))
+ (list
+  (emacsd*filepath "site-lisp/contrib"))
+ (emacsd*filepath "site-lisp/autoloads-contrib.el"))
 
 ;;
 ;;;; Setup package manager
@@ -146,7 +146,7 @@
 (straight-use-package 'use-package)
 (use-package straight
   :custom
-  (straight-use-package-by-default nil)) ;; use straight by default
+  (straight-use-package-by-default t)) ;; use straight by default
 
 ;; Use-Package Settings
 (use-package use-package
@@ -160,24 +160,24 @@
   ;; Expand normally
   (use-package-expand-minimally nil)
   ;; Unless otherwise set, manually handle package install
-  ;;(use-package-always-ensure nil)
+  (use-package-always-ensure nil)
   ;; Navigate use-package declarations w/imenu
   (use-package-enable-imenu-support t))
 
 ;;(straight-use-package '(once :type git :host github :repo "emacs-magus/once"))
 ;;(straight-use-package 'setup)
 
+;; always use built in
+(use-package org
+  :straight (:type built-in)
+  )
+
 (add-hook 'after-init-hook
-	  (lambda ()
-	    (message "AFTER INIT")
-))
+          (lambda ()
+            (message "AFTER INIT")
+            ))
 
 (run-hooks 'emacsd-init@package-manager-ready-hook)
-
-;; (require 'emacs/core-settings)
-;; (require 'emacs/core-keybindings)
-;; (require 'emacs/extensions)
-;; (require 'feature/search)
 
 ;;;;; Setup modular config
 ;; https://github.com/SidharthArya/modular-config.el
@@ -188,45 +188,44 @@
   :custom
   (modular-config-list '((none ())
                          (core (
-                                emacs/core-settings
-				                emacs/core-keybindings
-				                emacs/extensions
+                                settings
+                                keybindings
+                                extensions
                                 ))
                          (full ((core)
-				                emacs/shell
-                                emacs/server
-				                ui/manage-themes
+                                init-server
+                                ui/manage-themes
                                 ;;ui/modus-themes
-				                ui/manage-fonts
-				                ui/pulsar
+                                ui/manage-fonts
+                                ui/pulsar
                                 ui/keybindings
-				                mode/dired
-                                mode/ibuffer
-				                mode/filetype-modes
-				                mode/org
+                                mode/dired
+                                mode/filetype-modes
+                                mode/org
                                 mode/extended/org-capture-frame
-                                ;;mode/extended/org-folding
-                                mode/extended/org-ob
-				                mode/prog
+                                mode/prog
                                 mode/eshell
-                                mode/treesit
-				                feature/completion-at-point
+                                mode/shell
+                                feature/buffers
+                                feature/completion-at-point
                                 feature/completing-read
-				                feature/discoverability
+                                feature/discoverability
                                 feature/editing
                                 feature/files
-				                feature/minibuffer
+                                feature/minibuffer
                                 feature/navigation
-				                feature/notetaking
-                                feature/outline
-				                feature/project
-				                feature/search
-				                feature/spelling
-				                feature/templates
-				                feature/vcs
-				                feature/web
-				                feature/windows
+                                feature/notetaking
+                                feature/project
+                                feature/search
+                                feature/spelling
+                                feature/templates
+                                feature/vcs
+                                feature/web
+                                feature/windows
                                 ))
+                         (debug ((core)
+                                mode/org-REWORK                                 
+                                   ))
                          (testing ((full)
                                    ))
                          ))

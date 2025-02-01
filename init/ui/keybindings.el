@@ -6,13 +6,13 @@
 ;; https://github.com/justbur/emacs-which-key
 (use-package which-key
   :straight t
-  :defer 5
+  :demand t
   :diminish which-key-mode
   :config
   (which-key-setup-side-window-right-bottom)
   (setq which-key-sort-order 'which-key-key-order-alpha
         which-key-side-window-max-width 0.33
-        which-key-idle-delay 0.05)
+        which-key-idle-delay 0.1)
   (which-key-mode 1))
 
 (use-package key-chord
@@ -26,21 +26,6 @@
   (key-chord-define-global "jj" 'avy-goto-char-2)
   (key-chord-define-global "jl" 'avy-goto-line)
   (key-chord-mode 1))
-
-;; (bind-keys :prefix-map toggle-map
-;;            :prefix "C-c x"
-;;            :prefix-docstring "Keymap for commands that toggle settings."
-;;            ("c" . column-number-mode)
-;;            ("d" . toggle-debug-on-error)
-;;            ("t" . toggle-truncate-lines)
-;;            ("f" . follow-mode)
-;;            ("s" . whitespace-mode)
-;;            ("v" . variable-pitch-mode)
-;;            ("i" . visible-mode))
-
-;; (which-key-add-key-based-replacements
-;;   "C-c x" "Toggles"
-;;   )
 
 (use-package hydra
   :straight t

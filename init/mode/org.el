@@ -1,5 +1,4 @@
-;;; org.el --- description -*- lexical-binding: t; -*-
-;;
+;;; -*- lexical-binding: t; -*-
 
 ;;; Org cache
 (setq org-clock-persist-file           (emacs-state*filepath "clock-persist.el"))
@@ -8,53 +7,20 @@
 (setq org-publish-timestamp-directory  (emacs-state*filepath "org-timestamps"))
 
 ;;; Org
-(use-package org-super-links
-  :straight (org-super-links :type git :host github :repo "toshism/org-super-links" :branch "develop")
-  :bind (
-         :prefix-map my-org-superlinks-map
-         :prefix "C-c L"
-         ("s" . org-super-links-link)
-         ("l" . org-super-links-store-link)
-         ("C-l" . org-super-links-insert-link)))
-
 (use-package org
   ;;  :straight t
   :straight (:type built-in)
-  :ensure nil
-  :demand t
-  :commands (org-mode)
-  :mode (("\\.org$" . org-mode))
-  :bind (
-         :map global-map
-         ("C-c a" . org-agenda)
-         ("C-c c" . org-capture)
-         ("C-c o" . org-open-at-point-global)
-         :prefix-map my-org-link-map
-         :prefix "C-c l"
-         ("l" . org-insert-link)
-         ("s" . org-store-link)
-         )
-
-  :init
-  ;; Org-Emphasis-Regex settings. Set regex boundaries for emphasis.
-  ;; Load this before org-mode is loaded.
-  ;; See https://emacs.stackexchange.com/q/54673/11934
-  (setq org-emphasis-regexp-components
-        '
-        ("-—[:space:]('\"{["
-         "\] - [:space:].,:!?;'\")}\\["
-         "[:space:]"
-         "."
-         1))
-
-  (defun init-org-mode ()
-    "Start up org"
-    (require 'org)
-    (require 'org-tempo)
-    )
-
-  (add-hook 'after-init-hook 'init-org-mode)
-
+  ;:commands (org-mode)
+  ;:mode (("\\.org$" . org-mode))
+  :bind 
+  (:map global-map
+        ("C-c a" . org-agenda)
+        ("C-c c" . org-capture)
+        ("C-c o" . org-open-at-point-global)
+        :prefix-map my-org-link-map
+        :prefix "C-c l"
+        ("l" . org-insert-link)
+        ("s" . org-store-link))
   :custom
   ;; Aesthetics & UI
   (org-catch-invisible-edits 'smart)     ;; prevent editing invisible area
@@ -128,120 +94,89 @@
   (org-enforce-todo-dependencies t)
   (org-enforce-todo-checkbox-dependencies t)
 
+  :init
+  ;; Org-Emphasis-Regex settings. Set regex boundaries for emphasis.
+  ;; Load this before org-mode is loaded.
+  ;; See https://emacs.stackexchange.com/q/54673/11934
+  (setq org-emphasis-regexp-components
+        '
+        ("-—[:space:]('\"{["
+         "\] - [:space:].,:!?;'\")}\\["
+         "[:space:]"
+         "."
+         1))
   :config
-  (message "configure init/mode/org")
+  ;;
+  ;;;; load modules
+  ;;
+  (with-eval-after-load 'org
+    ;; Load additional org modules
+    (add-to-list 'org-modules 'org-tempo t)
+    (add-to-list 'org-modules 'org-protocol t))
+
+  ;;
+  ;;;; elec-pair
+  ;;
   (require 'elec-pair)
-  ;; Open file links in current window, rather than new ones
-  ;; https://github.com/hlissner/doom-emacs/blob/develop/modules/lang/org/config.el#L632
-  (setf (alist-get 'file org-link-frame-setup) #'find-file)
   
   (add-hook 'org-mode-hook (lambda ()  ;; don't pair < symbols
+                             (message "ORG_MODE_HOOK")
                              (setq-local electric-pair-inhibit-predicate
                                          `(lambda (c)
                                             (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
-  ;; Setup further org config
-  ;;(require 'lem-setup-org-settings)
-  ;;(require 'lem-setup-org-extensions))
-  )
 
-(use-package org-capture
-  :ensure nil
-  :requires org
-  :commands (org-capture)
-  :config
-  (load-file (expand-file-name "site-lisp/contrib/org-protocol-capture-html.el" emacsd$dir))
-)
+  ;;;; Open file links in current window, rather than new ones
+  ;; https://github.com/hlissner/doom-emacs/blob/develop/modules/lang/org/config.el#L632
+  (setf (alist-get 'file org-link-frame-setup) #'find-file)
+
+  ;; Only load org extensions after opening an org document
+  (defun init-org-extensions ()
+    (message "init-org-extensions")
+    (require 'mode/extended/org-extensions)
+    (remove-hook 'org-mode-hook #'init-org-extensions)
+    )
+  (add-hook 'org-mode-hook #'init-org-extensions)
+
+  (require 'org-protocol)
+  (require 'org-capture)
+  
+  (message "[USE-PACKAGE:config] - ORG"))
+
+;; ---------------------------------------------------
+;;
+;;;; load at startup
+;;
+;; ---------------------------------------------------
 
 (use-package org-protocol
-  :ensure nil
+  :straight (:type built-in)
   :after org)
 
-(use-package org-crypt
+(use-package org-capture
+  :straight (:type built-in)
   :after org
-  :custom
-  (org-tags-exclude-from-inheritance (quote ("crypt")))
-  (org-crypt-disable-auto-save nil)
+  :commands (org-capture)
   :config
-  (org-crypt-use-before-save-magic))
-
-(use-package org-tempo
-  ;;:after org
-  :config
-  (let ((templates '(
-                     ("sh" . "src sh")
-                     ("el" . "src emacs-lisp")
-                     )))
-    (dolist (template templates)
-      (push template org-structure-template-alist)))
-  )
-
-;; https://github.com/nobiot/org-transclusion
-(use-package org-transclusion
-  :straight t
-  :after org
-  ;;:bind ("C-c t" . org-transclusion-add)
-  )
+  (require 'contrib/org-protocol-capture-html))
 
 ;; https://github.com/alphapapa/org-ql
 (use-package org-ql
   :straight t
+  :after org
   :commands (org-ql-search org-ql-view org-ql-find)
   :bind
   ("M-g o" . org-ql-find))
 
-(use-package org-refile
+(use-package org-super-links
+  :straight (org-super-links :type git :host github :repo "toshism/org-super-links" :branch "develop")
   :after org
-  :commands org-refile
-  :config
+  :bind 
+  (:map my-org-link-map
+        ("S" . org-super-links-link)
+        ("L" . org-super-links-store-link)
+        ("C-l" . org-super-links-insert-link)))
 
-  (defadvice org-capture-refile (after save-after-refile-advice activate)
-    (org-save-all-org-buffers))
-
-  ;; FROM: https://yiming.dev/blog/2018/03/02/my-org-refile-workflow/
-  (defun +org/opened-buffer-files ()
-    "Return the list of files currently opened in emacs"
-    (delq nil
-          (mapcar (lambda (x)
-                    (if (and (buffer-file-name x)
-                             (not (string= "refile.org" (buffer-file-name x)))
-                             (string-match "\\.org$"
-                                           (buffer-file-name x)))
-                        (buffer-file-name x)))
-                  (buffer-list))))
-
-  (setq org-refile-targets '((+org/opened-buffer-files :maxlevel . 4)))
-  )
-
-;; Org Agenda Notifications
-;; (use-package org-yaap
-;;   :ensure nil
-;;   :after org
-;;   :defer 5
-;;   :quelpa (org-yaap :fetcher gitlab :repo "tygrdev/org-yaap")
-;;   :custom
-;;   (org-yaap-altert-severity 'critical)
-;;   (org-yaap-altert-before 10)
-;;   :config
-;;   (org-yaap-mode 1)
-;;   (org-yaap-daemon-start))
-
-;; (with-eval-after-load 'org
-;; ;; Load additional org modules
-;; (add-to-list 'org-modules 'org-habit t)
-;; (add-to-list 'org-modules 'org-tempo t)
-;; (add-to-list 'org-modules 'org-protocol t)
-;; (when sys-mac
-;;   (add-to-list 'org-modules 'org-mac-link t)))
-
-;;;; Org ID
-;; Use org ids for reference
-;; (use-package org-id
-;;   :straight nil
-;;   :after org
-;;   :custom
-;;   (org-id-locations-file (concat lem-cache-dir ".org-id-locations"))
-;;   (org-id-method 'ts) ;; use timestamp for id
-;;   (org-id-link-to-org-use-id 'create-if-interactive)) ;; create ids
+(require 'org)
 
 (provide 'mode/org)
-;;; org.el ends here
+

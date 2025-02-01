@@ -2,8 +2,7 @@
 (use-package yasnippet
   :straight t
   :diminish yas-minor-mode
-  :commands yas-minor-mode
-  :hook (after-init . yas-minor-mode)
+  :commands (yas-minor-mode yas-expand-snippet)
   :init (setq yas-verbosity 2)
   :config
   (setq yas-snippet-dirs

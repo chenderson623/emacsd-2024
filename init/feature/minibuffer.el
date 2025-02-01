@@ -19,11 +19,6 @@
   (setq minibuffer-prompt-properties '(read-only t cursor-intangible t face minibuffer-prompt))
   (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
-  ;; Emacs 28: Hide commands in M-x which do not work in the current mode.
-  ;; Vertico commands are hidden in normal buffers.
-  ;; (setq read-extended-command-predicate
-  ;;       #'command-completion-default-include-p)
-
   ;; Enable recursive minibuffers
   (setq enable-recursive-minibuffers t))
 
@@ -31,10 +26,18 @@
 ;; Vertico provides a performant and minimalistic vertical completion UI based on the default completion system
 ;; https://github.com/minad/vertico
 (use-package vertico
-  :straight (:files (:defaults "extensions/*"))
+  :straight (:files (:defaults "extensions/*")
+                      :includes (vertico-buffer
+                                 vertico-directory
+                                 vertico-multiform
+                                 vertico-flat
+                                 vertico-grid
+                                 vertico-indexed
+                                 vertico-quick
+                                 vertico-repeat
+                                 vertico-reverse))
+  :after minibuffer
   :hook (after-init . vertico-mode)
-;;  :init
-;;  (vertico-mode 1)
   :bind (:map vertico-map
 	      ("?" . #'minibuffer-completion-help)
 	      ("M-RET" . #'minibuffer-force-complete-and-exit)
@@ -47,7 +50,6 @@
 ;; `vertico-map'.  Furthermore a cleanup function for shadowed file
 ;; paths is provided
 (use-package vertico-directory
-  :straight nil
   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy)
   :after vertico
   :bind (:map vertico-map
@@ -55,7 +57,6 @@
 	      ("M-DEL" . vertico-directory-delete-word)
 	      ("C-w" . vertico-directory-delete-word)
 	      ("RET" . vertico-directory-enter)))
-
 
 ;;;; vertico extension: vertico-repeat
 ;; This package is a Vertico extension, which enables repetition of
@@ -65,7 +66,6 @@
 ;; corresponding to the current minibuffer command are offered via
 ;; completion.
 (use-package vertico-repeat
-  :straight nil
   :after vertico
   :hook (minibuffer-setup . vertico-repeat-save)
   :bind
@@ -77,7 +77,6 @@
    ("S-<next>" . vertico-repeat-next)))
 
 (use-package vertico-multiform
-  :ensure nil
   :after vertico)
 
 ;;;; Orderless

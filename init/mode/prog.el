@@ -1,20 +1,14 @@
 ;;; -*- lexical-binding: t; -*-
 
 (use-package auto-highlight-symbol
-  :straight t
+  :straight t  
   :hook (prog-mode . auto-highlight-symbol-mode))
 
 ;;; Use Org Mode links in other modes
 ;; https://github.com/tarsius/orglink
 (use-package orglink
   :straight t
-  :hook (prog-mode . orglink-mode)
-  :config
-  (message "config orglink")
-  ;;(global-orglink-mode)
-  ;; Only enable this in Emacs Lisp mode, for now.
-  ;;(setq orglink-activate-in-modes '(emacs-lisp-mode))
-  )
+  :hook (prog-mode . orglink-mode))
 
 ;;; Highlight numbers in source code
 ;; https://github.com/Fanael/highlight-numbers
@@ -28,15 +22,22 @@
 ;; configure it to treat elisp comments as headings.
 ;; [[help:outline-mode]]
 (use-package outline
-  :straight nil
-  :hook (prog-mode . outline-minor-mode)
+  :straight (:type built-in)  
   :bind (:map outline-minor-mode-map
-         ("<tab>"   . outline-cycle)
-         ("S-<tab>" . outline-cycle-buffer)
-         ("M-j"     . outline-move-subtree-down)
-         ("M-k"     . outline-move-subtree-up)
-         ("M-h"     . outline-promote)
-         ("M-l"     . outline-demote)))
+              ("TAB" . outline-cycle)
+	          ("<backtab>" . outline-cycle-buffer)
+              ("<tab>" . outline-cycle)
+              ("C-c C-n" . 'outline-next-visible-heading)
+              ("C-c C-p" . 'outline-previous-visible-heading))
+  :hook (prog-mode . outline-minor-mode))
+
+;; Make outline faces look better
+;; https://github.com/tarsius/outline-minor-faces
+(use-package outline-minor-faces
+  :straight t
+  :after outline
+  :config (add-hook 'outline-minor-mode-hook
+                    'outline-minor-faces-add-font-lock-keywords))
 
 (use-package hl-todo
   :straight t

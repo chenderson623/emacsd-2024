@@ -7,5 +7,5 @@
   :if window-system
   :hook (after-init . server-mode))
 
-(provide 'emacs/server)
+(provide 'init-server)
 

@@ -1,4 +1,4 @@
-;;; ibuffer.el --- description -*- lexical-binding: t; -*-
+;;; -*- lexical-binding: t; -*-
 
 (use-package ibuffer
   :straight nil
@@ -7,5 +7,5 @@
   ((ibuffer-mode . hl-line-mode)
 ))
 
-(provide 'mode/ibuffer)
-;;; ibuffer.el ends here
+(provide 'feature/buffers)
+

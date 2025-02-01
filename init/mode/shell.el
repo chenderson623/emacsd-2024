@@ -7,5 +7,5 @@
   :config
   (exec-path-from-shell-initialize))
 
-(provide 'emacs/shell)
+(provide 'mode/shell)
 

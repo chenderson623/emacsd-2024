@@ -13,7 +13,7 @@
          ("C-x 4 t" . crux-transpose-windows)
          ("C-x K" . crux-kill-other-buffers)
          ("C-k" . crux-smart-kill-line))
-	 ;;("C-c o" . crux-open-with)
+	     ;;("C-c o" . crux-open-with)
          ;;("M-o" . crux-smart-open-line)
          ;;("C-c n" . crux-cleanup-buffer-or-region)
          ;;("C-c f" . crux-recentf-find-file)
@@ -45,5 +45,5 @@
   (crux-with-region-or-point-to-eol kill-ring-save)
   (defalias 'rename-file-and-buffer #'crux-rename-file-and-buffer))
 
-(provide 'emacs/extensions)
+(provide 'extensions)
 

@@ -25,4 +25,4 @@
 (global-set-key (kbd "s--") 'text-scale-decrease)
 (global-set-key (kbd "s-0") 'text-scale-adjust)
 
-(provide 'emacs/core-keybindings)
+(provide 'keybindings)

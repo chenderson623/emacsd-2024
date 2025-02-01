@@ -22,7 +22,7 @@
    :map search-map
    ("M-s" . avy-goto-word-1))
   :config
-  (avy-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+  (setq avy-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
   (setq avy-dispatch-alist
         '((?x . avy-action-kill-move)
           (?X . avy-action-kill-stay)

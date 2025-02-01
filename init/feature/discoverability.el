@@ -3,7 +3,11 @@
 
 ;;;; discover-my-major
 ;; https://framagit.org/steckerhalter/discover-my-major
-(straight-use-package 'discover-my-major)
+(use-package discover-my-major
+  :straight t
+  :bind
+  ("C-h C-m" . discover-my-major)
+  ("C-h M-m" . discover-my-mode))
 
 ;;;; helpful
 ;; https://github.com/Wilfred/helpful

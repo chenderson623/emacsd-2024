@@ -2,6 +2,7 @@
 
 ;; Uncomment this to debug.
 (setq init-file-debug t)
+(toggle-debug-on-error t)
 (setq messages-buffer-max-lines 100000)
 
 ;; Measure startup time

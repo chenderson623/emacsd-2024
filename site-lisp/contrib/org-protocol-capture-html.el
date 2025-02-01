@@ -275,6 +275,6 @@ Returns list (HTML . TITLE)."
         (dotimes (n org-protocol-capture-html-demote-times)
           (org-demote-subtree))))))
 
-(provide 'org-protocol-capture-html)
+(provide 'contrib/org-protocol-capture-html)
 
 ;;; org-protocol-capture-html.el ends here

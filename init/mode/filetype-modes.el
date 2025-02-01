@@ -1,13 +1,10 @@
 ;;; -*- lexical-binding: t; -*-
 
 ;;;; emacs-lisp
-;; TODO this might be a candidate for 'once
-(require 'mode/language/elisp)
-;; (use-package mode/language/elisp
-;;   :ensure nil
-;;   :mode ("\\.el$" . emacs-lisp-mode))
-
-(add-to-list 'org-mode-hook 'flyspell-mode)
+(use-package mode/language/elisp
+  :straight nil
+  ;; load at startup
+  :demand t)
 
 (use-package ini-mode :straight t :mode "\\.ini\\'")
 
