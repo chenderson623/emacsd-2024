@@ -53,7 +53,8 @@
      (medium
       :default-height 110)
      (laptop
-      :default-family "Source Code Pro"
+      :default-family "Cascadia Code"
+      :variable-pitch-family "Arial"
       :default-weight semilight
       :default-height 100
       :bold-weight extrabold)
