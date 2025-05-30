@@ -13,6 +13,14 @@
   :straight t
   :commands windresize)
 
+(use-package buffer-move
+  :straight t
+  :commands (buf-move-left buf-move-right buf-move-up buf-move-down))
+
+(use-package winner
+  :straight t
+  :commands (winner-undo winner-redo))
+
 (use-package windmove
   :straight (:type built-in)
   :bind
@@ -72,7 +80,8 @@
     ("v" "Vertical"   split-window-right)
     ("b" "Balance"    balance-windows)
     ("f" "Fit"        fit-window-to-buffer)
-    ("r" "Rotate"     oht/rotate-window-split)]
+    ("r" "Rotate"     rotate-window-split)
+    ]
    ["Window"
     ("c" "Clone Indirect" clone-indirect-buffer)
     ("t" "Tear Off" tear-off-window)
@@ -107,6 +116,62 @@
   (require 'windmove)
   (split-window-below)
   (windmove-down))
+
+(defun rotate-window-split ()
+  "Rotates two windows from vertical to horizontal or horizontal to vertical orientation"
+  (interactive)
+  (if (= (count-windows) 2)
+      (let* ((this-win-buffer (window-buffer))
+             (next-win-buffer (window-buffer (next-window)))
+             (this-win-edges (window-edges (selected-window)))
+             (next-win-edges (window-edges (next-window)))
+             (this-win-2nd (not (and (<= (car this-win-edges)
+                                         (car next-win-edges))
+                                     (<= (cadr this-win-edges)
+                                         (cadr next-win-edges)))))
+             (splitter
+              (if (= (car this-win-edges)
+                     (car (window-edges (next-window))))
+                  'split-window-horizontally
+                'split-window-vertically)))
+        (delete-other-windows)
+        (let ((first-win (selected-window)))
+          (funcall splitter)
+          (if this-win-2nd (other-window 1))
+          (set-window-buffer (selected-window) this-win-buffer)
+          (set-window-buffer (next-window) next-win-buffer)
+          (select-window first-win)
+          (if this-win-2nd (other-window 1))))))
+
+(defun toggle-window-split ()
+  "Toggle the window splitting style when you have 2 windows."
+  (interactive)
+  (cond
+   ((= (count-windows) 2)
+    (let* ((this-win-buffer (window-buffer))
+	       (next-win-buffer (window-buffer (next-window)))
+	       (this-win-edges (window-edges (selected-window)))
+	       (next-win-edges (window-edges (next-window)))
+	       (this-win-2nd (not (and (<= (car this-win-edges)
+					                   (car next-win-edges))
+				                   (<= (cadr this-win-edges)
+					                   (cadr next-win-edges)))))
+	       (splitter
+	        (if (= (car this-win-edges)
+		           (car (window-edges (next-window))))
+		        'split-window-horizontally
+		      'split-window-vertically)))
+	  (delete-other-windows)
+	  (let ((first-win (selected-window)))
+	    (funcall splitter)
+	    (if this-win-2nd (other-window 1))
+	    (set-window-buffer (selected-window) this-win-buffer)
+	    (set-window-buffer (next-window) next-win-buffer)
+	    (select-window first-win)
+	    (if this-win-2nd (other-window 1)))))
+   ;; Give an error if there are more than 2 windows.
+   (t
+    (message "toggle-window-split only support 2 windows."))))
 
 (provide 'core/windows)
 ;;; windows.el ends here
