@@ -32,5 +32,24 @@
   (define-key denote-menu-mode-map (kbd "/ o") #'denote-menu-filter-out-keyword)
   (define-key denote-menu-mode-map (kbd "e") #'denote-menu-export-to-dired))
 
+;; https://github.com/protesilaos/denote-org
+;; Typing C-c C-x C-u (org-dblock-update) with point on that line runs (or re-runs) the associated function with the given parameters and populates the block's contents accordingly
+(use-package denote-org
+  :straight t
+  :commands
+  ( denote-org-link-to-heading
+    denote-org-backlinks-for-heading
+
+    denote-org-extract-org-subtree
+
+    denote-org-convert-links-to-file-type
+    denote-org-convert-links-to-denote-type
+
+    denote-org-dblock-insert-files
+    denote-org-dblock-insert-links
+    denote-org-dblock-insert-backlinks
+    denote-org-dblock-insert-missing-links
+    denote-org-dblock-insert-files-as-headings))
+
 (provide 'feature/notetaking)
 
