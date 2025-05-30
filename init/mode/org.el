@@ -177,7 +177,23 @@
   (:map my-org-link-map
         ("S" . org-super-links-link)
         ("L" . org-super-links-store-link)
-        ("C-l" . org-super-links-insert-link)))
+        ("C-l" . org-super-links-insert-link)
+        ("r" . org-super-links-quick-related)
+        )
+  :config
+  (defun org-super-links-quick-related ()
+    (interactive)
+    (let ((org-super-links-link-prefix "\nrelated: "))
+      (org-super-links-link)))
+
+  (use-package org-super-links-peek
+    :straight (org-super-links-peek :type git :host github :repo "toshism/org-super-links-peek" :branch "master")
+    :bind 
+    (:map my-org-link-map
+          ("p" . org-super-links-peek-link)
+          ))
+  
+  )
 
 (require 'org)
 
