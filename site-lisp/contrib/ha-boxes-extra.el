@@ -52,14 +52,15 @@ of the start and end of the subtree."
       (org-previous-visible-heading 1))
 
     (let* ((context (org-element-context))
-           (attrs   (cl-second context))
+           (attrs   (cl-second (org-element-resolve-deferred context t))) ;; TODO find a way to get properties without using org-element-resolve-deferred here
            (props   (org-entry-properties)))
 
-      (list :region     (list (plist-get attrs :begin) (plist-get attrs :end))
-            :header     (plist-get attrs :title)
+      (list :region     (list (org-element-property :begin context) (org-element-property :end context))
+            :header     (org-element-property :title context)
             :tags       (ha-org-get-subtree-tags props)
             :properties (ha-org-get-subtree-properties attrs)
-            :body       (ha-org-get-subtree-content attrs)))))
+            ;;:properties props
+            :body       (ha-org-get-subtree-content context)))))
 
 (defun ha-org-get-subtree-tags (&optional props)
   "Given the properties, PROPS, from a call to
@@ -88,7 +89,8 @@ of the start and end of the subtree."
 
   (defun convert-tuple (tup)
     (let ((key (cl-first tup))
-          (val (cl-second tup)))
+          (val (cl-second tup))
+          )
       (list (substring (symbol-name key) 1) val)))
 
   (->> attributes
@@ -96,20 +98,19 @@ of the start and end of the subtree."
        (--filter (symbol-upcase? (cl-first it))) ; Remove lowercase tuples
        (-map 'convert-tuple)))
 
-(defun ha-org-get-subtree-content (attributes)
+(defun ha-org-get-subtree-content (context)
   "Return the contents of the current subtree as a string."
   (let ((header-components '(clock diary-sexp drawer headline inlinetask
 				   node-property planning property-drawer section)))
 
-    (goto-char (plist-get attributes :contents-begin))
+    (goto-char (org-element-property :contents-begin context))
 
     ;; Walk down past the properties, etc.
     (while
         (let* ((cntx (org-element-context))
-               (elem (cl-first cntx))
-               (props (cl-second cntx)))
+               (elem (cl-first cntx)))
           (when (member elem header-components)
-            (goto-char (plist-get props :end)))))
+            (goto-char (org-element-property :end cntx)))))
 
     ;; At this point, we are at the beginning of what we consider
     ;; the contents of the subtree, so we can return part of the buffer:

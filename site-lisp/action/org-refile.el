@@ -48,4 +48,19 @@ the subtree's properties and other features to the new file."
 	 )
     (org-lib/create-org-file-from-props filepath head body tags properties)))
 
+;;;###autoload
+(defun org-refile>/refile-to-file-headline (file headline)
+  (let ((pos (save-excursion
+               (find-file file)
+               (org-find-exact-headline-in-buffer headline))))
+    (org-refile nil nil (list headline file nil pos))))
+
+;;;###autoload
+(defun org-refile>/refile-to-file-headline-reverse (file headline)
+  (let ((org-reverse-note-order t)
+        (pos (save-excursion
+               (find-file file)
+               (org-find-exact-headline-in-buffer headline))))
+    (org-refile nil nil (list headline file nil pos))))
+
 (provide 'action/org-refile)
