@@ -31,25 +31,6 @@
 (setq transient-levels-file  (emacs-state*filepath "transient/levels.el"))
 (setq transient-values-file  (emacs-state*filepath "transient/values.el"))
 
-
-;; (use-package mule
-;;   :defer 0.1
-;;   :config
-;;   (prefer-coding-system 'utf-8)
-;;   (set-language-environment "UTF-8")
-;;   (set-terminal-coding-system 'utf-8))
-
-;; (use-package mule
-;;   :defer t
-;;   :custom
-;;   ;; mule-cmds.el
-;;   (current-language-environment "UTF-8")
-;;   :config
-;;   (set-terminal-coding-system 'utf-8)
-;;   (prefer-coding-system 'utf-8)
-;;   (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
-
-
 ;;;; Use UTF-8
 (set-charset-priority 'unicode)
 (setq locale-coding-system   'utf-8) 

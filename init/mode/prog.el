@@ -1,5 +1,9 @@
 ;;; -*- lexical-binding: t; -*-
 
+(use-package display-line-numbers
+  :straight (:type built-in)
+  :hook prog-mode)
+
 (use-package auto-highlight-symbol
   :straight t  
   :hook (prog-mode . auto-highlight-symbol-mode))
@@ -24,9 +28,9 @@
 (use-package outline
   :straight (:type built-in)  
   :bind (:map outline-minor-mode-map
-             ;; ("TAB" . outline-cycle)
-	         ;; ("<backtab>" . outline-cycle-buffer)
-             ;; ("<tab>" . outline-cycle)
+              ("C-TAB" . outline-cycle)
+	          ("<backtab>" . outline-cycle-buffer)
+              ("C-<tab>" . outline-cycle)
               ("C-c C-n" . 'outline-next-visible-heading)
               ("C-c C-p" . 'outline-previous-visible-heading))
   :hook (prog-mode . outline-minor-mode))

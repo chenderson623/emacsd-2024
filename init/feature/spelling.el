@@ -12,7 +12,6 @@
 
 ;;(setq flyspell-use-meta-tab nil)
 
-
 (use-package ispell
   :commands (ispell-word ispell-region ispell-buffer)
   :config

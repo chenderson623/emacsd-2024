@@ -58,6 +58,7 @@
 ;;;;; Setup filepaths
 ;;
 (require 'lib/filepaths)
+
 ;; XDG specification and standard support
 ;; https://github.com/emacs-mirror/emacs/blob/master/lisp/xdg.el
 (require 'xdg)

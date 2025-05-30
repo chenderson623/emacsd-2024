@@ -57,6 +57,12 @@
 
 (use-package outline
   :straight nil
+  :bind (:map outline-minor-mode-map
+              ("C-TAB" . outline-cycle)
+	          ("<backtab>" . outline-cycle-buffer)
+              ("C-<tab>" . outline-cycle)
+              ("C-c C-n" . 'outline-next-visible-heading)
+              ("C-c C-p" . 'outline-previous-visible-heading))
   :config
   (add-hook 'emacs-lisp-mode-hook
             (lambda ()
