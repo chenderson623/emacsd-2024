@@ -1,5 +1,9 @@
 ;;; -*- lexical-binding: t; -*-
 
+(use-package display-line-numbers
+  :straight (:type built-in)
+  :hook prog-mode)
+
 (use-package auto-highlight-symbol
   :straight t  
   :hook (prog-mode . auto-highlight-symbol-mode))
