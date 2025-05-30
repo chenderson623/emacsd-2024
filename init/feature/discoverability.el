@@ -13,8 +13,8 @@
 ;; https://github.com/Wilfred/helpful
 (use-package helpful
   :bind
-  ("M-." . helpful-at-point)
-  ("s-h" . my/helpful-menu)
+  ("C-M-." . helpful-at-point)
+  ("C-S-h" . my/helpful-menu)
   :straight t
   :config
   (transient-define-prefix my/helpful-menu ()
