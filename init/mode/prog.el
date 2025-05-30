@@ -28,9 +28,9 @@
 (use-package outline
   :straight (:type built-in)  
   :bind (:map outline-minor-mode-map
-              ("TAB" . outline-cycle)
+              ("C-TAB" . outline-cycle)
 	          ("<backtab>" . outline-cycle-buffer)
-              ("<tab>" . outline-cycle)
+              ("C-<tab>" . outline-cycle)
               ("C-c C-n" . 'outline-next-visible-heading)
               ("C-c C-p" . 'outline-previous-visible-heading))
   :hook (prog-mode . outline-minor-mode))
