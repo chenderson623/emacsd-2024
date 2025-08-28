@@ -30,7 +30,9 @@
   (setq my$emacs-eln-cache-dir (convert-standard-filename "~/.cache/emacs/eln-cache"))
   (startup-redirect-eln-cache my$emacs-eln-cache-dir)
 
-  (add-to-list 'native-comp-eln-load-path my$emacs-eln-cache-dir))
+  ;; should not need this anymore. unset in startup-redirect-eln-cache
+  ;;(add-to-list 'native-comp-eln-load-path my$emacs-eln-cache-dir)
+  )
 
 ;;;; Prefer Newer files
 ;; Prefer newer versions of files

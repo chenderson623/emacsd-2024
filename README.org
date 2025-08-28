@@ -121,6 +121,38 @@ Always use :straight in use-package (never use :ensure):
            ("C-l" . org-super-links-insert-link)))
 #+end_src
 
+*** assign to parent map
+
+#+begin_src emacs-lisp
+    (use-package counsel
+      :ensure t
+      :bind
+      (([remap menu-bar-open] . counsel-tmm)
+       ([remap insert-char] . counsel-unicode-char)
+       ([remap isearch-forward] . counsel-grep-or-swiper)
+       :map mode-specific-map
+       :prefix-map counsel-prefix-map
+       :prefix "c"
+       ("a" . counsel-apropos)
+       ("b" . counsel-bookmark)
+
+#+end_src
+
+** repeat keymap
+
+#+begin_src emacs-lisp
+  (defvar-keymap dap-repeat-map
+    :doc "Keymap to repeat `dap-mode' commands."
+    :repeat '(:enter (dap-next dap-continue dap-step-in dap-step-out)
+              :exit (dap-disconnect dap-eval))
+    "n" 'dap-next
+    "c" 'dap-continue
+    "i" 'dap-step-in
+    "o" 'dap-step-out
+    "e" 'dap-eval
+    "d" 'dap-disconnect)
+#+end_src
+
 ** lazy load init
 
 This allows me to put the hydra definition in another file that does not need to load at init. Could put the hydra definition in a :config block, but this way it does not need to be compiles in the use-package macro
