@@ -5,10 +5,14 @@
       '(
         crux-move-beginning-of-line
         hydra-mark/mc/mark-next-like-this
+        ignore
+        keyboard-escape-quit
         multiple-cursors-hydra/mc/edit-lines-and-exit
         multiple-cursors-hydra/mc/mark-all-like-this-and-exit
         multiple-cursors-hydra/mc/mark-next-like-this
         org-delete-char
+        org-end-of-line
+        org-metaright
         org-self-insert-command
         ))
 

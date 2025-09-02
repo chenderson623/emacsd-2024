@@ -33,8 +33,8 @@
   (org-pretty-entities-include-sub-superscripts nil) ;; prettify sub/superscripts
   (org-read-date-prefer-future 'time) ;; Incomplete dates refer to future dates & times
   (org-startup-folded nil)            ;; Don't start org in outline
-  (org-tags-column 0)       ;; place tags directly next to headline text
-  (org-auto-align-tags nil) ;; don't auto-align tags
+  ;; (org-tags-column 0)       ;; place tags directly next to headline text
+  (org-auto-align-tags t) ;; don't auto-align tags
 
   ;; Images
   (org-image-actual-width nil) ;; When non-nil, use the actual width of images when inlining them.
@@ -70,10 +70,20 @@
   ;; Logging
   (org-log-done 'time)    ;; add timestamp to completed todos
   (org-log-into-drawer t) ;; log state changes into a drawer
+  (org-treat-insert-todo-heading-as-state-change t) ;; inserting a TODO heading is treated as state change
   (org-log-state-notes-insert-after-drawers nil)
   (org-log-redeadline nil) ;; don't log the time a task was rescheduled/redeadlined.
   (org-log-reschedule nil)
 
+  ;; Habit
+  (org-habit-show-habits t)
+  (org-habit-show-all-today t)
+  ;;(org-habit-show-habits-only-for-today t)
+  (org-habit-show-done-always-green t)
+  (org-habit-graph-column 40)
+  (org-habit-preceding-days 28)
+  (org-habit-following-days 7)
+  
   ;; Movement
   (org-return-follows-link t) ;; make RET follow links
   (org-special-ctrl-a/e t)    ;; better movement in headers
@@ -112,6 +122,7 @@
   (with-eval-after-load 'org
     ;; Load additional org modules
     (add-to-list 'org-modules 'org-tempo t)
+    (add-to-list 'org-modules 'org-habit t)
     (add-to-list 'org-modules 'org-protocol t))
 
   ;;
@@ -127,8 +138,8 @@
 
   ;;;; Open file links in current window, rather than new ones
   ;; https://github.com/hlissner/doom-emacs/blob/develop/modules/lang/org/config.el#L632
-  (setf (alist-get 'file org-link-frame-setup) #'find-file)
-
+  ;;(setf (alist-get 'file org-link-frame-setup) #'find-file)
+  
   ;; Only load org extensions after opening an org document
   (defun init-org-extensions ()
     (message "init-org-extensions")

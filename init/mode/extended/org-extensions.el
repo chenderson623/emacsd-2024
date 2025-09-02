@@ -15,6 +15,7 @@
   (let ((templates '(
                      ("sh" . "src sh")
                      ("el" . "src emacs-lisp")
+                     ("sq" . "src sql")
                      )))
     (dolist (template templates)
       (push template org-structure-template-alist)))
@@ -27,7 +28,7 @@
   :config
   (defun my/org-babel-execute-src-block (&optional _arg info _params)
     "Load language if needed"
-    (let* ((lang (nth 0 info))
+    (let* ((lang (or (nth 0 info) ""))
            (sym (if (member (downcase lang) '("c" "cpp" "c++")) 'C (intern lang)))
            (backup-languages org-babel-load-languages))
       (unless (assoc sym backup-languages)
