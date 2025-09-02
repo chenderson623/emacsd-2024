@@ -4,9 +4,11 @@
   :straight t
   :bind ("C-c f" . cape-file))
 
+;; https://github.com/company-mode/company-mode
+;;  - https://company-mode.github.io/
 (use-package company
   :straight t
-  :commands (global-company-mode)
+  :commands (global-company-mode company-mode)
   :hook (after-init . global-company-mode) 
   :config
   (setq-default company-idle-delay 0.2
@@ -24,8 +26,17 @@
   :bind (:map company-active-map
               ("\C-n" . #'company-select-next)
               ("\C-p" . #'company-select-previous)
+              ("TAB" . #'company-select-next)
+              ("<backtab>" . #'company-select-previous)
+              ("RET" . company-complete-selection)
+              ("<escape>" . company-abort)
+              ("C-s" . company-filter-candidates)
+              ("C-d" . company-show-doc-buffer)
+              ("M-." . company-show-location)
               ("M-n" . nil)
-              ("M-p" . nil)))
+              ("M-p" . nil)
+              )
+  )
 
 (provide 'feature/completion-at-point)
 

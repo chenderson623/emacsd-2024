@@ -20,6 +20,8 @@
 ;;     (lispy-mode 1)))
 ;; (add-hook 'minibuffer-setup-hook 'conditionally-enable-lispy)
 
+;; https://github.com/Fanael/highlight-defined
+;; Highlight known Emacs Lisp symbols
 (use-package highlight-defined
   :straight t
   :custom
@@ -28,6 +30,8 @@
   (help-mode . highlight-defined-mode)
   (emacs-lisp-mode . highlight-defined-mode))
 
+;; https://github.com/Fanael/highlight-quoted
+;; Highlight Lisp quotes and quoted symbols
 (use-package highlight-quoted
   :straight t
   :hook

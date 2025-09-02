@@ -86,8 +86,8 @@
   (interactive)
   (set-mark-command 1))
 
-(define-key global-map (kbd "C-`") 'push-mark-no-activate)
-(define-key global-map (kbd "M-`") 'jump-to-mark)
+;;(define-key global-map (kbd "C-`") 'push-mark-no-activate)
+;;(define-key global-map (kbd "M-`") 'jump-to-mark)
 
 
 ;;

@@ -31,6 +31,10 @@
   :straight t
   :commands (defhydra))
 
+(use-package pretty-hydra
+  :straight t
+  :commands (pretty-hydra-define))
+
 (use-package repeat
   :straight nil
   :demand t

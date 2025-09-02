@@ -50,5 +50,21 @@
   (add-hook 'prog-mode-hook #'hl-todo-mode)
   (add-hook 'markdown-mode-hook #'hl-todo-mode))
 
+(use-package rainbow-delimiters
+  :straight t
+  :hook prog-mode
+  :commands rainbow-delimiters-mode)
+
+(use-package smartparens
+  :straight t
+  :hook (prog-mode text-mode markdown-mode)
+  :config
+  ;; load default config
+  (require 'smartparens-config))
+
+(use-package whitespace-cleanup-mode
+  :straight t
+  :hook prog-mode)
+
 (provide 'mode/prog)
 
