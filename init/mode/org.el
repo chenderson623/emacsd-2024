@@ -178,6 +178,17 @@
   :bind
   ("M-g o" . org-ql-find))
 
+;; https://github.com/unhammer/org-mru-clock
+(use-package org-mru-clock
+  :straight t
+  :after org
+  :bind* (("C-c C-x i" . org-mru-clock-in)
+          ("C-c C-x C-j" . org-mru-clock-select-recent-task))
+  :config
+  (setq org-mru-clock-how-many 100
+        org-mru-clock-files #'org-agenda-files)
+  (add-hook 'minibuffer-setup-hook #'org-mru-clock-embark-minibuffer-hook))
+
 (use-package org-super-links
   :straight (org-super-links :type git :host github :repo "toshism/org-super-links" :branch "develop")
   :after org
