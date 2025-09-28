@@ -51,7 +51,15 @@
     (remove-hook 'dired-before-readin-hook #'init-dired)
     )
   (add-hook 'dired-before-readin-hook #'init-dired)
-  
+
+  ;; when isearching in dired, enter will selected the file as well as
+  ;; ending the isearch
+  (defun quit-isearch-and-pass-return-to-dired()
+    (when (and (eq major-mode 'dired-mode)
+                         (not isearch-mode-end-hook-quit)
+                         (eq last-input-event 'return)) ; <==========
+                (dired-find-file)))
+  (add-hook 'isearch-mode-end-hook #'quit-isearch-and-pass-return-to-dired)  
   )
 
 (provide 'mode/dired)
