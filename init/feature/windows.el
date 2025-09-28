@@ -26,8 +26,9 @@
   :bind
   (("M-<left>" . windmove-left)
    ("M-<right>" . windmove-right)
-   ("C-M-<up>" . windmove-up)
-   ("C-M-<down>" . windmove-down)))
+   ;;("C-M-<up>" . windmove-up) ;; interferes with org clock adjustment 
+   ;;("C-M-<down>" . windmove-down)
+   ))
 
 ;;
 ;; Window related

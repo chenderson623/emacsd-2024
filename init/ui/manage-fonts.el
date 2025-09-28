@@ -53,7 +53,7 @@
      (medium
       :default-height 110)
      (laptop
-      :default-family "Cascadia Code"
+      :default-family "Cascadia Code NF"
       :variable-pitch-family "Arial"
       :default-weight semilight
       :default-height 100

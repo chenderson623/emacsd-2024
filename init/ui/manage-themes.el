@@ -127,6 +127,12 @@
           :dark 'kaolin-temple
           :light 'kaolin-valley-light)
          manage-themes/theme-definitions)
+(puthash "kaolin-ocean"
+         (make-THEME_DEFINITION
+          :package 'kaolin-themes
+          :dark 'kaolin-ocean
+          :light 'kaolin-valley-light)
+         manage-themes/theme-definitions)
 (puthash "twilight"
          (make-THEME_DEFINITION
           :package 'twilight-anti-bright-theme
@@ -150,6 +156,31 @@
           :package 'shanty-themes
           :dark 'shanty-themes-dark
           :light 'shanty-themes-light)
+         manage-themes/theme-definitions)
+(puthash "ef-maris"
+         (make-THEME_DEFINITION
+          :package 'ef-themes
+          :dark 'ef-maris-dark
+          :light 'ef-maris-light)
+         manage-themes/theme-definitions)
+(puthash "ef-dream"
+         (make-THEME_DEFINITION
+          :package 'ef-themes
+          :dark 'ef-dream
+          :light 'ef-light)
+         manage-themes/theme-definitions)
+;; like
+(puthash "ef-owl"
+         (make-THEME_DEFINITION
+          :package 'ef-themes
+          :dark 'ef-owl
+          :light 'ef-light)
+         manage-themes/theme-definitions)
+(puthash "ef-winter"
+         (make-THEME_DEFINITION
+          :package 'ef-themes
+          :dark 'ef-winter
+          :light 'ef-light)
          manage-themes/theme-definitions)
 
 
