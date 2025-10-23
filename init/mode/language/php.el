@@ -13,11 +13,11 @@
 ;;
 (defvar php$ide-level "lsp-mode") ;; ac-php, phpactor, lsp-mode, eglot
 
-(defvar php$phpactor-install-directory "/home/chris/.local/share/php-global")
-(defvar php$phpactor-executable-filepath "/home/chris/.local/share/php-global/vendor/bin/phpactor")
+(defvar php$phpactor-install-directory "~/.local/share/php-global")
+(defvar php$phpactor-executable-filepath "~/.local/share/php-global/vendor/bin/phpactor")
 
 (setq lsp-phpactor-path
-      "/home/chris/.local/share/php-global/vendor/bin/phpactor"
+      "~/.local/share/php-global/vendor/bin/phpactor"
        )
 
 (setq flycheck-phpcs-standard "PSR2"
@@ -234,8 +234,21 @@
   :commands (php:lsp-mode-init)
   :config
   ; TODO are these already lists?
-  (setq lsp-enabled-clients '(phpactor))
-  (setq lsp-disabled-clients '(php-ls iph intelephense serenata))
+  ;; (setq lsp-enabled-clients '(phpactor))
+  ;; (setq lsp-disabled-clients '(php-ls iph intelephense serenata))
+
+
+  ;; good guid. covers debugger too: https://emacs-lsp.github.io/lsp-mode/tutorials/php-guide/
+
+  (setq php-mode-template-compatibility nil)
+  
+  (add-to-list 'exec-path "C:/Users/henderch/.local/share/nvm/versions/node/v22.14.0/bin")
+  ;;(setq lsp-enabled-clients '(intelephense))
+  ;;(setq lsp-disabled-clients '(php-ls iph serenata))
+
+  ;;(setq lsp-clients-php-server-command
+  ;;`("php" ,(expand-file-name "~/.local/share/php-global/vendor/felixfbecker/language-server/bin/php-language-server.php")))
+  ;;'' (setq lsp-php-composer-dir "~/.config/composer")
   
   (defun php-local-checkers()
     (setq-local flycheck-local-checkers-chain '((lsp . phpstan)

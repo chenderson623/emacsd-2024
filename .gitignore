@@ -1,2 +1,11 @@
 site-lisp/autoloads*
 tree-sitter
+.idea/
+.cursorrules
+easysession/
+eln-cache/
+lsp-cache/
+persist/
+request/
+tabsession.el
+tramp
