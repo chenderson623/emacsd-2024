@@ -7,6 +7,14 @@
   ((ibuffer-mode . hl-line-mode)
    ))
 
+(use-package ace-jump-buffer
+  :straight t
+  :commands (ace-jump-buffer ace-jump-buffer-other-window ace-jump-same-mode-buffers)
+    :bind
+  (:map goto-map
+        ("b" . ace-jump-buffer)))
+
+
 ;;; popper 
 ;; https://github.com/karthink/popper
 ;;

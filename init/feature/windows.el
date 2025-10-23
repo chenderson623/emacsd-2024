@@ -15,11 +15,24 @@
 
 (use-package buffer-move
   :straight t
-  :commands (buf-move-left buf-move-right buf-move-up buf-move-down))
+  :commands (buf-move-left buf-move-right buf-move-up buf-move-down)
+  :custom
+  (buffer-move-behavior 'move "move instead of swap"))
 
+;; C-c left (winner-undo), C-c right (winner-redo)
 (use-package winner
-  :straight t
-  :commands (winner-undo winner-redo))
+  :straight (:type built-in)
+  :commands (winner-mode winner-undo winner-redo)
+  :init (winner-mode)
+  :config
+  (defvar w/winner-repeat-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "<left>") 'winner-undo)
+      (define-key map (kbd "<right>") 'winner-redo)
+      map)
+    "Keymap to repeat `winner' key sequences.  Used in `repeat-mode'.")
+  (put 'winner-undo 'repeat-map 'w/winner-repeat-map)
+  (put 'winner-redo 'repeat-map 'w/winner-repeat-map))
 
 (use-package windmove
   :straight (:type built-in)
@@ -33,9 +46,7 @@
 ;;
 ;; Window related
 ;; https://github.com/abo-abo/hydra/wiki/Window-Management
-(defhydra hydra-window (;; map key
-                        ;; Bind the body
-                        ;; mode-specific-map "o"
+(defhydra feature-windows>hydra (
                         :exit nil
                         :pre (progn
                                (require 'windmove)
@@ -74,7 +85,10 @@
   ("q" nil "Quit" :column "Misc")
   ("C-g" nil "Quit" :column "Misc"))
 
-(transient-define-prefix oht-transient-window ()
+(global-set-key (kbd "C-c w") 'feature-windows>hydra/body)
+
+
+(transient-define-prefix feature-windows>transient-menu ()
   "Most commonly used window commands"
   [["Splits"
     ("s" "Horizontal" split-window-below)
@@ -101,8 +115,8 @@
     ("S-<up>"    "S-↑" buf-move-up    :transient t)
     ("S-<down>"  "S-↓" buf-move-down  :transient t)]
    ["Undo/Redo"
-    ("s-z" "Winner Undo" winner-undo :transient t)
-    ("s-Z" "Winner Redo" winner-redo :transient t)]])
+    ("C-<left>" "Winner Undo" winner-undo :transient t)
+    ("C-<right>" "Winner Redo" winner-redo :transient t)]])
 
 (defun lem-split-window-right-and-focus ()
   "Split the window horizontally and focus the new window."
@@ -117,32 +131,6 @@
   (require 'windmove)
   (split-window-below)
   (windmove-down))
-
-(defun rotate-window-split ()
-  "Rotates two windows from vertical to horizontal or horizontal to vertical orientation"
-  (interactive)
-  (if (= (count-windows) 2)
-      (let* ((this-win-buffer (window-buffer))
-             (next-win-buffer (window-buffer (next-window)))
-             (this-win-edges (window-edges (selected-window)))
-             (next-win-edges (window-edges (next-window)))
-             (this-win-2nd (not (and (<= (car this-win-edges)
-                                         (car next-win-edges))
-                                     (<= (cadr this-win-edges)
-                                         (cadr next-win-edges)))))
-             (splitter
-              (if (= (car this-win-edges)
-                     (car (window-edges (next-window))))
-                  'split-window-horizontally
-                'split-window-vertically)))
-        (delete-other-windows)
-        (let ((first-win (selected-window)))
-          (funcall splitter)
-          (if this-win-2nd (other-window 1))
-          (set-window-buffer (selected-window) this-win-buffer)
-          (set-window-buffer (next-window) next-win-buffer)
-          (select-window first-win)
-          (if this-win-2nd (other-window 1))))))
 
 (defun toggle-window-split ()
   "Toggle the window splitting style when you have 2 windows."

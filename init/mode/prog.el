@@ -6,7 +6,22 @@
 
 (use-package auto-highlight-symbol
   :straight t  
-  :hook (prog-mode . auto-highlight-symbol-mode))
+  :hook (prog-mode . auto-highlight-symbol-mode)
+  ;;
+  ;;; Key bindings:
+  ;;
+  ;; (defvar auto-highlight-symbol-mode-map
+  ;;   (let ((map (make-sparse-keymap)))
+  ;;     (define-key map (kbd "M-<left>") #'ahs-backward)
+  ;;     (define-key map (kbd "M-<right>") #'ahs-forward)
+  ;;     (define-key map (kbd "M-S-<left>") #'ahs-backward-definition)
+  ;;     (define-key map (kbd "M-S-<right>") #'ahs-forward-definition)
+  ;;     (define-key map (kbd "M--") #'ahs-back-to-start)
+  ;;     (define-key map (kbd "C-x C-'") #'ahs-change-range)
+  ;;     (define-key map (kbd "C-x C-a") #'ahs-edit-mode)
+  ;;     map)
+  ;;   "Keymap used in function `auto-highlight-symbol-mode'.")  
+  )
 
 ;;; Use Org Mode links in other modes
 ;; https://github.com/tarsius/orglink
