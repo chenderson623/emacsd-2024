@@ -27,7 +27,7 @@
   ;; Denote DOES NOT define any key bindings.  This is for the user to
   ;; decide.  For example:
   ( :map global-map
-    ("C-c n c" . consult-denote-prefix-map)
+    ;;("C-c n c" . consult-denote-prefix-map) ;; defined in consult-denote
     ("C-c n d" . denote-dired)
     ("C-c n g" . denote-grep)
     ("C-c n n" . denote)
@@ -62,7 +62,7 @@
   (consult-denote-find-command #'consult-fd)
   :init 
   (define-prefix-command 'consult-denote-prefix-map)
-  ;;(define-key global-map (kbd "C-c n c") (cons "consult-denote" 'consult-denote-prefix-map))
+  (define-key global-map (kbd "C-c n c") (cons "consult-denote" 'consult-denote-prefix-map))
   :config
   (consult-denote-mode 1))
 
