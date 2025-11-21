@@ -27,10 +27,10 @@
   ;; Denote DOES NOT define any key bindings.  This is for the user to
   ;; decide.  For example:
   ( :map global-map
-    ("C-c n n" . denote)
+    ("C-c n c" . consult-denote-prefix-map)
     ("C-c n d" . denote-dired)
     ("C-c n g" . denote-grep)
-    ("C-c n c" . consult-denote-prefix-map)
+    ("C-c n n" . denote)
   )
 
   :config
