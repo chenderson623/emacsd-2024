@@ -10,6 +10,7 @@
         multiple-cursors-hydra/mc/edit-lines-and-exit
         multiple-cursors-hydra/mc/mark-all-like-this-and-exit
         multiple-cursors-hydra/mc/mark-next-like-this
+        org-beginning-of-line
         org-delete-char
         org-end-of-line
         org-metaright

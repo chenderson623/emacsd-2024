@@ -3,6 +3,7 @@
 (require 'dash)
 (require 'cl-lib)
 
+;;;###autoload
 (defun org-lib/org-filename-from-title
     (title)
   "Creates a useful filename based on a header string, TITLE.
@@ -16,10 +17,12 @@ For instance, given the string:    What's all this then?
                         (replace-regexp-in-string no-letters "-"))))
     (string-trim init-try "-+" "-+")))
 
+;;;###autoload
 (defun org-lib/org-tagsafe (tag-text)
   (upcase (replace-regexp-in-string "-" "" tag-text)))
 
 ;; This is modified from ha-org-create-org-file
+;;;###autoload
 (defun org-lib/create-org-file-from-props (filepath header body tags properties)
     "Create a new Org file by FILEPATH. The contents of the file is
     pre-populated with the HEADER, BODY and any associated TAGS."
@@ -44,6 +47,5 @@ For instance, given the string:    What's all this then?
     (goto-char (point-max))
     (insert "\n")
     (insert body))
-
 
 (provide 'lib/org)
