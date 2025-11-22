@@ -23,6 +23,15 @@
   :config
   (message "Loaded mode/language/json"))
 
+;;;; markdown
+;; https://github.com/jrblevin/markdown-mode
+(use-package markdown-mode
+  :straight t
+  :mode ("README\\.md\\'" . gfm-mode)
+  :init (setq markdown-command "multimarkdown")
+  :bind (:map markdown-mode-map
+         ("C-c C-e" . markdown-do)))
+
 ;;;; php
 (use-package mode/language/php
   :straight nil

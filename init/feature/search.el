@@ -53,8 +53,8 @@
     :format regexp
     :files "everything"
     :dir (or (project-root (project-current))
-	     (vc-root-dir)              ; search root project dir
-	     default-directory)         ; or from the current dir
+	         (vc-root-dir)              ; search root project dir
+	         default-directory)         ; or from the current dir
     :confirm prefix
     :flags ("--hidden -g !.git"))
 
@@ -81,6 +81,14 @@
     (interactive)
     (let ((pattern (car rg-pattern-history)))
       (rg-save-search-as-name (concat "«" pattern "»"))))
+
+  ;; adopted from https://christiantietze.de/posts/2024/06/fold-search-results-away-in-rg-el/
+  (defun ct/rg-enable-folding ()
+    "Configure outline-minor-mode on file entries in rg.el results."
+    (setq-local outline-regexp "^File: ")
+    (outline-minor-mode t))
+  (add-hook 'rg-filter-hook #'ct/rg-enable-folding)
+  (define-key rg-mode-map (kbd "<tab>") #'outline-cycle)
   )
 
 (provide 'feature/search)

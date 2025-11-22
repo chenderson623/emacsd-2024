@@ -81,6 +81,8 @@
 (advice-add #'split-window-below :after (lambda (&rest _) (other-window 1)))
 (advice-add #'split-window-right :after (lambda (&rest _) (other-window 1)))
 
+(setq sentence-end-double-space nil) 
+
 (use-package emacs
   :straight nil
   :defer 1

@@ -25,4 +25,6 @@
 (global-set-key (kbd "s--") 'text-scale-decrease)
 (global-set-key (kbd "s-0") 'text-scale-adjust)
 
+(keymap-global-set "M-q" #'sc-reformat-paragraph-or-region)
+
 (provide 'keybindings)

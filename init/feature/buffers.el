@@ -27,17 +27,39 @@
 ;; compilation or shell output, etc.
 (use-package popper
   :straight t
-  :bind (("C-`"   . popper-toggle-latest)
+  :bind (("C-`"   . popper-toggle)
          ("M-`"   . popper-cycle)
          ("C-M-`" . popper-toggle-type))
   :init
   (setq popper-reference-buffers
         '("\\*Messages\\*"
           "^\\*scratch.*\\*$"
+          "^\\*Ibuffer\\*" ibuffer-mode
           "Output\\*$"
           help-mode
           compilation-mode))
+
+  (setq popper-display-control nil)
+  
   (popper-mode +1))
+
+;; Enforce rules for popups.
+;; https://depp.brause.cc/shackle/.
+(use-package shackle
+    :straight t
+    :defer 1
+    :commands shackle-mode
+  :custom
+  (shackle-default-rule '(:select t))
+  (shackle-rules
+   '((compilation-mode :select nil :size 0.6)
+     ("\\`\\*Messages" :select t :align t :size 0.6)
+     ("\\`\\*company-coq:" :regexp t :noselect t)
+     ("\\`\\*fetch" :regexp t :size 0.25 :noselect t :align bottom)
+     ("\\`\\*Flycheck" :regexp t :size 0.2 :noselect t :align bottom)
+     ("\\`\\*?magit-diff" :regexp t :align bottom :noselect t)))
+  :config
+  (shackle-mode 1))
 
 (provide 'feature/buffers)
 
