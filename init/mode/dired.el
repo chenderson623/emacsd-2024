@@ -27,7 +27,7 @@
   ;; -h :: print sizes like 1K 234M 2G etc.
   ;; -o :: like -l, but do not list group information
   ;; -A :: do not list implied . and ..
-  (dired-listing-switches "-aho --group-directories-first")
+  (dired-listing-switches "-ahgo --group-directories-first")
   ;; prevent opening extra dired buffers
   (dired-kill-when-opening-new-dired-buffer t)
   ;; If there are two dired open side by side, copy destination is the other.
