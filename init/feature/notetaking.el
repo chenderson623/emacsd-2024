@@ -33,6 +33,8 @@
     ;;("C-c n m" . denote-menu-prefix-map) ;; defined in denote-menu
     ("C-c n n" . denote)
     ("C-c n o" . denote-open-or-create)
+    ("C-c n l" . denote-link)
+    ("C-c n c" . denote-link-after-creating)
     ;; denote-org-extract-org-subtree
     )
 
@@ -71,7 +73,7 @@
   (consult-denote-find-command #'consult-fd)
   :init 
   (define-prefix-command 'consult-denote-prefix-map)
-  (define-key global-map (kbd "C-c n c") (cons "consult-denote" 'consult-denote-prefix-map))
+  (define-key global-map (kbd "C-c n s") (cons "consult-denote" 'consult-denote-prefix-map))
   :config
   (consult-denote-mode 1))
 
@@ -84,7 +86,7 @@
          ("l" . list-denotes))
   :init 
   (define-prefix-command 'denote-menu-prefix-map)
-  (define-key global-map (kbd "C-c n c") (cons "denote-menu" 'denote-menu-prefix-map))
+  (define-key global-map (kbd "C-c n m") (cons "denote-menu" 'denote-menu-prefix-map))
   :config
   (define-key denote-menu-mode-map (kbd "c") #'denote-menu-clear-filters)
   (define-key denote-menu-mode-map (kbd "/ r") #'denote-menu-filter)
