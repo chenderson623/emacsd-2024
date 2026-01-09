@@ -115,6 +115,10 @@
  (list
   (emacsd*filepath "site-lisp/contrib"))
  (emacsd*filepath "site-lisp/autoloads-contrib.el"))
+(autoloads:define
+ (list
+  (emacsd*filepath "site-lisp/lib"))
+ (emacsd*filepath "site-lisp/autoloads-lib.el"))
 
 ;;
 ;;;; Setup package manager
