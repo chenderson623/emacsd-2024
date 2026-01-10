@@ -56,6 +56,7 @@
      ("\\`\\*Messages" :select t :align t :size 0.6)
      ("\\`\\*company-coq:" :regexp t :noselect t)
      ("\\`\\*fetch" :regexp t :size 0.25 :noselect t :align bottom)
+     ("\\`\\*Org Help" :regexp t :size 0.25 :noselect t :align top)
      ("\\`\\*Flycheck" :regexp t :size 0.2 :noselect t :align bottom)
      ("\\`\\*?magit-diff" :regexp t :align bottom :noselect t)))
   :config
