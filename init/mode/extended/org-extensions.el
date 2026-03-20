@@ -18,6 +18,7 @@
                      ("sq" . "src sql")
                      ("js" . "src javascript")
                      ("jn" . "src json")
+                     ("md" . "src markdown")
                      ("ja" . "src java")
                      ("ya" . "src yaml")
                      ("ph" . "src php")
