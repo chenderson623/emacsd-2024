@@ -21,6 +21,10 @@
         :prefix "C-c l"
         ("l" . org-insert-link)
         ("s" . org-store-link))
+  :hook
+  (org-mode . variable-pitch-mode)
+  (org-mode . visual-line-mode)
+  (org-mode . my/org-font-setup)
   :custom
   ;; Aesthetics & UI
   (org-catch-invisible-edits 'smart)     ;; prevent editing invisible area
@@ -150,8 +154,66 @@
 
   (require 'org-protocol)
   (require 'org-capture)
+
+  ;;(my/org-font-setup)
   
   (message "[USE-PACKAGE:config] - ORG"))
+
+(defun my-setup-org-fonts--OLD()
+  (let* ((variable-tuple
+
+          (cond ((x-list-fonts "Iosevka Comfy")   '(:font "Iosevka Comfy"))
+                ((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
+                ((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
+                ((x-list-fonts "Verdana")         '(:font "Verdana"))
+                ((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))
+                (nil (warn "Cannot find a Sans Serif Font.  Install Source Sans Pro."))))
+         (headline `( :weight bold)))
+
+
+    (custom-theme-set-faces
+     'user
+     `(org-level-8 ((t (,@headline ,@variable-tuple))))
+     `(org-level-7 ((t (,@headline ,@variable-tuple))))
+     `(org-level-6 ((t (,@headline ,@variable-tuple))))
+     `(org-level-5 ((t (,@headline ,@variable-tuple))))
+     `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.1))))
+     `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.2))))
+     `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.3))))
+     `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.4))))
+     `(org-document-title ((t (,@headline ,@variable-tuple :height 1.5 :underline nil))))
+        
+     )))
+
+;;   From [[file:/home/chris/collections/emacsd-others/ghoseb--dotemacs/dotemacs/conf/org-config.el::6][org-config.el]]:
+(defun my/org-font-setup ()
+  "Set faces for heading levels."
+  (interactive)
+  (dolist (face '((org-level-1 . 1.35)
+                  (org-level-2 . 1.25)
+                  (org-level-3 . 1.15)
+                  (org-level-4 . 1.12)
+                  (org-level-5 . 1.1)
+                  (org-level-6 . 1.1)
+                  (org-level-7 . 1.1)
+                  (org-level-8 . 1.1)))
+;;    (set-face-attribute (car face) nil :font bg--variable-pitch-font :weight 'regular :height (cdr face)))
+
+;;  (set-face-attribute 'org-document-title nil :font bg--variable-pitch-font :weight 'bold :height 1.5)
+
+    (set-face-attribute (car face) nil :weight 'bold :height (cdr face)))
+
+  (set-face-attribute 'org-document-title nil :weight 'bold :height 1.5)
+  
+  ;; Ensure that anything that should be fixed-pitch in Org files appears that way
+  (set-face-attribute 'org-block nil :foreground 'unspecified :inherit 'fixed-pitch)
+  (set-face-attribute 'org-code nil :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-table nil :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
+
 
 ;; ---------------------------------------------------
 ;;

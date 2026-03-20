@@ -2,7 +2,9 @@
 
 (use-package display-line-numbers
   :straight (:type built-in)
-  :hook prog-mode)
+  :hook prog-mode
+  :config
+  (setq display-line-numbers-width 4))
 
 (use-package auto-highlight-symbol
   :straight t  

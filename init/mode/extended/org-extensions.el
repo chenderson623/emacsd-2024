@@ -28,26 +28,33 @@
   )
 
 ;;;  Lazy load languages
-(use-package ob-core
-  :straight (:type built-in)
-  :after org
-  :config
-  (defun my/org-babel-execute-src-block (&optional _arg info _params)
-    "Load language if needed"
-    (let* ((lang (or (nth 0 info) ""))
-           (sym (if (member (downcase lang) '("c" "cpp" "c++")) 'C (intern lang)))
-           (backup-languages org-babel-load-languages))
-      (unless (assoc sym backup-languages)
-        (condition-case err
-            (progn
-              (org-babel-do-load-languages 'org-babel-load-languages (list (cons sym t)))
-              (setq-default org-babel-load-languages (append (list (cons sym t)) backup-languages)))
-          (file-missing
-           (setq-default org-babel-load-languages backup-languages)
-           err)))))
-  (advice-add 'org-babel-execute-src-block :before 'my/org-babel-execute-src-block)
-  (setq org-confirm-babel-evaluate nil)
-  (message "[USE-PACKAGE:config] - ob-core"))
+;; (use-package ob-core
+;;   :straight (:type built-in)
+;;   :after org
+;;   :config
+;;   (add-to-list 'org-babel-load-languages '(shell . t) )
+
+;;   (defun my/org-babel-execute-src-block (&optional _arg info _params)
+;;     "Load language if needed"
+;;     (let* ((lang (or (nth 0 info) ""))
+;;            (sym (if (member (downcase lang) '("c" "cpp" "c++")) 'C (intern lang)))
+;;            (backup-languages org-babel-load-languages))
+;;       (unless (assoc sym backup-languages)
+;;         (condition-case err
+;;             (progn
+;;               (org-babel-do-load-languages 'org-babel-load-languages (list (cons sym t)))
+;;               (setq-default org-babel-load-languages (append (list (cons sym t)) backup-languages)))
+;;           (file-missing
+;;            (setq-default org-babel-load-languages backup-languages)
+;;            err)))))
+;;   (advice-add 'org-babel-execute-src-block :before 'my/org-babel-execute-src-block)
+;;   (setq org-confirm-babel-evaluate nil)
+;;   (message "[USE-PACKAGE:config] - ob-core"))
+
+(eval-after-load 'org
+  '(org-babel-do-load-languages
+    'org-babel-load-languages
+    '((shell . t))))
 
 ;; ---------------------------------------------------
 ;;
