@@ -30,7 +30,16 @@
   :mode ("README\\.md\\'" . gfm-mode)
   :init (setq markdown-command "multimarkdown")
   :bind (:map markdown-mode-map
-         ("C-c C-e" . markdown-do)))
+              ("C-c C-e" . markdown-do))
+  :custom
+  (markdown-header-scaling t)
+  (markdown-hide-urls t)
+  (markdown-fontify-code-blocks-natively t)
+  )
+;; https://github.com/whhone/markdown-indent-mode
+(use-package markdown-indent-mode
+  :straight (markdown-indent-mode :type git :host github :repo "whhone/markdown-indent-mode" :branch "main")  
+  :hook (markdown-mode . markdown-indent-mode))
 
 ;;;; php
 (use-package mode/language/php
