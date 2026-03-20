@@ -183,7 +183,7 @@
   :straight t
   :after org
   :bind* (("C-c C-x i" . org-mru-clock-in)
-          ("C-c C-x C-j" . org-mru-clock-select-recent-task))
+          ("C-c C-x j" . org-mru-clock-select-recent-task))
   :config
   (setq org-mru-clock-how-many 100
         org-mru-clock-files #'org-agenda-files)
