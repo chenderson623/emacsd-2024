@@ -59,8 +59,8 @@
   (consult-denote-find-command #'consult-fd)
   :init 
   (define-prefix-command 'consult-denote-prefix-map)
-  :config
   (define-key my-denote-prefix-map (kbd "s") 'consult-denote-prefix-map)
+  :config
   (consult-denote-mode 1))
 
 ;; https://github.com/namilus/denote-menu
@@ -72,8 +72,8 @@
          ("l" . list-denotes))
   :init 
   (define-prefix-command 'denote-menu-prefix-map)
-  :config
   (define-key my-denote-prefix-map (kbd "m") 'denote-menu-prefix-map)
+  :config
   (define-key denote-menu-mode-map (kbd "c") #'denote-menu-clear-filters)
   (define-key denote-menu-mode-map (kbd "/ r") #'denote-menu-filter)
   (define-key denote-menu-mode-map (kbd "/ k") #'denote-menu-filter-by-keyword)
@@ -98,6 +98,26 @@
     denote-org-dblock-insert-backlinks
     denote-org-dblock-insert-missing-links
     denote-org-dblock-insert-files-as-headings))
+
+;; same as denote-org-extract-org-subtree bu COPIES instead of moving
+(defun my>denote-org-copy-org-subtree ()
+  (interactive nil org-mode)
+  (unless (derived-mode-p 'org-mode)
+    (user-error "Headings can only be extracted from Org files"))
+  (if-let* ((text (org-get-entry))
+            (heading (denote-link-ol-get-heading)))
+      (let ((tags (org-get-tags))
+            (date (denote-org--get-heading-date))
+            subdirectory
+            signature)
+        (dolist (prompt denote-prompts)
+          (pcase prompt
+            ('keywords (when (not tags) (setq tags (denote-keywords-prompt))))
+            ('subdirectory (setq subdirectory (denote-subdirectory-prompt)))
+            ('date (when (not date) (setq date (denote-date-prompt))))
+            ('signature (setq signature (denote-signature-prompt)))))
+        (denote heading tags 'org subdirectory date text signature))
+    (user-error "No subtree to extract; aborting")))
 
 ;; https://github.com/mclear-tools/consult-notes
 (use-package consult-notes

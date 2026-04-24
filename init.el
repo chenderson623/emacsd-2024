@@ -211,7 +211,6 @@
                                 mode/prog
                                 mode/eshell
                                 mode/shell
-                                feature/ai
                                 feature/buffers
                                 feature/completion-at-point
                                 feature/completing-read
