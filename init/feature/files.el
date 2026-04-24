@@ -12,14 +12,10 @@
   (consult-customize affe-grep :preview-key
                      (kbd "M-."))
   ;; The default regular expression transformation of Consult is limited. It is recommended to configure Orderless as affe-regexp-compiler in Consult.
-  (defun affe-orderless-regexp-compiler
-      (input _type _ignorecase)
-    (setq input
-          (orderless-pattern-compiler input))
-    (cons input
-          (lambda
-            (str)
-            (orderless--highlight input str))))
-  (setq affe-regexp-compiler #'affe-orderless-regexp-compiler))
+(defun affe-orderless-regexp-compiler (input _type _ignorecase)
+  (setq input (cdr (orderless-compile input)))
+  (cons input (apply-partially #'orderless--highlight input t)))
+(setq affe-regexp-compiler #'affe-orderless-regexp-compiler)
+  )
 
 (provide 'feature/files)

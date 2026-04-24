@@ -1,5 +1,16 @@
 ;;; navigation.el --- Set up navigation features -*- lexical-binding: t; -*-
 
+
+(use-package backward-forward
+  :straight t
+  :defer 3
+  :config
+  (backward-forward-mode t)
+  :bind
+  (:map backward-forward-mode-map
+        ("M-<left>" . backward-forward-previous-location)
+        ("M-<right>" . backward-forward-next-location)))
+
 ;;;; Avy
 ;; https://github.com/abo-abo/avy
 (defun avy-action/copy-and-yank (pt)
