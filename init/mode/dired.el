@@ -27,6 +27,8 @@
   ;; -h :: print sizes like 1K 234M 2G etc.
   ;; -o :: like -l, but do not list group information
   ;; -A :: do not list implied . and ..
+  ;; -v :: natural sort of (version) numbers within text
+  ;; -F :: 
   ;;(dired-listing-switches "-ahgo --group-directories-first")
   (dired-listing-switches "-vAFg --group-directories-first")
   ;; prevent opening extra dired buffers
