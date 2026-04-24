@@ -12,6 +12,14 @@
   :straight t
   :mode "\\.ini\\'")
 
+;;;; pdf
+(use-package mode/file-type/pdf
+  :straight nil
+  :commands (pdf:pdf-mode-init)
+  :mode ("\\.pdf\\'" . pdf:pdf-mode-init)
+  :mode ("\\.PDF\\'" . pdf:pdf-mode-init)
+)
+
 ;;;; json
 (use-package mode/language/json
   :straight nil
