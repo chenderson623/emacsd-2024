@@ -211,6 +211,7 @@
                                 mode/prog
                                 mode/eshell
                                 mode/shell
+                                feature/ai
                                 feature/buffers
                                 feature/completion-at-point
                                 feature/completing-read
@@ -219,7 +220,7 @@
                                 feature/files
                                 feature/minibuffer
                                 feature/navigation
-                                feature/notetaking
+                                feature/denote
                                 feature/project
                                 feature/search
                                 feature/spelling

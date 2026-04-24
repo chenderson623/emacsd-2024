@@ -14,20 +14,15 @@
    ;; directories you may prefer instead.  Then, instead of
    ;; `denote-dired-mode', use `denote-dired-mode-in-directories'.
    (dired-mode . denote-dired-mode))
-  :bind
-  ;; Denote DOES NOT define any key bindings.  This is for the user to
-  ;; decide.  For example:
-  ( :map global-map
-    ;;("C-c n c" . consult-denote-prefix-map) ;; defined in consult-denote
-    ("C-c n d" . denote>sort-dired-modified-time)
-    ("C-c n g" . denote-grep)
-    ;;("C-c n m" . denote-menu-prefix-map) ;; defined in denote-menu
-    ("C-c n n" . denote)
-    ("C-c n o" . denote-open-or-create)
-    ("C-c n l" . denote-link)
-    ("C-c n c" . denote-link-after-creating)
-    ;; denote-org-extract-org-subtree
-    )
+  :init
+  (define-prefix-command 'my-denote-prefix-map)
+  (define-key global-map (kbd "C-c n") 'my-denote-prefix-map)
+  (define-key my-denote-prefix-map (kbd "d") 'denote>sort-dired-modified-time)
+  (define-key my-denote-prefix-map (kbd "g") 'denote-grep)
+  (define-key my-denote-prefix-map (kbd "n") 'denote)
+  (define-key my-denote-prefix-map (kbd "o") 'denote-open-or-create)
+  (define-key my-denote-prefix-map (kbd "l") 'denote-link)
+  (define-key my-denote-prefix-map (kbd "c") 'denote-link-after-creating)
 
   :config
   ;; Remember to check the doc string of each of those variables.
@@ -64,8 +59,8 @@
   (consult-denote-find-command #'consult-fd)
   :init 
   (define-prefix-command 'consult-denote-prefix-map)
-  (define-key global-map (kbd "C-c n s") (cons "consult-denote" 'consult-denote-prefix-map))
   :config
+  (define-key my-denote-prefix-map (kbd "s") 'consult-denote-prefix-map)
   (consult-denote-mode 1))
 
 ;; https://github.com/namilus/denote-menu
@@ -77,8 +72,8 @@
          ("l" . list-denotes))
   :init 
   (define-prefix-command 'denote-menu-prefix-map)
-  (define-key global-map (kbd "C-c n m") (cons "denote-menu" 'denote-menu-prefix-map))
   :config
+  (define-key my-denote-prefix-map (kbd "m") 'denote-menu-prefix-map)
   (define-key denote-menu-mode-map (kbd "c") #'denote-menu-clear-filters)
   (define-key denote-menu-mode-map (kbd "/ r") #'denote-menu-filter)
   (define-key denote-menu-mode-map (kbd "/ k") #'denote-menu-filter-by-keyword)
@@ -208,6 +203,43 @@
      ;;("M-SPC" major-mode-hydra "Major Mode Hydra")
      )))
 
+(transient-define-suffix denote-set-directory ()
+  :description (lambda () (format "Directory: %s" denote-directory))
+  :transient t
+  (interactive)
+  (let ((dir (read-directory-name "Denote directory: " denote-directory)))
+    (setq denote-directory dir)
+    (message "Denote directory set to %s" dir)))
+
+(transient-define-prefix my/denote-transient-menu ()
+  "Denote"
+  [["Create"
+    ("n" "New note" denote)
+    ("t" "Other type" denote-type)
+    ("d" "Other date" denote-date)
+    ("s" "Other subdir" denote-subdirectory)
+    ("T" "With template" denote-template)
+    ("S" "With signature" denote-signature)]
+   ["Link"
+    ("l" "Link" denote-link-or-create)
+    ("h" "Specific header" denote-org-link-to-heading)
+    ("r" "By regexp" denote-add-links)
+    ("d" "By dired" denote-add-links)
+    ("b" "Backlinks" denote-backlinks)]
+   ["Rename"
+    ("RF" "Rename File" denote-rename-file)
+    ("FT" "Only FileType" denote-change-file-type-and-front-matter)
+    ("UF" "Use Frontmatter" denote-rename-file-using-front-matter)]]
+  [["Dyn. Block"
+    ("DL" "Dyn. Links" denote-org-dblock-insert-links)
+    ("DB" "Dyn. Backlinks" denote-org-dblock-insert-backlinks)]
+   ["Convert links"
+    ("CF" "To File Type" denote-org-convert-links-to-file-type)
+    ("CD" "To Denote Type" denote-org-convert-links-to-denote-type)]
+   ["Settings & Other"
+    ("c" denote-set-directory)
+    ("?" "Help" (lambda () (interactive) (info "denote")))]])
+
 
 ;; If you intend to use Denote with a variety of file types, it is
 ;; easier to bind the link-related commands to the `global-map', as
@@ -238,4 +270,3 @@
   ;; ("C-c n h" . denote-org-extras-link-to-heading)
 
 (provide 'feature/notetaking)
-
