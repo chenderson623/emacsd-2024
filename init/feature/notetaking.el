@@ -1,17 +1,8 @@
 ;;; -*- lexical-binding: t; -*-
 
 ;; https://github.com/protesilaos/denote
-;; (use-package denote
-;;   :straight t
-;;   :commands (denote denote-open-or-create denote-link)
-;;   :bind
-;;   (("C-c n n" . denote)
-;;    ("C-c n o" . denote-open-or-create)
-;;    ("C-c n i" . denote-link)))
-
-;; https://github.com/protesilaos/denote
 (use-package denote
-  :ensure t
+  :straight t
   :commands (denote denote-open-or-create denote-link)
   :hook
   ( ;; If you use Markdown or plain text files, then you want to make
@@ -41,7 +32,7 @@
   :config
   ;; Remember to check the doc string of each of those variables.
   ;;(setq denote-directory (expand-file-name "~/Documents/notes/"))
-  (setq denote-save-buffers nil)
+  (setq denote-save-buffers t)
   (setq denote-infer-keywords t)
   (setq denote-sort-keywords t)
   (setq denote-prompts '(title keywords))
