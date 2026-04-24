@@ -7,6 +7,7 @@ A symbol prefixed with my: indicates it is a function.
 A symbol prefixed with my> indicates it is an interactive command.
 
 A symbol prefixed with my$ indicates it is a variable.
+A symbol prefixed with my$$ indicates it is a defcustom.
 
 A symbol prefixed with my% indicates it is a macro.
   - A symbol prefixed with my* indicates it is generated via closure or macro.
