@@ -43,13 +43,13 @@
          ("M-Z" . zop-up-to-char))
   :config
   (progn
-    (setq zop-to-char-kill-keys          '(?\C-w ?\C-k))
-    (setq zop-to-char-copy-keys          '(?\M-w nil))
-    (setq zop-to-char-next-keys          '(?\C-n nil))
-    (setq zop-to-char-prec-keys          '(?\C-p nil))
+    (setq zop-to-char-kill-keys          '(?\C-w nil))
+    ;;(setq zop-to-char-copy-keys          '(?\M-w nil))
+    ;;(setq zop-to-char-next-keys          '(?\C-n nil))
+    ;;(setq zop-to-char-prec-keys          '(?\C-p nil))
     (setq zop-to-char-quit-at-pos-keys   '(?\C-g ?\e)) ; quit to original pos
     (setq zop-to-char-quit-at-point-keys '(?\r ?\C-q)) ; quit to current pos
-    (setq zop-to-char-erase-keys         '(?\d ?\C-d))
+    (setq zop-to-char-erase-keys         '(?\d ?\C-k))
   ))
 
 (provide 'feature/editing)
