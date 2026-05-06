@@ -8,8 +8,12 @@
   (backward-forward-mode t)
   :bind
   (:map backward-forward-mode-map
-        ("M-<left>" . backward-forward-previous-location)
-        ("M-<right>" . backward-forward-next-location)))
+        ("C-<left>" . nil)
+        ("C-<right>" . nil)
+        ("C-M-<left>" . backward-forward-previous-location)
+        ("C-M-<right>" . backward-forward-next-location)
+        )
+  )
 
 ;;;; Avy
 ;; https://github.com/abo-abo/avy

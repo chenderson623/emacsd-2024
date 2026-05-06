@@ -49,6 +49,28 @@
   :straight (markdown-indent-mode :type git :host github :repo "whhone/markdown-indent-mode" :branch "main")  
   :hook (markdown-mode . markdown-indent-mode))
 
+;; markdown-to-org-region
+(use-package markdown-mode
+  :straight t
+  :ensure-system-package pandoc
+  :commands gfm-mode
+  :mode (("\\.md$" . gfm-mode))
+  :config
+  (custom-set-faces
+   '(markdown-pre-face ((t nil))))
+
+  (setq markdown-command "pandoc --standalone --mathjax --from=gfm"
+        markdown-disable-tooltip-prompt t
+        markdown-fontify-code-blocks-natively t)
+
+  (defun +markdown-to-org-region (start end)
+    "Convert Markdown formatted text in region (START, END) to Org by
+shelling out to `pandoc'."
+    (interactive "r")
+    (shell-command-on-region start end
+                             "pandoc -f markdown -t org --wrap=preserve" t t)))
+
+
 ;;;; php
 (use-package mode/language/php
   :straight nil

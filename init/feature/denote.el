@@ -1,5 +1,20 @@
 ;;; -*- lexical-binding: t; -*-
 
+(defvar my$denote-directories
+        (list "~/denote"))
+
+(add-to-list 'savehist-additional-variables 'denote-directory)
+
+(unless (boundp 'denote-directory)
+  (setq denote-directory (expand-file-name (car my$denote-directories))))
+
+(defun my>denote-choose-directory ()
+  (interactive)
+  (let* ((prompt (format "Choose denote directory [%s]: " (abbreviate-file-name denote-directory)))
+         (choice (completing-read prompt my$denote-directories nil t)))
+    (setq denote-directory (expand-file-name choice))
+    (message "Switched denote-directory to %s" denote-directory)))
+
 ;; https://github.com/protesilaos/denote
 (use-package denote
   :straight t
@@ -14,16 +29,30 @@
    ;; directories you may prefer instead.  Then, instead of
    ;; `denote-dired-mode', use `denote-dired-mode-in-directories'.
    (dired-mode . denote-dired-mode))
+  :bind
+  (("C-c n" . my-denote-prefix-map)
+   :map my-denote-prefix-map
+   ("d" . denote>sort-dired-modified-time)
+   ("g" . denote-grep)
+   ("n" . denote)
+   ("o" . denote-open-or-create)
+   ("l" . denote-link)
+   ("c" . denote-link-after-creating)
+   ("m" . my>denote-choose-directory)
+   ("C-d" . my/denote-dired-hydra/body)
+   ("C-o" . my/denote-find-hydra/body)
+   ("C-f" . my/denote-create-note-hydra/body)
+   ("C-n" . my/denote-note-hydra/body)
+   ("C-m" . my/denote-menu-hydra/body)
+   ("C-t" . my/denote-transient-menu)
+   )
   :init
-  (define-prefix-command 'my-denote-prefix-map)
-  (define-key global-map (kbd "C-c n") 'my-denote-prefix-map)
-  (define-key my-denote-prefix-map (kbd "d") 'denote>sort-dired-modified-time)
-  (define-key my-denote-prefix-map (kbd "g") 'denote-grep)
-  (define-key my-denote-prefix-map (kbd "n") 'denote)
-  (define-key my-denote-prefix-map (kbd "o") 'denote-open-or-create)
-  (define-key my-denote-prefix-map (kbd "l") 'denote-link)
-  (define-key my-denote-prefix-map (kbd "c") 'denote-link-after-creating)
-
+  (define-prefix-command 'my-denote-prefix-map nil "Denote")
+  (with-eval-after-load 'which-key
+    (which-key-add-key-based-replacements
+      "C-c n" "Denote"
+      "C-c n s" "Consult Denote"
+      "C-c n m" "Denote Menu"))
   :config
   ;; Remember to check the doc string of each of those variables.
   ;;(setq denote-directory (expand-file-name "~/Documents/notes/"))
@@ -42,24 +71,42 @@
   (denote-rename-buffer-mode 1)
   (defun denote>sort-dired-modified-time ()
             (interactive)
-            ;; (dired (denote-directories))
+            (dired (denote-directories))
             (denote-sort-dired ".*" 'last-modified nil nil)
             )
   )
+
+;;
+;;; denote-silo
+;;
+(use-package denote-silo
+  :straight t
+  ;; Bind these commands to key bindings of your choice.
+  :commands ( denote-silo-create-note
+              denote-silo-open-or-create
+              denote-silo-select-silo-then-command
+              denote-silo-dired
+              denote-silo-cd )
+  :config
+  ;; Add your silos to this list.  By default, it only includes the
+  ;; value of the variable `denote-directory'.
+  (setq denote-silo-directories my$denote-directories)
+)
 
 ;; https://github.com/protesilaos/consult-denote
 ;; https://protesilaos.com/emacs/consult-denote
 (use-package consult-denote
   :straight t
   :bind (
-         :map consult-denote-prefix-map
+         :map my-consult-denote-prefix-map
          ("f" . consult-denote-find)
-         ("g" . consult-denote-grep))
+         ("g" . consult-denote-grep)
+         :map my-denote-prefix-map
+         ("s" . my-consult-denote-prefix-map))
   :custom
   (consult-denote-find-command #'consult-fd)
   :init 
-  (define-prefix-command 'consult-denote-prefix-map)
-  (define-key my-denote-prefix-map (kbd "s") 'consult-denote-prefix-map)
+  (define-prefix-command 'my-consult-denote-prefix-map nil "Consult Denote")
   :config
   (consult-denote-mode 1))
 
@@ -68,22 +115,55 @@
   :straight t
   :commands (list-denotes)
   :bind (
-         :map denote-menu-prefix-map
-         ("l" . list-denotes))
+         :map my-denote-menu-prefix-map
+         ("l" . list-denotes)
+         :map my-denote-prefix-map
+         ("m" . my-denote-menu-prefix-map)
+         :map denote-menu-mode-map
+         ("c" . denote-menu-clear-filters)
+         ("/ r" . denote-menu-filter)
+         ("/ k" . denote-menu-filter-by-keyword)
+         ("/ o" . denote-menu-filter-out-keyword)
+         ("e" . denote-menu-export-to-dired))
   :init 
-  (define-prefix-command 'denote-menu-prefix-map)
-  (define-key my-denote-prefix-map (kbd "m") 'denote-menu-prefix-map)
-  :config
-  (define-key denote-menu-mode-map (kbd "c") #'denote-menu-clear-filters)
-  (define-key denote-menu-mode-map (kbd "/ r") #'denote-menu-filter)
-  (define-key denote-menu-mode-map (kbd "/ k") #'denote-menu-filter-by-keyword)
-  (define-key denote-menu-mode-map (kbd "/ o") #'denote-menu-filter-out-keyword)
-  (define-key denote-menu-mode-map (kbd "e") #'denote-menu-export-to-dired))
+  (define-prefix-command 'my-denote-menu-prefix-map nil "Denote Menu"))
 
 ;; https://github.com/protesilaos/denote-org
 ;; Typing C-c C-x C-u (org-dblock-update) with point on that line runs (or re-runs) the associated function with the given parameters and populates the block's contents accordingly
 (use-package denote-org
   :straight t
+  :bind (
+        ;;  :map org-mode-map
+        ;;  ("C-c n O" . my-denote-org-prefix-map)
+         :map my-denote-org-prefix-map
+         ("h" . my/denote-org-hydra/body)
+         ("e" . denote-org-extract-org-subtree)
+         ("M-e" . my>denote-org-copy-org-subtree)
+         ("l" . denote-org-link-to-heading)
+         ("b" . denote-org-backlinks-for-heading)
+         ("c f" . denote-org-convert-links-to-file-type)
+         ("c d" . denote-org-convert-links-to-denote-type)
+         ("d f" . denote-org-dblock-insert-files)
+         ("d l" . denote-org-dblock-insert-links)
+         ("d b" . denote-org-dblock-insert-backlinks)
+         ("d m" . denote-org-dblock-insert-missing-links)
+         ("d h" . denote-org-dblock-insert-files-as-headings))
+  :init
+  (define-prefix-command 'my-denote-org-prefix-map nil "Denote Org")
+  (define-key my-denote-prefix-map (kbd "O")
+    '(menu-item "Denote Org" my-denote-org-prefix-map
+                :filter (lambda (cmd) (if (derived-mode-p 'org-mode) cmd))))
+  (define-key my-denote-prefix-map (kbd "e")
+    '(menu-item "" denote-org-extract-org-subtree
+                :filter (lambda (cmd) (if (derived-mode-p 'org-mode) cmd))))
+  (define-key my-denote-prefix-map (kbd "M-e")
+    '(menu-item "" my>denote-org-copy-org-subtree
+                :filter (lambda (cmd) (if (derived-mode-p 'org-mode) cmd))))
+  (with-eval-after-load 'which-key
+    (which-key-add-key-based-replacements
+      "C-c n O" "Org-mode"
+      "C-c n O c" "convert links"
+      "C-c n O d" "dynamic blocks"))
   :commands
   ( denote-org-link-to-heading
     denote-org-backlinks-for-heading
@@ -138,91 +218,116 @@
 
 ;; TODO make hydra
 
-(pretty-hydra-define hydra-jump-dir
-  (:title (pretty-hydra-title "Jump to directory" 'octicon "nf-oct-file_directory_open_fill") :quit-key ("C-g" "q" "<escape>") :all-exit t)
-  ("Base"
-   (("t" trashed "Trashed")
-    ("d" consult-dir "Dirs")
-
-    ("n"  (lambda ()
-            (interactive)
-            ;; (dired (denote-directories))
-            (denote-sort-dired ".*" denote-sort-dired-default-sort-component t nil)
-            ) "Denote-Dir")
-
-    ("v" (lambda ()
+(pretty-hydra-define my/denote-create-note-hydra
+  (:color blue :quit-key "<escape>" :title "Create Denote Note [%s(abbreviate-file-name denote-directory)]")
+  ("Standard" (
+    ("n" denote "New note")
+    ("o" denote-open-or-create "Open or create"))
+   "Custom" (
+    ("t" denote-type "Other type")
+    ("d" denote-date "Other date")
+    ("s" denote-subdirectory "Other subdir")
+    ("T" denote-template "With template")
+    ("S" denote-signature "With signature"))
+   "Silo" (
+    ("c" denote-silo-create-note "Create in silo")
+    ("O" denote-silo-open-or-create "Open or create in silo"))
+   "Settings" (
+    ("." (lambda ()
            (interactive)
-           (when user/dirvish
-             (call-interactively #'dirvish-dwim))) "Dirvish"))
+           (call-interactively #'my>denote-choose-directory)
+           (list-denotes)) "Choose directory" :exit nil))))
 
-   "Search"
-   (("s s" (lambda ()
-             (interactive)
-             (autoload 'consult-fd-dir "init-func" nil t)
-             (consult-fd-dir)) "Fuzzy search dir HOME")
-    ("s n" consult-notes "Fuzzy search dir Note")
-    ("s d" consult-denote-find "Fuzzy search dir Denote")
-    ("j" dired-jump "Dired jump")
-    ("J" dired-jump-other-window "Dired jump other"))))
+(pretty-hydra-define my/denote-org-hydra
+  (:color blue :quit-key "<escape>" :title "Denote Org Commands [%s(abbreviate-file-name denote-directory)]")
+  ("Extraction" (
+    ("e" denote-org-extract-org-subtree "Extract subtree")
+    ("E" my>denote-org-copy-org-subtree "Copy subtree"))
+   "Links" (
+    ("l" denote-org-link-to-heading "Link to heading")
+    ("b" denote-org-backlinks-for-heading "Backlinks for heading")
+    ("cf" denote-org-convert-links-to-file-type "Convert to file type")
+    ("cd" denote-org-convert-links-to-denote-type "Convert to denote type"))
+   "Dynamic Blocks" (
+    ("df" denote-org-dblock-insert-files "Insert files")
+    ("dl" denote-org-dblock-insert-links "Insert links")
+    ("db" denote-org-dblock-insert-backlinks "Insert backlinks")
+    ("dm" denote-org-dblock-insert-missing-links "Insert missing links")
+    ("dh" denote-org-dblock-insert-files-as-headings "Insert files as headings"))
+   "Settings" (
+    ("." (lambda ()
+           (interactive)
+           (call-interactively #'my>denote-choose-directory)
+           (dired denote-directory)) "Choose directory" :exit nil))))
+
+
+(pretty-hydra-define my/denote-note-hydra
+  (:color blue :quit-key "<escape>" :title "Denote: Inside Note [%s(abbreviate-file-name denote-directory)]")
+  ("Links" (
+    ("l" denote-link "Insert link")
+    ("c" denote-link-after-creating "Link after creating")
+    ("A" denote-add-links "Add multiple links")
+    ("b" denote-backlinks "View backlinks"))
+   "Navigate" (
+    ("f" denote-find-link "Find link forward")
+    ("B" denote-find-backlink "Find backlink backward")
+    ("s" consult-denote-find "Search all notes")
+    ("g" consult-denote-grep "Grep all notes"))
+   "Rename & Metadata" (
+    ("r" denote-rename-file "Rename file")
+    ("R" denote-rename-file-using-front-matter "Rename using front-matter")
+    ("t" denote-change-file-type-and-front-matter "Change file type"))
+   "Settings" (
+    ("." my>denote-choose-directory "Choose directory" :exit nil))))
+
+(pretty-hydra-define my/denote-menu-hydra
+  (:color blue :quit-key "<escape>" :title "Denote Menu Mode [%s(abbreviate-file-name denote-directory)]"
+   :body-pre (unless (derived-mode-p 'denote-menu-mode)
+               (list-denotes)))
+  ("Filter" (
+    ("r" denote-menu-filter "Filter by regexp")
+    ("k" denote-menu-filter-by-keyword "Filter by keyword")
+    ("o" denote-menu-filter-out-keyword "Filter out keyword")
+    ("c" denote-menu-clear-filters "Clear filters"))
+   "Actions" (
+    ("e" denote-menu-export-to-dired "Export to Dired"))
+   "Settings" (
+    ("." my>denote-choose-directory "Choose directory" :exit nil))))
+
+(pretty-hydra-define my/denote-dired-hydra
+  (:color blue :quit-key "<escape>" :title "Denote Dired Mode [%s(abbreviate-file-name denote-directory)]"
+   :body-pre (unless (derived-mode-p 'dired-mode)
+               (dired denote-directory)))
+  ("Rename Marked" (
+    ("r" denote-dired-rename-files "Rename files")
+    ("k" denote-dired-rename-marked-files-with-keywords "Rename with keywords")
+    ("R" denote-dired-rename-marked-files-using-front-matter "Rename using front-matter"))
+   "Link" (
+    ("l" denote-dired-link-marked-notes "Link marked notes"))
+   "Settings" (
+    ("." my>denote-choose-directory "Choose directory" :exit nil))))
+
+(pretty-hydra-define my/denote-find-hydra
+  (:color blue :quit-key "<escape>" :title "Find & Open Denote Notes [%s(abbreviate-file-name denote-directory)]")
+  ("Consult Search" (
+    ("f" consult-denote-find "Find file")
+    ("g" consult-denote-grep "Grep in notes")
+    ("n" consult-notes "Consult notes dir")
+    ("s" consult-notes-search-in-all-notes "Search in all notes"))
+   "Open / Create" (
+    ("o" denote-open-or-create "Open or create")
+    ("O" denote-silo-open-or-create "Open or create in silo"))
+   "Explore Links" (
+    ("l" denote-find-link "Find link forward")
+    ("b" denote-find-backlink "Find backlink backward"))
+   "Directories & Menus" (
+    ("m" list-denotes "List denotes (Menu)")
+    ("d" denote>sort-dired-modified-time "Open Dired (Sorted)")
+    ("D" denote-silo-dired "Open Silo Dired"))
+   "Settings" (
+    ("." my>denote-choose-directory "Choose directory" :exit nil))))
 
 (require 'transient)
-(transient-define-prefix my/links-menu ()
-  "Links"
-  ["Denote Backlinks"
-   ("b" "Buffer" denote-backlinks :transient nil)]
-  [["Org Link"
-;;    ("c" "Copy IDlink" my/copy-idlink :transient nil)
-    ("i" "Insert" org-insert-link :transient nil)
-    ("s" "Store" org-store-link :transient nil)
-    ("t" "Display" org-toggle-link-display :transient nil)]
-   ["Denote Insert"
-    ("l" "Link" denote-link :transient nil)
-    ("h" "Heading" denote-org-link-to-heading :transient nil)
-    ("%" "Links: With Regexp" denote-add-links :transient nil)
-    ("d" "Links: DBlock" denote-org-dblock-insert-links :transient nil)
-    ("D" "Backlinks: DBlock" denote-org-dblock-insert-backlinks :transient nil)]
-   ["Denote Links Roam"
-    ;; ("e" "Explore Links" my/denote-find-link-other-window :transient t)
-    ("fb" "Find Backlinks" denote-find-backlink :transient nil)
-;;    ("fr" "References" citar-denote-find-reference :transient nil)
-    ]
-   ["Misc"
-;;    ("g" "Grab: Safari" my/link-grab :transient nil)
-;;    ("x" "Remove" jf/org-link-remove-link :transient nil)
-    ]])
-
-
-(pretty-hydra-define medusa/denote
-  (:color blue :quit-key "<escape>" :title "Denote")
-  ("Create" (
-    ("n" denote "_n_ew note" )
-    ("t" denote-type "other _t_ype" )
-    ("d" denote-date  "other _d_ate" )
-    ("s" denote-subdirectory  "other _s_ubdir" )
-    ("T" denote-template  "with _T_emplate" )
-    ("S" denote-signature  "with _S_ignature" ))
-   "Link" (
-    ("l" denote-link-or-create "_l_ink" )
-    ;;("L" denote-link-or-create-with-command "_L_ink with command" )
-    ("h" denote-org-link-to-heading  "specific _h_eader" )
-    ("r" denote-add-links "by _r_egexp" )
-    ("d" denote-add-links "by _d_ired" )
-    ("b" denote-backlinks "_b_acklinks" ))
-   "Rename" (
-    ("RF" denote-rename-file "Rename File")
-    ("FT" denote-change-file-type-and-front-matter  "only FileType")
-    ("UF" denote-rename-file-using-front-matter "use Frontmatter"))
-   "Dyn. Block" (
-    ("DL" denote-org-dblock-insert-links "dyn. Links" )
-    ("DB" denote-org-dblock-insert-backlinks "dyn. Backlinks" ))
-   "Convert links" (
-    ("CF" denote-org-convert-links-to-file-type "to File Type" )
-    ("CD" denote-org-convert-links-to-denote-type "to Denote Type" ))
-  "Other" (
-     ("?" (info "denote") "Help")
-     ;;("M-SPC" major-mode-hydra "Major Mode Hydra")
-     )))
-
 (transient-define-suffix denote-set-directory ()
   :description (lambda () (format "Directory: %s" denote-directory))
   :transient t
@@ -259,34 +364,5 @@
    ["Settings & Other"
     ("c" denote-set-directory)
     ("?" "Help" (lambda () (interactive) (info "denote")))]])
-
-
-;; If you intend to use Denote with a variety of file types, it is
-;; easier to bind the link-related commands to the `global-map', as
-;; shown here.  Otherwise follow the same pattern for `org-mode-map',
-;; `markdown-mode-map', and/or `text-mode-map'.
-;; ("C-c n l" . denote-link)
-;; ("C-c n L" . denote-add-links)
-;; ("C-c n b" . denote-backlinks)
-;; ("C-c n q c" . denote-query-contents-link) ; create link that triggers a grep
-;; ("C-c n q f" . denote-query-filenames-link) ; create link that triggers a dired
-;; ;; Note that `denote-rename-file' can work from any context, not just
-;; ;; Dired bufffers.  That is why we bind it here to the `global-map'.
-;; ("C-c n r" . denote-rename-file)
-;; ("C-c n R" . denote-rename-file-using-front-matter)
-
-;; ;; Key bindings specifically for Dired.
-;; :map dired-mode-map
-;; ("C-c C-d C-i" . denote-dired-link-marked-notes)
-;; ("C-c C-d C-r" . denote-dired-rename-files)
-;; ("C-c C-d C-k" . denote-dired-rename-marked-files-with-keywords)
-;; ("C-c C-d C-R" . denote-dired-rename-marked-files-using-front-matter)
-
-  ;; ("C-c n i" . denote-link-or-create)
-  ;; ("C-c n c" . denote-open-or-create)
-  ;; ("C-c n b" . denote-find-backlink)
-  ;; ("C-c n d" . denote-date)
-  ;; ("C-c n l" . denote-find-link)
-  ;; ("C-c n h" . denote-org-extras-link-to-heading)
 
 (provide 'feature/notetaking)
