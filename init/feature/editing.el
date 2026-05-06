@@ -11,6 +11,63 @@
          ("C-=" . 'er/expand-region)
          ("C-+" . 'er/contract-region)))
 
+;; (use-package expreg
+;;   :straight t
+;;   :bind (("C-=" . expreg-expand)
+;;          ("C-+" . expreg-contract))
+;;   :config
+;;   (add-hook 'text-mode-hook
+;;           (lambda ()
+;;             (add-to-list 'expreg-functions #'expreg--sentence)))
+
+;;   (defun expreg--line ()
+;;   "Return a list of regions containing surrounding sentences."
+;;   (ignore-errors
+;;     (let (beg end)
+;;       (end-of-visual-line)
+;;       (setq end (point))
+;;       (beginning-of-visual-line)
+;;       (setq beg (point))
+;;       `((line . ,(cons beg end))))))
+
+;;   (setq-default expreg-functions
+;;                 '(expreg--subword
+;;                   expreg--word
+;;                   expreg--sentence
+;;                   expreg--line
+;;                   expreg--list
+;;                   expreg--string
+;;                   expreg--treesit
+;;                   expreg--comment
+;;                   expreg--paragraph-defun))
+;;   )
+
+(use-package selected
+  :straight t
+  :commands selected-minor-mode
+  :init
+  (setq selected-org-mode-map (make-sparse-keymap))
+  (selected-global-mode 1)
+  :bind (:map selected-keymap
+              ("=" . er/expand-region)
+              ("i" . indent-region)
+              ("l" . downcase-region)
+              ("m" . apply-macro-to-region-lines)
+              ("q" . selected-off)
+              ("r" . reverse-region)
+              ("s" . sort-lines)
+              ("u" . upcase-region)
+              ("w" . count-words-region)
+              ("y" . yank)
+              :map selected-org-mode-map
+              ("t" . org-table-convert-region)))
+
+(use-package beginend
+  :straight t
+  :demand t
+  :config
+  (beginend-global-mode))
+
 (use-package ui/hydra/editing-mark
   ;; internal init
   :straight nil
