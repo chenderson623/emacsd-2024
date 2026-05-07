@@ -32,13 +32,15 @@
   :bind
   (("C-c n" . my-denote-prefix-map)
    :map my-denote-prefix-map
-   ("d" . denote>sort-dired-modified-time)
-   ("g" . denote-grep)
-   ("n" . denote)
-   ("o" . denote-open-or-create)
-   ("l" . denote-link)
    ("c" . denote-link-after-creating)
-   ("m" . my>denote-choose-directory)
+   ("d" . denote>sort-dired-modified-time)
+   ("f" . consult-denote-find)
+   ("g" . denote-grep)
+   ("l" . denote-link)
+   ("m" . my>denote-choose-directory)   
+   ("n" . denote)   
+   ("o" . denote-open-or-create)
+   ("s" . consult-denote-grep)   
    ("C-d" . my/denote-dired-hydra/body)
    ("C-o" . my/denote-find-hydra/body)
    ("C-f" . my/denote-create-note-hydra/body)
@@ -51,7 +53,7 @@
   (with-eval-after-load 'which-key
     (which-key-add-key-based-replacements
       "C-c n" "Denote"
-      "C-c n s" "Consult Denote"
+      ;;"C-c n s" "Consult Denote"
       "C-c n m" "Denote Menu"))
   :config
   ;; Remember to check the doc string of each of those variables.
@@ -97,12 +99,14 @@
 ;; https://protesilaos.com/emacs/consult-denote
 (use-package consult-denote
   :straight t
+  :commands (consult-denote-find consult-denote-grep)
   :bind (
          :map my-consult-denote-prefix-map
          ("f" . consult-denote-find)
          ("g" . consult-denote-grep)
-         :map my-denote-prefix-map
-         ("s" . my-consult-denote-prefix-map))
+         ;;:map my-denote-prefix-map
+         ;;("s" . my-consult-denote-prefix-map)
+         )
   :custom
   (consult-denote-find-command #'consult-fd)
   :init 
