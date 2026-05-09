@@ -272,10 +272,16 @@ It then calls `my/denote-change-date-and-rename` with the extracted date.
   (interactive)
   (unless (derived-mode-p 'org-mode)
     (user-error "Not in an Org mode buffer."))
-  (unless (denote-file-is-note-p (buffer-file-name))
-    (user-error "Not in a Denote file. Please open a Denote note to use this function."))
+  ;; It's possible to be in an Org buffer that is not a Denote file,
+  ;; but we still want to try and extract the date if it's present.
+  ;; The actual renaming function `my/denote-change-date-and-rename`
+  ;; will perform the `denote-file-is-note-p` check.
 
-  (let* ((captured-date-string (org-entry-get (point) "CAPTURED"))
+  (let* ((captured-date-string
+          ;; Try to get from the current Org entry first (if point is on a heading)
+          (or (org-entry-get (point) "CAPTURED")
+              ;; Fallback to top-level properties drawer
+              (my/denote-get-top-level-property "CAPTURED")))
          (parsed-date-time nil)) ; This was a duplicate line, removed in previous diff, but still present in the provided file.
     (unless captured-date-string
       (user-error "No :CAPTURED: property found in the current Org entry."))
@@ -288,14 +294,21 @@ It then calls `my/denote-change-date-and-rename` with the extracted date.
     (my/denote-change-date-and-rename parsed-date-time)
     (message "Date updated from :CAPTURED: property to %s" (format-time-string "%Y-%m-%d %H:%M:%S" parsed-date-time))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defun my/denote-get-top-level-property (property-name)
+(defun my/denote-get-top-level-property (property-name &optional buffer)
   "Search for a top-level Org property PROPERTY-NAME and return its value.
 PROPERTY-NAME should be a string, e.g., \"CAPTURED\".
-This function searches the entire buffer for the property, not just the current Org entry."
+This function searches the entire BUFFER (or current buffer if nil) for the
+property within a top-level :PROPERTIES: drawer."
   (save-excursion
-    (goto-char (point-min))
-    (when (re-search-forward (format "^[ \t]*:%s: \\(.*\\)$" (regexp-quote property-name)) nil t)
-      (match-string 1))))
+    (with-current-buffer (or buffer (current-buffer))
+      (goto-char (point-min))
+      (when (re-search-forward "^[ \t]*:PROPERTIES:[ \t]*$" nil t)
+        (let ((properties-start (point)))
+          (when (re-search-forward "^[ \t]*:END:[ \t]*$" nil t)
+            (let ((properties-end (point)))
+              (goto-char properties-start)
+              (when (re-search-forward (format "^[ \t]*:%s:[ \t]+\\(.*\\)$" (regexp-quote property-name)) properties-end t)
+                (match-string 1)))))))))
 
 (defun my/denote-change-date-and-rename (&optional new-date-time)
   "Change the date in the current Denote note's identifier and rename the file.
