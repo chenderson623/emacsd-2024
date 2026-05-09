@@ -233,7 +233,6 @@
             ('signature (setq signature (denote-signature-prompt)))))
         (denote heading tags 'org subdirectory date text signature))
     (user-error "No subtree to extract; aborting")))
-
 ;; https://github.com/mclear-tools/consult-notes
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -258,7 +257,7 @@
   (setq consult-notes-denote-files-function (lambda () (denote-directory-files nil t t))))
 
 ;; TODO make hydra
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;; Custom Functions
@@ -277,7 +276,7 @@ It then calls `my/denote-change-date-and-rename` with the extracted date.
     (user-error "Not in a Denote file. Please open a Denote note to use this function."))
 
   (let* ((captured-date-string (org-entry-get (point) "CAPTURED"))
-         (parsed-date-time nil))
+         (parsed-date-time nil)) ; This was a duplicate line, removed in previous diff, but still present in the provided file.
     (unless captured-date-string
       (user-error "No :CAPTURED: property found in the current Org entry."))
 
@@ -288,7 +287,62 @@ It then calls `my/denote-change-date-and-rename` with the extracted date.
 
     (my/denote-change-date-and-rename parsed-date-time)
     (message "Date updated from :CAPTURED: property to %s" (format-time-string "%Y-%m-%d %H:%M:%S" parsed-date-time))))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defun my/denote-get-top-level-property (property-name)
+  "Search for a top-level Org property PROPERTY-NAME and return its value.
+PROPERTY-NAME should be a string, e.g., \"CAPTURED\".
+This function searches the entire buffer for the property, not just the current Org entry."
+  (save-excursion
+    (goto-char (point-min))
+    (when (re-search-forward (format "^[ \t]*:%s: \\(.*\\)$" (regexp-quote property-name)) nil t)
+      (match-string 1))))
 
+(defun my/denote-change-date-and-rename (&optional new-date-time)
+  "Change the date in the current Denote note's identifier and rename the file.
+If NEW-DATE-TIME is provided (a time value), it is used directly.
+Otherwise, it prompts the user for a new date and time.
+
+This function operates on the current buffer's file, assuming it is a Denote note.
+It reconstructs the file identifier and then calls `denote--rename-file` to perform
+the actual renaming."
+  (interactive)
+  (unless (denote-file-is-note-p (buffer-file-name))
+    (user-error "Not in a Denote file. Please open a Denote note to use this function."))
+
+  (let* ((current-file (buffer-file-name))
+         (current-identifier (denote-retrieve-filename-identifier current-file))
+         (actual-new-time-value ; Determine the new time value
+          (cond
+           (new-date-time new-date-time) ; 1. If new-date-time argument is provided, use it.
+           ((let ((captured-str (my/denote-get-top-level-property "CAPTURED"))) ; 2. Else, try to get from :CAPTURED: property.
+              (when captured-str
+                (denote-valid-date-p captured-str))))
+           ;; 3. Else, fall back to prompting the user.
+           ((if (and denote-date-prompt-use-org-read-date
+                     (require 'org nil :no-error))
+                ;; Use org-read-date to get a time value
+                (let* ((time (org-read-date nil t nil "Enter new date and time (YYYY-MM-DD HH:MM): " nil))
+                       (org-time-seconds (format-time-string "%S" time))
+                       (cur-time-seconds (format-time-string "%S" (current-time))))
+                  ;; When the user does not input a time, org-read-date defaults to 00 for seconds.
+                  ;; When the seconds are 00, we add the current seconds to avoid identifier collisions.
+                  (if (string-equal "00" org-time-seconds)
+                      (time-add time (string-to-number cur-time-seconds))
+                    time))
+              ;; Fallback to read-string and parse-time-string if org-read-date is not used
+              (parse-time-string (read-string "Enter new date and time (YYYY-MM-DD HH:MM:SS): ")))))))
+         (formatted-new-date (format-time-string denote-date-identifier-format actual-new-time-value))
+         (new-identifier (concat formatted-new-date (substring current-identifier 15)))
+         (current-title (denote-retrieve-filename-title current-file))
+         (current-keywords (denote-extract-keywords-from-path current-file))
+         (current-signature (or (denote-retrieve-filename-signature current-file) ""))
+         (renamed-file (denote--rename-file current-file
+                                            current-title
+                                            current-keywords
+                                            current-signature
+                                            actual-new-time-value ; Pass the actual time value
+                                            new-identifier)))
+    (message "Denote file date changed and renamed to %s" (file-name-nondirectory renamed-file)))
 
 (defun my/denote-org-extract-org-subtree ()
   "Create new Denote note using the current Org subtree as input.
@@ -310,7 +364,7 @@ For other details, refer to the documentation of `denote-org-extract-org-subtree
       (let* ((tags (org-get-tags))
              ;; Try to get date from :CAPTURED: property first
              (captured-date-string (org-entry-get (point) "CAPTURED"))
-             (date (if captured-date-string
+             (date (if captured-date-string ; This still uses org-entry-get, which is fine for subtrees
                          (denote-valid-date-p captured-date-string)
                        (denote-org--get-heading-date))) ; Fallback to heading date
             subdirectory
@@ -325,36 +379,6 @@ For other details, refer to the documentation of `denote-org-extract-org-subtree
                        (save-excursion (org-end-of-subtree t) (point)))
         (denote heading tags 'org subdirectory date text signature))
     (user-error "No subtree to extract; aborting")))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;;; Custom Functions
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defun my/denote-change-date-from-captured ()
-  "Change the date in the current Org Denote note's identifier using the :CAPTURED: property.
-This function reads the date from the :CAPTURED: property of the current Org entry
-and uses it to update the note's identifier and rename the file.
-It then calls `my/denote-change-date-and-rename` with the extracted date.
-"
-  (interactive)
-  (unless (derived-mode-p 'org-mode)
-    (user-error "Not in an Org mode buffer."))
-  (unless (denote-file-is-note-p (buffer-file-name))
-    (user-error "Not in a Denote file. Please open a Denote note to use this function."))
-
-  (let* ((captured-date-string (org-entry-get (point) "CAPTURED"))
-         (parsed-date-time nil))
-    (unless captured-date-string
-      (user-error "No :CAPTURED: property found in the current Org entry."))
-
-    (setq parsed-date-time (denote-valid-date-p captured-date-string))
-
-    (unless parsed-date-time
-      (user-error "Could not parse date from :CAPTURED: property: %s" captured-date-string))
-
-    (my/denote-change-date-and-rename parsed-date-time)
-    (message "Date updated from :CAPTURED: property to %s" (format-time-string "%Y-%m-%d %H:%M:%S" parsed-date-time))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;; Hydras
@@ -419,7 +443,8 @@ It then calls `my/denote-change-date-and-rename` with the extracted date.
     ("r" denote-rename-file "Rename file")
     ("R" denote-rename-file-using-front-matter "Rename using front-matter")
     ("t" denote-change-file-type-and-front-matter "Change file type")
-    ("D" my/denote-change-date-and-rename "Change date and rename"))
+    ("D" my/denote-change-date-and-rename "Change date and rename (prompt)")
+    ("C" my/denote-change-date-from-captured "Change date from :CAPTURED: property"))
    "Settings" (
     ("." my>denote-choose-directory "Choose directory" :exit nil))))
 
@@ -502,7 +527,8 @@ It then calls `my/denote-change-date-and-rename` with the extracted date.
     ("RF" "Rename File" denote-rename-file)
     ("FT" "Only FileType" denote-change-file-type-and-front-matter)
     ("UF" "Use Frontmatter" denote-rename-file-using-front-matter)
-    ("RD" "Rename Date" my/denote-change-date-and-rename)]]
+    ("RD" "Rename Date (prompt)" my/denote-change-date-and-rename)
+    ("RC" "Rename Date (from :CAPTURED:)" my/denote-change-date-from-captured)]]
   [["Dyn. Block"
     ("DL" "Dyn. Links" denote-org-dblock-insert-links)
     ("DB" "Dyn. Backlinks" denote-org-dblock-insert-backlinks)]
