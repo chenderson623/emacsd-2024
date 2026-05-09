@@ -324,38 +324,33 @@ the actual renaming."
 
   (let* ((current-file (buffer-file-name))
          (current-identifier (denote-retrieve-filename-identifier current-file))
-         (actual-new-time-value ; Determine the new time value
+         (actual-new-time-value
           (cond
-           (new-date-time new-date-time) ; 1. If new-date-time argument is provided, use it.
-           ((let ((captured-str (my/denote-get-top-level-property "CAPTURED"))) ; 2. Else, try to get from :CAPTURED: property.
+           (new-date-time new-date-time)
+           ((let ((captured-str (my/denote-get-top-level-property "CAPTURED")))
               (when captured-str
                 (denote-valid-date-p captured-str))))
-           ;; 3. Else, fall back to prompting the user.
            ((if (and denote-date-prompt-use-org-read-date
                      (require 'org nil :no-error))
-                ;; Use org-read-date to get a time value
                 (let* ((time (org-read-date nil t nil "Enter new date and time (YYYY-MM-DD HH:MM): " nil))
                        (org-time-seconds (format-time-string "%S" time))
                        (cur-time-seconds (format-time-string "%S" (current-time))))
-                  ;; When the user does not input a time, org-read-date defaults to 00 for seconds.
-                  ;; When the seconds are 00, we add the current seconds to avoid identifier collisions.
                   (if (string-equal "00" org-time-seconds)
                       (time-add time (string-to-number cur-time-seconds))
                     time))
-              ;; Fallback to read-string and parse-time-string if org-read-date is not used
               (parse-time-string (read-string "Enter new date and time (YYYY-MM-DD HH:MM:SS): ")))))))
-         (formatted-new-date (format-time-string denote-date-identifier-format actual-new-time-value))
-         (new-identifier (concat formatted-new-date (substring current-identifier 15)))
-         (current-title (denote-retrieve-filename-title current-file))
-         (current-keywords (denote-extract-keywords-from-path current-file))
-         (current-signature (or (denote-retrieve-filename-signature current-file) ""))
-         (renamed-file (denote--rename-file current-file
-                                            current-title
-                                            current-keywords
-                                            current-signature
-                                            actual-new-time-value ; Pass the actual time value
-                                            new-identifier)))
-    (message "Denote file date changed and renamed to %s" (file-name-nondirectory renamed-file)))
+    (let* ((formatted-new-date (format-time-string denote-date-identifier-format actual-new-time-value))
+           (new-identifier (concat formatted-new-date (substring current-identifier 15)))
+           (current-title (denote-retrieve-filename-title current-file))
+           (current-keywords (denote-extract-keywords-from-path current-file))
+           (current-signature (or (denote-retrieve-filename-signature current-file) ""))
+           (renamed-file (denote--rename-file current-file
+                                              current-title
+                                              current-keywords
+                                              current-signature
+                                              actual-new-time-value
+                                              new-identifier)))
+      (message "Denote file date changed and renamed to %s" (file-name-nondirectory renamed-file)))))
 
 (defun my/denote-org-extract-org-subtree ()
   "Create new Denote note using the current Org subtree as input.
