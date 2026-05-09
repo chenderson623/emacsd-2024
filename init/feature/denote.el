@@ -27,7 +27,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package denote
   :straight t
-  :commands (denote denote-open-or-create denote-link denote-file-is-note-p denote-retrieve-filename-identifier denote-date-prompt denote-retrieve-filename-title denote-extract-keywords-from-path denote-retrieve-filename-signature denote-valid-date-p)
+  :commands (denote denote-open-or-create denote-link denote-file-is-note-p)
   :hook
   ( ;; If you use Markdown or plain text files, then you want to make
    ;; the Denote links clickable (Org renders links as buttons right
@@ -325,7 +325,8 @@ the actual renaming."
   (let* ((current-file (buffer-file-name))
          (current-identifier (denote-retrieve-filename-identifier current-file))
          (actual-new-time-value
-          (cond
+          (cond ; Determine the new time value
+
            (new-date-time new-date-time)
            ((let ((captured-str (my/denote-get-top-level-property "CAPTURED")))
               (when captured-str
@@ -341,11 +342,12 @@ the actual renaming."
               (parse-time-string (read-string "Enter new date and time (YYYY-MM-DD HH:MM:SS): ")))))))
     (let* ((formatted-new-date (format-time-string denote-date-identifier-format actual-new-time-value))
            (new-identifier (concat formatted-new-date (substring current-identifier 15)))
-           (current-title (denote-retrieve-buffer-title))
+           (file-type (denote-filetype-heuristics current-file)) ; Get the file type
+           (original-buffer-title (denote-retrieve-title-or-filename current-file file-type)) ; Use the correct function
            (current-keywords (denote-extract-keywords-from-path current-file))
            (current-signature (or (denote-retrieve-filename-signature current-file) ""))
            (renamed-file (denote--rename-file current-file
-                                              current-title
+                                              original-buffer-title ; Pass the original title
                                               current-keywords
                                               current-signature
                                               actual-new-time-value
