@@ -341,7 +341,7 @@ the actual renaming."
               (parse-time-string (read-string "Enter new date and time (YYYY-MM-DD HH:MM:SS): ")))))))
     (let* ((formatted-new-date (format-time-string denote-date-identifier-format actual-new-time-value))
            (new-identifier (concat formatted-new-date (substring current-identifier 15)))
-           (current-title (denote-retrieve-filename-title current-file))
+           (current-title (denote-retrieve-buffer-title))
            (current-keywords (denote-extract-keywords-from-path current-file))
            (current-signature (or (denote-retrieve-filename-signature current-file) ""))
            (renamed-file (denote--rename-file current-file
