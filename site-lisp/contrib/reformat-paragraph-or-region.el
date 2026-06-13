@@ -1,6 +1,9 @@
 ;;; reformat-paragraph-or-region.el --- reformat paragraph -*- lexical-binding: t; -*-
 
 ;; adopted from: https://sachachua.com/blog/2025/09/emacs-cycle-through-different-paragraph-formats-all-on-one-line-wrapped-max-one-sentence-per-line-one-sentence-per-line/
+
+(require 'contrib/semlf)
+
 (defvar sc-repeat-counter '()
   "How often `sc-repeat-next' was called in a row using the same command.
 This is an alist of (cat count list) so we can use it for different functions.")
@@ -17,7 +20,8 @@ This command does the inverse of `fill-paragraph'."
 (defun sc-fill-paragraph-semlf-long ()
   (interactive)
   (let ((fill-column most-positive-fixnum))
-    (fill-paragraph-semlf)))
+    ;; this will be in emacs 31: (fill-paragraph-semlf)))
+    (semlf-fill-paragraph)))
 
 (defun sc-repeat-next (category &optional element-list reset)
   "Return the next element for CATEGORY.
@@ -51,8 +55,10 @@ Initialize with ELEMENT-LIST if this is the first time."
 If a region is selected, handle all paragraphs within that region."
   (interactive)
   (let ((func (sc-repeat-next 'sc-reformat-paragraph
-                              '(fill-paragraph sc-unfill-paragraph fill-paragraph-semlf
-                                               sc-fill-paragraph-semlf-long)
+                              ;; this will be in emacs 31: '(fill-paragraph my-unfill-paragraph fill-paragraph-semlf
+                              ;;                  my-fill-paragraph-semlf-long)
+                              '(fill-paragraph my-unfill-paragraph semlf-fill-paragraph
+                                               my-fill-paragraph-semlf-long)
                               (not (eq this-command last-command))))
         (deactivate-mark nil))
     (if (region-active-p)
