@@ -4,7 +4,7 @@
 (require 'transient)
 
 (defvar my$denote-directories
-        (list "~/denote"))
+        (list "~/Shared/notes"))
 
 (add-to-list 'savehist-additional-variables 'denote-directory)
 
