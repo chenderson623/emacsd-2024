@@ -179,6 +179,22 @@
          ("d b" . denote-org-dblock-insert-backlinks)
          ("d m" . denote-org-dblock-insert-missing-links)
          ("d h" . denote-org-dblock-insert-files-as-headings))
+  :commands
+  ( denote-org-link-to-heading
+    denote-org-backlinks-for-heading
+
+    denote-org-extract-org-subtree
+
+    denote-org-convert-links-to-file-type
+    denote-org-convert-links-to-denote-type
+
+    denote-org-dblock-insert-files
+    denote-org-dblock-insert-links
+    denote-org-dblock-insert-backlinks
+    denote-org-dblock-insert-missing-links
+    denote-org-dblock-insert-files-as-headings
+    my>denote-org-copy-org-subtree
+    my/denote-org-extract-org-subtree)
   :init
   (define-prefix-command 'my-denote-org-prefix-map nil "Denote Org")
   (define-key my-denote-prefix-map (kbd "O")
@@ -195,23 +211,10 @@
       "C-c n O" "Org-mode"
       "C-c n O c" "convert links"
       "C-c n O d" "dynamic blocks"))
-  :commands
-  ( denote-org-link-to-heading
-    denote-org-backlinks-for-heading
-
-    denote-org-extract-org-subtree
-
-    denote-org-convert-links-to-file-type
-    denote-org-convert-links-to-denote-type
-
-    denote-org-dblock-insert-files
-    denote-org-dblock-insert-links
-    denote-org-dblock-insert-backlinks
-    denote-org-dblock-insert-missing-links
-    denote-org-dblock-insert-files-as-headings))
-
-;; same as denote-org-extract-org-subtree bu COPIES instead of moving
-(defun my>denote-org-copy-org-subtree ()
+  :config
+  
+  (defun my>denote-org-copy-org-subtree ()
+    "Same as denote-org-extract-org-subtree bu COPIES instead of moving"
   (interactive nil org-mode)
   (unless (derived-mode-p 'org-mode)
     (user-error "Headings can only be extracted from Org files"))
@@ -233,6 +236,44 @@
             ('signature (setq signature (denote-signature-prompt)))))
         (denote heading tags 'org subdirectory date text signature))
     (user-error "No subtree to extract; aborting")))
+
+(defun my/denote-org-extract-org-subtree ()
+  "Create new Denote note using the current Org subtree as input.
+Remove the subtree from its current file and move its contents into a
+new Denote file (a subtree is a heading with all of its contents,
+including subheadings).
+
+This custom version prioritizes the date found in the `:CAPTURED:`
+property of the Org heading. If not found, it falls back to the
+standard `denote-org-extract-org-subtree` date logic (Org properties
+like DATE, CREATED, CLOSED, or current time).
+
+For other details, refer to the documentation of `denote-org-extract-org-subtree`."
+  (interactive nil org-mode)
+  (unless (derived-mode-p 'org-mode)
+    (user-error "Headings can only be extracted from Org files"))
+  (if-let* ((text (org-get-entry))
+            (heading (denote-link-ol-get-heading)))
+      (let* ((tags (org-get-tags))
+             ;; Try to get date from :CAPTURED: property first
+             (captured-date-string (org-entry-get (point) "CAPTURED"))
+             (date (if captured-date-string ; This still uses org-entry-get, which is fine for subtrees
+                         (denote-valid-date-p captured-date-string)
+                       (denote-org--get-heading-date))) ; Fallback to heading date
+            subdirectory
+            signature)
+        (dolist (prompt denote-prompts)
+          (pcase prompt
+            ('keywords (when (not tags) (setq tags (denote-keywords-prompt))))
+            ('subdirectory (setq subdirectory (denote-subdirectory-prompt)))
+            ('date (when (not date) (setq date (denote-date-prompt))))
+            ('signature (setq signature (denote-signature-prompt)))))
+        (delete-region (org-entry-beginning-position)
+                       (save-excursion (org-end-of-subtree t) (point)))
+        (denote heading tags 'org subdirectory date text signature))
+    (user-error "No subtree to extract; aborting")))
+)
+
 ;; https://github.com/mclear-tools/consult-notes
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -256,7 +297,6 @@
   ;; search only for text files in denote dir
   (setq consult-notes-denote-files-function (lambda () (denote-directory-files nil t t))))
 
-;; TODO make hydra
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -354,41 +394,7 @@ the actual renaming."
                                               new-identifier)))
       (message "Denote file date changed and renamed to %s" (file-name-nondirectory renamed-file)))))
 
-(defun my/denote-org-extract-org-subtree ()
-  "Create new Denote note using the current Org subtree as input.
-Remove the subtree from its current file and move its contents into a
-new Denote file (a subtree is a heading with all of its contents,
-including subheadings).
 
-This custom version prioritizes the date found in the `:CAPTURED:`
-property of the Org heading. If not found, it falls back to the
-standard `denote-org-extract-org-subtree` date logic (Org properties
-like DATE, CREATED, CLOSED, or current time).
-
-For other details, refer to the documentation of `denote-org-extract-org-subtree`."
-  (interactive nil org-mode)
-  (unless (derived-mode-p 'org-mode)
-    (user-error "Headings can only be extracted from Org files"))
-  (if-let* ((text (org-get-entry))
-            (heading (denote-link-ol-get-heading)))
-      (let* ((tags (org-get-tags))
-             ;; Try to get date from :CAPTURED: property first
-             (captured-date-string (org-entry-get (point) "CAPTURED"))
-             (date (if captured-date-string ; This still uses org-entry-get, which is fine for subtrees
-                         (denote-valid-date-p captured-date-string)
-                       (denote-org--get-heading-date))) ; Fallback to heading date
-            subdirectory
-            signature)
-        (dolist (prompt denote-prompts)
-          (pcase prompt
-            ('keywords (when (not tags) (setq tags (denote-keywords-prompt))))
-            ('subdirectory (setq subdirectory (denote-subdirectory-prompt)))
-            ('date (when (not date) (setq date (denote-date-prompt))))
-            ('signature (setq signature (denote-signature-prompt)))))
-        (delete-region (org-entry-beginning-position)
-                       (save-excursion (org-end-of-subtree t) (point)))
-        (denote heading tags 'org subdirectory date text signature))
-    (user-error "No subtree to extract; aborting")))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;; Hydras

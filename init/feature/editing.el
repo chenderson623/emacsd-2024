@@ -5,42 +5,42 @@
   :straight t
   :bind ("C-c C-u" . string-inflection-all-cycle))
 
-(use-package expand-region
-  :straight t
-  :bind (
-         ("C-=" . 'er/expand-region)
-         ("C-+" . 'er/contract-region)))
-
-;; (use-package expreg
+;; (use-package expand-region
 ;;   :straight t
-;;   :bind (("C-=" . expreg-expand)
-;;          ("C-+" . expreg-contract))
-;;   :config
-;;   (add-hook 'text-mode-hook
-;;           (lambda ()
-;;             (add-to-list 'expreg-functions #'expreg--sentence)))
+;;   :bind (
+;;          ("C-=" . 'er/expand-region)
+;;          ("C-+" . 'er/contract-region)))
 
-;;   (defun expreg--line ()
-;;   "Return a list of regions containing surrounding sentences."
-;;   (ignore-errors
-;;     (let (beg end)
-;;       (end-of-visual-line)
-;;       (setq end (point))
-;;       (beginning-of-visual-line)
-;;       (setq beg (point))
-;;       `((line . ,(cons beg end))))))
+(use-package expreg
+  :straight t
+  :bind (("C-=" . expreg-expand)
+         ("C-+" . expreg-contract))
+  :config
+  (add-hook 'text-mode-hook
+          (lambda ()
+            (add-to-list 'expreg-functions #'expreg--sentence)))
 
-;;   (setq-default expreg-functions
-;;                 '(expreg--subword
-;;                   expreg--word
-;;                   expreg--sentence
-;;                   expreg--line
-;;                   expreg--list
-;;                   expreg--string
-;;                   expreg--treesit
-;;                   expreg--comment
-;;                   expreg--paragraph-defun))
-;;   )
+  (defun expreg--line ()
+  "Return a list of regions containing surrounding sentences."
+  (ignore-errors
+    (let (beg end)
+      (end-of-visual-line)
+      (setq end (point))
+      (beginning-of-visual-line)
+      (setq beg (point))
+      `((line . ,(cons beg end))))))
+
+  (setq-default expreg-functions
+                '(expreg--subword
+                  expreg--word
+                  expreg--sentence
+                  expreg--line
+                  expreg--list
+                  expreg--string
+                  expreg--treesit
+                  expreg--comment
+                  expreg--paragraph-defun))
+  )
 
 (use-package selected
   :straight t
