@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t; -*-
 
-(require 'lib/org)
+;;(require 'lib/org)
 (require 'dash)
 (require 'contrib/ha-boxes-extra)
 (require 'cl-lib)

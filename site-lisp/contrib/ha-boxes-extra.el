@@ -52,13 +52,12 @@ of the start and end of the subtree."
       (org-previous-visible-heading 1))
 
     (let* ((context (org-element-context))
-           (attrs   (cl-second (org-element-resolve-deferred context t))) ;; TODO find a way to get properties without using org-element-resolve-deferred here
            (props   (org-entry-properties)))
 
       (list :region     (list (org-element-property :begin context) (org-element-property :end context))
             :header     (org-element-property :title context)
             :tags       (ha-org-get-subtree-tags props)
-            :properties (ha-org-get-subtree-properties attrs)
+            :properties (ha-org-get-subtree-properties props)
             ;;:properties props
             :body       (ha-org-get-subtree-content context)))))
 
@@ -80,41 +79,29 @@ of the start and end of the subtree."
   specified in parents headlines or on the file itself). Defaults
   to true.")
 
-(defun ha-org-get-subtree-properties (attributes)
+(defconst ha-org-internal-entry-property-keys
+  '("ALLTAGS" "BLOCKED" "CATEGORY" "CLOSED" "FILE" "FILETAGS"
+    "ITEM" "PRIORITY" "TAGS" "TIMESTAMP" "TIMESTAMP_IA" "TODO")
+  "Org-computed entry properties not exported as #+PROPERTY lines.")
+
+(defun ha-org-get-subtree-properties (&optional props)
   "Return a list of tuples of a subtrees properties where the keys are strings."
-
-  (defun symbol-upcase? (sym)
-    (let ((case-fold-search nil))
-      (string-match-p "^:[A-Z]+$" (symbol-name sym))))
-
-  (defun convert-tuple (tup)
-    (let ((key (cl-first tup))
-          (val (cl-second tup))
-          )
-      (list (substring (symbol-name key) 1) val)))
-
-  (->> attributes
-       (-partition 2)                         ; Convert plist to list of tuples
-       (--filter (symbol-upcase? (cl-first it))) ; Remove lowercase tuples
-       (-map 'convert-tuple)))
+  (unless props
+    (setq props (org-entry-properties)))
+  (->> props
+       (-remove (lambda (p) (member (car p) ha-org-internal-entry-property-keys)))
+       (-map (lambda (p) (list (car p) (cdr p))))))
 
 (defun ha-org-get-subtree-content (context)
   "Return the contents of the current subtree as a string."
-  (let ((header-components '(clock diary-sexp drawer headline inlinetask
-				   node-property planning property-drawer section)))
-
-    (goto-char (org-element-property :contents-begin context))
-
-    ;; Walk down past the properties, etc.
-    (while
-        (let* ((cntx (org-element-context))
-               (elem (cl-first cntx)))
-          (when (member elem header-components)
-            (goto-char (org-element-property :end cntx)))))
-
-    ;; At this point, we are at the beginning of what we consider
-    ;; the contents of the subtree, so we can return part of the buffer:
-    (buffer-substring-no-properties (point) (org-end-of-subtree))))
+  (save-excursion
+    (let ((beg (org-element-property :begin context))
+          (end (org-element-property :end context)))
+      (when (and beg end (> end beg))
+        (goto-char beg)
+        (org-end-of-meta-data t)
+        (when (> end (point))
+          (buffer-substring-no-properties (point) end))))))
 
 ;;;###autoload
 (defun ha-org-refile-subtree-to-file (dir)
