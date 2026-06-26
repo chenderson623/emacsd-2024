@@ -1,7 +1,10 @@
 ;;; -*- lexical-binding: t; -*-
 
+(require 'pretty-hydra)
+(require 'transient)
+
 (defvar my$denote-directories
-        (list "~/denote"))
+        (list "~/Shared/notes"))
 
 (add-to-list 'savehist-additional-variables 'denote-directory)
 
@@ -16,9 +19,15 @@
     (message "Switched denote-directory to %s" denote-directory)))
 
 ;; https://github.com/protesilaos/denote
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;;; Denote Base
+;;  https://github.com/protesilaos/denote
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package denote
   :straight t
-  :commands (denote denote-open-or-create denote-link)
+  :commands (denote denote-open-or-create denote-link denote-file-is-note-p)
   :hook
   ( ;; If you use Markdown or plain text files, then you want to make
    ;; the Denote links clickable (Org renders links as buttons right
@@ -32,15 +41,13 @@
   :bind
   (("C-c n" . my-denote-prefix-map)
    :map my-denote-prefix-map
-   ("c" . denote-link-after-creating)
    ("d" . denote>sort-dired-modified-time)
-   ("f" . consult-denote-find)
    ("g" . denote-grep)
-   ("l" . denote-link)
-   ("m" . my>denote-choose-directory)   
-   ("n" . denote)   
+   ("n" . denote)
    ("o" . denote-open-or-create)
-   ("s" . consult-denote-grep)   
+   ("l" . denote-link)
+   ("c" . denote-link-after-creating)
+   ("m" . my>denote-choose-directory)
    ("C-d" . my/denote-dired-hydra/body)
    ("C-o" . my/denote-find-hydra/body)
    ("C-f" . my/denote-create-note-hydra/body)
@@ -53,7 +60,7 @@
   (with-eval-after-load 'which-key
     (which-key-add-key-based-replacements
       "C-c n" "Denote"
-      ;;"C-c n s" "Consult Denote"
+      "C-c n s" "Consult Denote"
       "C-c n m" "Denote Menu"))
   :config
   ;; Remember to check the doc string of each of those variables.
@@ -78,9 +85,12 @@
             )
   )
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;; denote-silo
+;;; Denote Silo
 ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package denote-silo
   :straight t
   ;; Bind these commands to key bindings of your choice.
@@ -97,16 +107,21 @@
 
 ;; https://github.com/protesilaos/consult-denote
 ;; https://protesilaos.com/emacs/consult-denote
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;;; Consult Denote
+;;  https://github.com/protesilaos/consult-denote
+;;  https://protesilaos.com/emacs/consult-denote
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package consult-denote
   :straight t
-  :commands (consult-denote-find consult-denote-grep)
   :bind (
          :map my-consult-denote-prefix-map
          ("f" . consult-denote-find)
          ("g" . consult-denote-grep)
-         ;;:map my-denote-prefix-map
-         ;;("s" . my-consult-denote-prefix-map)
-         )
+         :map my-denote-prefix-map
+         ("s" . my-consult-denote-prefix-map))
   :custom
   (consult-denote-find-command #'consult-fd)
   :init 
@@ -115,6 +130,12 @@
   (consult-denote-mode 1))
 
 ;; https://github.com/namilus/denote-menu
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;;; Denote Menu
+;;  https://github.com/namilus/denote-menu
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package denote-menu
   :straight t
   :commands (list-denotes)
@@ -133,6 +154,12 @@
   (define-prefix-command 'my-denote-menu-prefix-map nil "Denote Menu"))
 
 ;; https://github.com/protesilaos/denote-org
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;;; Denote Org
+;;  https://github.com/protesilaos/denote-org
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Typing C-c C-x C-u (org-dblock-update) with point on that line runs (or re-runs) the associated function with the given parameters and populates the block's contents accordingly
 (use-package denote-org
   :straight t
@@ -152,6 +179,22 @@
          ("d b" . denote-org-dblock-insert-backlinks)
          ("d m" . denote-org-dblock-insert-missing-links)
          ("d h" . denote-org-dblock-insert-files-as-headings))
+  :commands
+  ( denote-org-link-to-heading
+    denote-org-backlinks-for-heading
+
+    denote-org-extract-org-subtree
+
+    denote-org-convert-links-to-file-type
+    denote-org-convert-links-to-denote-type
+
+    denote-org-dblock-insert-files
+    denote-org-dblock-insert-links
+    denote-org-dblock-insert-backlinks
+    denote-org-dblock-insert-missing-links
+    denote-org-dblock-insert-files-as-headings
+    my>denote-org-copy-org-subtree
+    my/denote-org-extract-org-subtree)
   :init
   (define-prefix-command 'my-denote-org-prefix-map nil "Denote Org")
   (define-key my-denote-prefix-map (kbd "O")
@@ -168,30 +211,21 @@
       "C-c n O" "Org-mode"
       "C-c n O c" "convert links"
       "C-c n O d" "dynamic blocks"))
-  :commands
-  ( denote-org-link-to-heading
-    denote-org-backlinks-for-heading
-
-    denote-org-extract-org-subtree
-
-    denote-org-convert-links-to-file-type
-    denote-org-convert-links-to-denote-type
-
-    denote-org-dblock-insert-files
-    denote-org-dblock-insert-links
-    denote-org-dblock-insert-backlinks
-    denote-org-dblock-insert-missing-links
-    denote-org-dblock-insert-files-as-headings))
-
-;; same as denote-org-extract-org-subtree bu COPIES instead of moving
-(defun my>denote-org-copy-org-subtree ()
+  :config
+  
+  (defun my>denote-org-copy-org-subtree ()
+    "Same as denote-org-extract-org-subtree bu COPIES instead of moving"
   (interactive nil org-mode)
   (unless (derived-mode-p 'org-mode)
     (user-error "Headings can only be extracted from Org files"))
   (if-let* ((text (org-get-entry))
             (heading (denote-link-ol-get-heading)))
-      (let ((tags (org-get-tags))
-            (date (denote-org--get-heading-date))
+      (let* ((tags (org-get-tags))
+             ;; Try to get date from :CAPTURED: property first
+             (captured-date-string (org-entry-get (point) "CAPTURED"))
+             (date (if captured-date-string
+                         (denote-valid-date-p captured-date-string)
+                       (denote-org--get-heading-date))) ; Fallback to heading date
             subdirectory
             signature)
         (dolist (prompt denote-prompts)
@@ -203,7 +237,50 @@
         (denote heading tags 'org subdirectory date text signature))
     (user-error "No subtree to extract; aborting")))
 
+(defun my/denote-org-extract-org-subtree ()
+  "Create new Denote note using the current Org subtree as input.
+Remove the subtree from its current file and move its contents into a
+new Denote file (a subtree is a heading with all of its contents,
+including subheadings).
+
+This custom version prioritizes the date found in the `:CAPTURED:`
+property of the Org heading. If not found, it falls back to the
+standard `denote-org-extract-org-subtree` date logic (Org properties
+like DATE, CREATED, CLOSED, or current time).
+
+For other details, refer to the documentation of `denote-org-extract-org-subtree`."
+  (interactive nil org-mode)
+  (unless (derived-mode-p 'org-mode)
+    (user-error "Headings can only be extracted from Org files"))
+  (if-let* ((text (org-get-entry))
+            (heading (denote-link-ol-get-heading)))
+      (let* ((tags (org-get-tags))
+             ;; Try to get date from :CAPTURED: property first
+             (captured-date-string (org-entry-get (point) "CAPTURED"))
+             (date (if captured-date-string ; This still uses org-entry-get, which is fine for subtrees
+                         (denote-valid-date-p captured-date-string)
+                       (denote-org--get-heading-date))) ; Fallback to heading date
+            subdirectory
+            signature)
+        (dolist (prompt denote-prompts)
+          (pcase prompt
+            ('keywords (when (not tags) (setq tags (denote-keywords-prompt))))
+            ('subdirectory (setq subdirectory (denote-subdirectory-prompt)))
+            ('date (when (not date) (setq date (denote-date-prompt))))
+            ('signature (setq signature (denote-signature-prompt)))))
+        (delete-region (org-entry-beginning-position)
+                       (save-excursion (org-end-of-subtree t) (point)))
+        (denote heading tags 'org subdirectory date text signature))
+    (user-error "No subtree to extract; aborting")))
+)
+
 ;; https://github.com/mclear-tools/consult-notes
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;;; Consult Notes
+;;  https://github.com/mclear-tools/consult-notes
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package consult-notes
   :straight t
   :commands (consult-notes
@@ -220,8 +297,109 @@
   ;; search only for text files in denote dir
   (setq consult-notes-denote-files-function (lambda () (denote-directory-files nil t t))))
 
-;; TODO make hydra
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;;; Custom Functions
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defun my/denote-change-date-from-captured ()
+  "Change the date in the current Org Denote note's identifier using the :CAPTURED: property.
+This function reads the date from the :CAPTURED: property of the current Org entry
+and uses it to update the note's identifier and rename the file.
+It then calls `my/denote-change-date-and-rename` with the extracted date.
+"
+  (interactive)
+  (unless (derived-mode-p 'org-mode)
+    (user-error "Not in an Org mode buffer."))
+  ;; It's possible to be in an Org buffer that is not a Denote file,
+  ;; but we still want to try and extract the date if it's present.
+  ;; The actual renaming function `my/denote-change-date-and-rename`
+  ;; will perform the `denote-file-is-note-p` check.
 
+  (let* ((captured-date-string
+          ;; Try to get from the current Org entry first (if point is on a heading)
+          (or (org-entry-get (point) "CAPTURED")
+              ;; Fallback to top-level properties drawer
+              (my/denote-get-top-level-property "CAPTURED")))
+         (parsed-date-time nil)) ; This was a duplicate line, removed in previous diff, but still present in the provided file.
+    (unless captured-date-string
+      (user-error "No :CAPTURED: property found in the current Org entry."))
+
+    (setq parsed-date-time (denote-valid-date-p captured-date-string))
+
+    (unless parsed-date-time
+      (user-error "Could not parse date from :CAPTURED: property: %s" captured-date-string))
+
+    (my/denote-change-date-and-rename parsed-date-time)
+    (message "Date updated from :CAPTURED: property to %s" (format-time-string "%Y-%m-%d %H:%M:%S" parsed-date-time))))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defun my/denote-get-top-level-property (property-name &optional buffer)
+  "Search for a top-level Org property PROPERTY-NAME and return its value.
+PROPERTY-NAME should be a string, e.g., \"CAPTURED\".
+This function searches the entire BUFFER (or current buffer if nil) for the
+property within a top-level :PROPERTIES: drawer."
+  (save-excursion
+    (with-current-buffer (or buffer (current-buffer))
+      (goto-char (point-min))
+      (when (re-search-forward "^[ \t]*:PROPERTIES:[ \t]*$" nil t)
+        (let ((properties-start (point)))
+          (when (re-search-forward "^[ \t]*:END:[ \t]*$" nil t)
+            (let ((properties-end (point)))
+              (goto-char properties-start)
+              (when (re-search-forward (format "^[ \t]*:%s:[ \t]+\\(.*\\)$" (regexp-quote property-name)) properties-end t)
+                (match-string 1)))))))))
+
+(defun my/denote-change-date-and-rename (&optional new-date-time)
+  "Change the date in the current Denote note's identifier and rename the file.
+If NEW-DATE-TIME is provided (a time value), it is used directly.
+Otherwise, it prompts the user for a new date and time.
+
+This function operates on the current buffer's file, assuming it is a Denote note.
+It reconstructs the file identifier and then calls `denote--rename-file` to perform
+the actual renaming."
+  (interactive)
+  (unless (denote-file-is-note-p (buffer-file-name))
+    (user-error "Not in a Denote file. Please open a Denote note to use this function."))
+
+  (let* ((current-file (buffer-file-name))
+         (current-identifier (denote-retrieve-filename-identifier current-file))
+         (actual-new-time-value
+          (cond ; Determine the new time value
+
+           (new-date-time new-date-time)
+           ((let ((captured-str (my/denote-get-top-level-property "CAPTURED")))
+              (when captured-str
+                (denote-valid-date-p captured-str))))
+           ((if (and denote-date-prompt-use-org-read-date
+                     (require 'org nil :no-error))
+                (let* ((time (org-read-date nil t nil "Enter new date and time (YYYY-MM-DD HH:MM): " nil))
+                       (org-time-seconds (format-time-string "%S" time))
+                       (cur-time-seconds (format-time-string "%S" (current-time))))
+                  (if (string-equal "00" org-time-seconds)
+                      (time-add time (string-to-number cur-time-seconds))
+                    time))
+              (parse-time-string (read-string "Enter new date and time (YYYY-MM-DD HH:MM:SS): ")))))))
+    (let* ((formatted-new-date (format-time-string denote-date-identifier-format actual-new-time-value))
+           (new-identifier (concat formatted-new-date (substring current-identifier 15)))
+           (file-type (denote-filetype-heuristics current-file)) ; Get the file type
+           (original-buffer-title (denote-retrieve-title-or-filename current-file file-type)) ; Use the correct function
+           (current-keywords (denote-extract-keywords-from-path current-file))
+           (current-signature (or (denote-retrieve-filename-signature current-file) ""))
+           (renamed-file (denote--rename-file current-file
+                                              original-buffer-title ; Pass the original title
+                                              current-keywords
+                                              current-signature
+                                              actual-new-time-value
+                                              new-identifier)))
+      (message "Denote file date changed and renamed to %s" (file-name-nondirectory renamed-file)))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;;; Hydras
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (pretty-hydra-define my/denote-create-note-hydra
   (:color blue :quit-key "<escape>" :title "Create Denote Note [%s(abbreviate-file-name denote-directory)]")
   ("Standard" (
@@ -245,7 +423,7 @@
 (pretty-hydra-define my/denote-org-hydra
   (:color blue :quit-key "<escape>" :title "Denote Org Commands [%s(abbreviate-file-name denote-directory)]")
   ("Extraction" (
-    ("e" denote-org-extract-org-subtree "Extract subtree")
+    ("e" my/denote-org-extract-org-subtree "Extract subtree (with CAPTURED date)")
     ("E" my>denote-org-copy-org-subtree "Copy subtree"))
    "Links" (
     ("l" denote-org-link-to-heading "Link to heading")
@@ -280,7 +458,9 @@
    "Rename & Metadata" (
     ("r" denote-rename-file "Rename file")
     ("R" denote-rename-file-using-front-matter "Rename using front-matter")
-    ("t" denote-change-file-type-and-front-matter "Change file type"))
+    ("t" denote-change-file-type-and-front-matter "Change file type")
+    ("D" my/denote-change-date-and-rename "Change date and rename (prompt)")
+    ("C" my/denote-change-date-from-captured "Change date from :CAPTURED: property"))
    "Settings" (
     ("." my>denote-choose-directory "Choose directory" :exit nil))))
 
@@ -331,7 +511,11 @@
    "Settings" (
     ("." my>denote-choose-directory "Choose directory" :exit nil))))
 
-(require 'transient)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;;; Transient Menu
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (transient-define-suffix denote-set-directory ()
   :description (lambda () (format "Directory: %s" denote-directory))
   :transient t
@@ -358,7 +542,9 @@
    ["Rename"
     ("RF" "Rename File" denote-rename-file)
     ("FT" "Only FileType" denote-change-file-type-and-front-matter)
-    ("UF" "Use Frontmatter" denote-rename-file-using-front-matter)]]
+    ("UF" "Use Frontmatter" denote-rename-file-using-front-matter)
+    ("RD" "Rename Date (prompt)" my/denote-change-date-and-rename)
+    ("RC" "Rename Date (from :CAPTURED:)" my/denote-change-date-from-captured)]]
   [["Dyn. Block"
     ("DL" "Dyn. Links" denote-org-dblock-insert-links)
     ("DB" "Dyn. Backlinks" denote-org-dblock-insert-backlinks)]

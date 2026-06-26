@@ -5,13 +5,6 @@
 
 (defvar my$fontaine-default-preset 'laptop)
 
-;; Iosevka Comfy            == monospaced, supports ligatures
-;; Iosevka Comfy Fixed      == monospaced, no ligatures
-;; Iosevka Comfy Duo        == quasi-proportional, supports ligatures
-;; Iosevka Comfy Wide       == like Iosevka Comfy, but wider
-;; Iosevka Comfy Wide Fixed == like Iosevka Comfy Fixed, but wider
-;; Iosevka Comfy Motion     == monospaced, supports ligatures, fancier glyphs
-;; Iosevka Comfy Motion Duo == as above, but quasi-proportional
 (use-package fontaine
   :straight t
   :commands (fontaine-set-preset) ;; this is called below and will load fontaine
@@ -22,10 +15,10 @@
   ;; The `:inherit' contains the name of another named preset.
   (setq fontaine-presets
    '((tiny
-      :default-family "Iosevka Comfy Wide Fixed"
+      :default-family "Aporetic Sans Mono"
       :default-height 70)
      (small
-      :default-family "Iosevka Comfy Fixed"
+      :default-family "Aporetic Sans Mono"
       :default-height 90)
      (regular
       :default-height 100)
@@ -53,7 +46,7 @@
       ;; I keep all properties for didactic purposes, but most can be
       ;; omitted.  See the fontaine manual for the technicalities:
       ;; <https://protesilaos.com/emacs/fontaine>.
-      :default-family "Iosevka Comfy"          ;; TODO set this
+      :default-family "Aporetic Sans Mono"          ;; TODO set this
       :default-weight regular
       :default-height 100                      ;; TODO set this
       :fixed-pitch-family nil ; falls back to :default-family
@@ -62,7 +55,7 @@
       :fixed-pitch-serif-family nil ; falls back to :default-family
       :fixed-pitch-serif-weight nil ; falls back to :default-weight
       :fixed-pitch-serif-height 1.0
-      :variable-pitch-family "Iosevka Comfy Duo"  ;; TODO set this
+      :variable-pitch-family "Aporetic Sans"  ;; TODO set this
       :variable-pitch-weight nil
       :variable-pitch-height 1.0
       :bold-family nil ; use whatever the underlying face has

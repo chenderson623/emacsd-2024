@@ -222,7 +222,9 @@
   (show-paren-highlight-openparen t)
   (show-paren-style `mixed)
   (show-paren-when-point-inside-paren t)
-  (show-paren-when-point-in-periphery t))
+  (show-paren-when-point-in-periphery t)
+  ;; overlay beginning of the context when offscreen:
+  (show-paren-context-when-offscreen 'overlay))
 
 (provide 'settings)
 ;;; emacs-settings.el ends here

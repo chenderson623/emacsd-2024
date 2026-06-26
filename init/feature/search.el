@@ -34,7 +34,7 @@
 (use-package rg
   :if (executable-find "rg") 
   :straight t
-  :commands (rg rg>vc-or-dir rg>ref-in-dir rg>emacsd-dir)
+  :commands (rg rg>vc-or-dir rg>ref-in-dir rg>emacsd-dir my-search/rg-search-multi-directory)
   :config
   (setq rg-custom-type-aliases nil)
   (setq rg-group-result t)
@@ -47,6 +47,20 @@
   (rg-define-toggle "--context 3" (kbd "C"))
   (rg-define-toggle "-A 5" (kbd "A"))
 
+  (defun my-search/rg-search-full-command (default-directory command)
+    (let ((default-directory default-directory))
+      (compilation-start command 'rg-mode #'rg-buffer-name)))
+
+  (defun my-search/rg-search-multi-directory (base-dir dirs search)
+    (my-search/rg-search-full-command
+     base-dir
+     (format
+      "rg -S --color=always --colors=match:fg:red \
+      --colors=path:fg:magenta --colors=line:fg:green --colors=column:none -n \
+      --column --heading --no-config -e \"%s\" %s"
+      search
+      (mapconcat 'shell-quote-argument dirs " "))))
+  
   (rg-define-search rg>vc-or-dir
     "RipGrep in project root or present directory."
     :query ask
