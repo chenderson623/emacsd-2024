@@ -14,6 +14,7 @@
 ;;; Code:
 
 (require 'cl-lib)
+(require 'transient)
 
 ;; 1. Variables and Persistence
 ;; =============================================================================
@@ -315,6 +316,64 @@ If BACKWARDP is non-nil, select the previous entry; otherwise select the next en
     ("q" nil "quit" :exit t)))
 
 
+;; 7. Transient Menu (experimental alternative to hydra)
+;; =============================================================================
+
+(when (require 'transient nil t)
+  (defclass my-variable-pitch-transient (transient-prefix)
+    ()
+    "Custom transient prefix for variable-pitch buffer face with dynamic hint display.")
+
+  ;; Custom info group that only displays a description, no children
+  (defclass my-variable-pitch-info-group (transient-group)
+    ()
+    "A group that only displays its description (used for info/headers).")
+
+  (cl-defmethod transient--insert-group ((group my-variable-pitch-info-group) &optional _)
+    "Insert the group's description only, without any children."
+    (when-let ((desc (transient-with-shadowed-buffer
+                       (transient-format-description group))))
+      (insert desc ?\n)))
+
+  ;; Override init to ensure available list is populated
+  (cl-defmethod transient-init-value ((obj my-variable-pitch-transient))
+    (my:variable-pitch-buffer-face-ensure-available-list)
+    (cl-call-next-method))
+
+  ;; Toggle mode and refresh the transient menu to show/hide items
+  (defun my>variable-pitch-buffer-face-toggle-and-refresh ()
+    (interactive)
+    (call-interactively #'my>variable-pitch-buffer-face-mode)
+    (transient--refresh-transient))
+
+  ;;;###autoload
+  (transient-define-prefix my>variable-pitch-buffer-face-transient ()
+    "Variable Pitch Buffer Face"
+    :class 'my-variable-pitch-transient
+    [(:info* (lambda () (format "Variable Pitch — %s" (my:variable-pitch-buffer-face-hydra-hint))))]
+    [["Font"
+      ("f" "Cycle" my>variable-pitch-buffer-face-cycle :transient t
+       :inapt-if (lambda () (not my>variable-pitch-buffer-face-mode)))
+      ("b" "Backward" my>variable-pitch-buffer-face-cycle-backward :transient t
+       :inapt-if (lambda () (not my>variable-pitch-buffer-face-mode)))]
+     ["Scaling"
+      ("=" "Up" my>variable-pitch-buffer-face-scale-up :transient t
+       :inapt-if (lambda () (not my>variable-pitch-buffer-face-mode)))
+      ("-" "Down" my>variable-pitch-buffer-face-scale-down :transient t
+       :inapt-if (lambda () (not my>variable-pitch-buffer-face-mode)))]
+     ["Base Scale"
+      ("[" "Lower" my>variable-pitch-buffer-face-decrease-family-base-scale :transient t
+       :inapt-if (lambda () (not my>variable-pitch-buffer-face-mode)))
+      ("]" "Raise" my>variable-pitch-buffer-face-increase-family-base-scale :transient t
+       :inapt-if (lambda () (not my>variable-pitch-buffer-face-mode)))]
+     ["Actions"
+      ("t" "Toggle" my>variable-pitch-buffer-face-toggle-and-refresh :transient t)
+      ("r" "Report" my>variable-pitch-buffer-face-report-current-scales :transient t
+       :inapt-if (lambda () (not my>variable-pitch-buffer-face-mode)))
+      ("s" "Save" my>variable-pitch-buffer-face-save-as-default :transient t
+       :inapt-if (lambda () (not my>variable-pitch-buffer-face-mode)))
+      ("q" "Quit" transient-quit-one)]])
+  )
 
 (provide 'action/variable-pitch-buffer-face-mode)
 ;;; variable-pitch-buffer-face-mode.el ends here

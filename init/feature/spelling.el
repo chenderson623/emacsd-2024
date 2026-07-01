@@ -31,6 +31,7 @@
          (prog-mode . flyspell-prog-mode)))
 
 ;; completion of spellings
+;; https://github.com/d12frosted/flyspell-correct
 (use-package flyspell-correct
   :straight t
   :after flyspell
@@ -40,6 +41,17 @@
   :custom
   (flyspell-correct-interface #'flyspell-correct-completing-read))
 
+;; use avy interface for flyspell
+;; https://github.com/d12frosted/flyspell-correct
+(use-package flyspell-correct-avy-menu
+  :after flyspell-correct)
+
+;;;;; Spelling Goto Next Error
+(defun my-spelling>ispell-goto-next-error ()
+  "Custom function to spell check next highlighted word"
+  (interactive)
+  (flyspell-goto-next-error)
+  (ispell-word))
 
 (provide 'feature/spellcheck)
 

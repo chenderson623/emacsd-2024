@@ -211,6 +211,7 @@
                                 mode/prog
                                 mode/eshell
                                 mode/shell
+                                mode/writing
                                 feature/buffers
                                 feature/completion-at-point
                                 feature/completing-read
@@ -227,6 +228,7 @@
                                 feature/vcs
                                 feature/web
                                 feature/windows
+                                feature/word-menu
                                 ))
                          (debug ((core)
                                 mode/org-REWORK                                 
