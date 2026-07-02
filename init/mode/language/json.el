@@ -18,16 +18,17 @@
   (message "HOOK: json:json-mode-init")
   (flycheck-mode +1)
   )
-  ;; hook set in filetype-modes.el: (add-hook 'json-ts-mode-hook #'json:json-mode-init)
 
-(unless (executable-find "jsonlint")
-      (message "Install jsonlint with `npm install jsonlint -g`"))
+(with-eval-after-load 'json-mode
+  (if (executable-find "jsonlint")
+      (flycheck-add-mode 'json-jsonlint 'json-mode)
+      (flycheck-add-mode 'json-jsonlint 'json-ts-mode)
+    (message "Install jsonlint with `npm install jsonlint -g`"))
+    )
+
 
 (unless (executable-find "prettier")
       (message "Install prettier with `npm install prettier -g`"))
-
-(flycheck-add-mode 'json-jsonlint 'json-mode)
-(flycheck-add-mode 'json-jsonlint 'json-ts-mode)
 
 ;;
 ;;; json-mode
