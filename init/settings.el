@@ -194,6 +194,8 @@
 ;; Toggle automatic parens pairing (Electric Pair mode).
 ;; [[help:electric-pair-mode]]
 (use-package elec-pair
+  ;; TODO add this to toggle menu 
+  :disabled
   :straight nil
   :no-require t
   ;; TODO move prog-mode hooks to prog setup, or filetype setup
