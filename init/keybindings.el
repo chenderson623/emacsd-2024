@@ -27,4 +27,33 @@
 
 (keymap-global-set "M-q" #'sc-reformat-paragraph-or-region)
 
+(defvar my$my-leader-key "M-m"
+  "My global leader key")
+
+(defvar-keymap my$leader-prefix-map
+  :doc "My global leader key map."
+  "w" (cons "Writing Mode" #'hrs-writing-mode)
+  "v" (cons "Variable Font Mode" #'my>variable-pitch-buffer-face-mode)
+
+  "S" (cons "Spellcheck Menu" #'my-transient>spellcheck-menu)
+  "T" (cons "Toggles Menu" #'my-transient>toggle-menu)
+
+  "f" #'find-file
+
+  )
+
+(keymap-set global-map my$my-leader-key my$leader-prefix-map)
+
+;; (use-package transient
+;;   :straight (:type built-in)
+;;   ;;:defer 5
+;;   :config
+;;   (transient-define-prefix my-transient>toggle-menu ()
+;;     "My prefix transient menu for minor modes."
+;;     ["Toggles"
+;;      ("l" display-line-numbers-mode :description (lambda () (my/transient-format-toggle "Line numbers" 'display-line-numbers-mode)) :transient t)
+;;      ("h" hl-line-mode :description (lambda () (my/transient-format-toggle "Highlight line" 'hl-line-mode)) :transient t)])
+
+;;   )
+
 (provide 'keybindings)

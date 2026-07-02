@@ -54,7 +54,8 @@
                         olivetti-mode
                         prettify-symbols-mode
                         visual-line-mode
-                        wc-mode)))))
+                        wc-mode))))
+  )
 
 ;;;###autoload
 (defun my/toggle-line-spacing ()

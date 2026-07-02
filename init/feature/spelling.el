@@ -46,12 +46,63 @@
 (use-package flyspell-correct-avy-menu
   :after flyspell-correct)
 
+(use-package jinx
+  :straight t
+  :commands (jinx-mode jinx-correct))
+
 ;;;;; Spelling Goto Next Error
 (defun my-spelling>ispell-goto-next-error ()
   "Custom function to spell check next highlighted word"
   (interactive)
   (flyspell-goto-next-error)
   (ispell-word))
+
+(defun my/toggle-flyspell-exclusive ()
+  "Toggle `flyspell-mode', disabling `jinx-mode' if activating."
+  (interactive)
+  (if flyspell-mode
+      (flyspell-mode -1) ; If on, turn it off.
+    ;; If off, turn it on and disable the other.
+    (when (and (fboundp 'jinx-mode) (bound-and-true-p jinx-mode))
+      (jinx-mode -1))
+    (flyspell-mode 1)))
+
+(defun my/toggle-jinx-exclusive ()
+  "Toggle `jinx-mode', disabling `flyspell-mode' if activating."
+  (interactive)
+  (if (not (fboundp 'jinx-mode))
+      (message "Jinx is not available.")
+    (if (bound-and-true-p jinx-mode)
+        (jinx-mode -1) ; If on, turn it off.
+      ;; If off, turn it on and disable the other.
+      (when flyspell-mode
+        (flyspell-mode -1))
+      (jinx-mode 1))))
+
+(transient-define-prefix my-transient>spellcheck-menu ()
+  "Transient menu for switching spell checkers."
+  ["Spelling"
+;;  ["Spell Checkers"
+;;   ("f" my/toggle-flyspell-exclusive :description (lambda () (my/transient-format-toggle "Flyspell" 'flyspell-mode)) :transient t)
+;;   ("j" my/toggle-jinx-exclusive :description (lambda () (my/transient-format-toggle "Jinx" 'jinx-mode)) :transient t)]
+  ["Flyspell"
+   ("<" "flyspell-correct-previous" flyspell-correct-previous :transient t)
+   (">" "flyspell-correct-next" flyspell-correct-next :transient t)
+   ]
+]
+
+  )
+
+    ;; ("q" nil)
+    ;; ("<" flyspell-correct-previous :color pink)
+    ;; (">" flyspell-correct-next :color pink)
+    ;; ("c" ispell)
+    ;; ("d" ispell-change-dictionary)
+    ;; ("f" flyspell-buffer :color pink)
+    ;; ("m" flyspell-mode)))
+
+     ;; ("c" "Jinx correct" jinx-correct)]
+
 
 (provide 'feature/spellcheck)
 
