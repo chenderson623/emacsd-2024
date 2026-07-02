@@ -35,7 +35,9 @@
   "w" (cons "Writing Mode" #'hrs-writing-mode)
   "v" (cons "Variable Font Mode" #'my>variable-pitch-buffer-face-mode)
 
-  "S" (cons "Spellcheck Menu" #'my-transient>spellcheck-menu)
+  ;; TODO make "s" be spelling keymap
+
+  "s" (cons "Spellcheck Menu" #'my-transient>spellcheck-menu)
   "T" (cons "Toggles Menu" #'my-transient>toggle-menu)
 
   "f" #'find-file

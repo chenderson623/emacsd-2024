@@ -46,8 +46,11 @@
 (use-package flyspell-correct-avy-menu
   :after flyspell-correct)
 
+
+
 (use-package jinx
   :straight t
+  :demand t
   :commands (jinx-mode jinx-correct))
 
 ;;;;; Spelling Goto Next Error
@@ -56,6 +59,24 @@
   (interactive)
   (flyspell-goto-next-error)
   (ispell-word))
+
+(defun my-spelling>correct-previous-and-return ()
+  "Correct the previous misspelled word and return cursor to typing position."
+  (interactive)
+  (let ((original-point (point))
+        (found-error nil))
+    ;; Search backward for a misspelled word with flyspell overlay
+    (while (and (> (point) (point-min)) (not found-error))
+      (backward-word 1)
+      (let ((overlays (overlays-at (point))))
+        (dolist (ov overlays)
+          (when (overlay-get ov 'flyspell-overlay)
+            (setq found-error t)))))
+    ;; If found error, correct it interactively
+    (if found-error
+        (call-interactively #'flyspell-correct-at-point)
+      (message "No misspelled word found before cursor"))
+    (goto-char original-point)))
 
 (defun my/toggle-flyspell-exclusive ()
   "Toggle `flyspell-mode', disabling `jinx-mode' if activating."
@@ -82,13 +103,13 @@
 (transient-define-prefix my-transient>spellcheck-menu ()
   "Transient menu for switching spell checkers."
   ["Spelling"
-;;  ["Spell Checkers"
-;;   ("f" my/toggle-flyspell-exclusive :description (lambda () (my/transient-format-toggle "Flyspell" 'flyspell-mode)) :transient t)
-;;   ("j" my/toggle-jinx-exclusive :description (lambda () (my/transient-format-toggle "Jinx" 'jinx-mode)) :transient t)]
+  ["Spell Checkers"
+   ("f" my/toggle-flyspell-exclusive :description (lambda () (my/transient-format-toggle "Flyspell" 'flyspell-mode)) :transient t)
+   ("j" my/toggle-jinx-exclusive :description (lambda () (my/transient-format-toggle "Jinx" 'jinx-mode)) :transient t)]
   ["Flyspell"
    ("<" "flyspell-correct-previous" flyspell-correct-previous :transient t)
-   (">" "flyspell-correct-next" flyspell-correct-next :transient t)
-   ]
+   (">" "flyspell-correct-next" flyspell-correct-next :transient t)   
+   ("p" "Correct previous & return" my-spelling>correct-previous-and-return)   ]
 ]
 
   )
