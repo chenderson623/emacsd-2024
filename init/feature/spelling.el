@@ -46,8 +46,6 @@
 (use-package flyspell-correct-avy-menu
   :after flyspell-correct)
 
-
-
 (use-package jinx
   :straight t
   :demand t
@@ -123,7 +121,16 @@
     ;; ("m" flyspell-mode)))
 
      ;; ("c" "Jinx correct" jinx-correct)]
+     ;; jinx-correct-all
+     ;; jinx-correct-word
 
+(defun my/avy-jinx-correct (pt &optional arg)
+  "Correct word at point."
+  (interactive "P")
+  (let ((avy-all-windows)
+        (current-prefix-arg (if arg 4)))
+    (save-excursion (goto-char pt)
+                    (call-interactively 'jinx-correct-word))))
 
 (provide 'feature/spellcheck)
 

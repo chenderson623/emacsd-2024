@@ -4,16 +4,6 @@
 (straight-use-package 'synosaurus)
 (straight-use-package 'transient)
 
-(defun my/switch-to-brave ()
-  "Switch focus to Brave browser window."
-  (run-at-time 0.5 nil 
-    (lambda () (shell-command "wmctrl -a Brave" nil nil))))
-
-(advice-add 'browse-url-default-browser :after
-  (lambda (&rest _args)
-    (my/switch-to-brave)))
-
-
 (use-package powerthesaurus
   :straight t)
 

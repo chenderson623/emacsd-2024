@@ -68,4 +68,29 @@ Version 2017-06-02"
     (setq line-spacing 0.1))
   (redraw-frame (selected-frame)))
 
+;; https://github.com/mhayashi1120/Emacs-langtool
+(use-package langtool
+  :straight t
+  :commands (langtool-check
+             langtool-check-done
+             langtool-show-message-at-point
+             langtool-correct-buffer)
+  :init (setq langtool-default-language "en-US")
+  :custom-face
+  ;; add subtle line under the error as opposed to the ugliness before
+  ;;(langtool-errline ((t (:background nil :foreground nil :inherit 'flyspell-duplicate))))
+  :config
+  (setq langtool-language-tool-jar "/opt/LanguageTool-6.6-stable/languagetool-commandline.jar")
+)
+
+;; https://github.com/emacs-languagetool/flymake-languagetool
+(use-package flymake-languagetool
+  :straight t
+  :commands (flymake-languagetool-load)
+  ;;:hook (text-mode . flymake-languagetool-load)
+  :init
+  ;; Local Server Configuration
+  (setq flymake-languagetool-server-jar
+    "/opt/LanguageTool-6.6-stable/languagetool-server.jar"))
+
 (provide 'mode/writing)
