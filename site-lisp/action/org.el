@@ -149,5 +149,43 @@ If no match is found, point remains unchanged."
                 (org-edit-headline title)))
 
 
+;;;###autoload
+(defun org+>copy-src-block-content ()
+  "Copy the inner content of the Org source block at point to the kill ring."
+  (interactive)
+  (if (derived-mode-p 'org-mode)
+      (let ((element (org-element-at-point)))
+        (if (eq (car element) 'src-block)
+            (let ((value (org-element-property :value element)))
+              (kill-new value)
+              (message "Copied source block content!"))
+          (message "Not inside an Org source block.")))
+    (message "Not in Org mode.")))
+
+;;;###autoload
+(defun org+>copy-org-block-contents ()
+  "Copy the inner contents of the current Org block (including nested paragraphs) to the kill ring."
+  (interactive)
+  (let* ((allowed-types '(src-block example-block export-block quote-block center-block verse-block special-block))
+         ;; Find the closest matching block element upward in the structural tree
+         (element (org-element-lineage (org-element-at-point) allowed-types t))
+         (type (org-element-type element))
+         (cbeg (org-element-property :contents-begin element))
+         (cend (org-element-property :contents-end element)))
+
+    (cond
+     ((not element)
+      (user-error "Point is not inside an Org block"))
+
+     ;; Case 1: Structural containers (Quote, Center, Verse) use buffer markers
+     ((and cbeg cend)
+      (kill-new (buffer-substring-no-properties cbeg cend))
+      (message "Block contents copied!"))
+
+     ;; Case 2: Code blocks or Flat blocks use literal values
+     ((memq type '(src-block example-block export-block))
+      (kill-new (org-element-property :value element))
+      (message "Block contents copied!")))))
+
 (provide 'action/org)
 ;;; org.el ends here
