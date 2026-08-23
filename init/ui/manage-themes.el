@@ -33,6 +33,13 @@
   (light nil :type symbol)
   (dark nil :type symbol))
 
+;; TODO try
+;; (use-package folio-theme
+;;   :straight t
+;;   :config
+;;   (load-theme 'folio t))
+
+
 ;; --------------------------------------------------------------------------
 ;; Define Themes
 ;; --------------------------------------------------------------------------
