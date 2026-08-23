@@ -132,13 +132,13 @@
   ;;
   ;;;; elec-pair
   ;;
-  (require 'elec-pair)
+  ;; (require 'elec-pair)
   
-  (add-hook 'org-mode-hook (lambda ()  ;; don't pair < symbols
-                             (message "ORG_MODE_HOOK")
-                             (setq-local electric-pair-inhibit-predicate
-                                         `(lambda (c)
-                                            (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
+  ;; (add-hook 'org-mode-hook (lambda ()  ;; don't pair < symbols
+  ;;                            (message "ORG_MODE_HOOK")
+  ;;                            (setq-local electric-pair-inhibit-predicate
+  ;;                                        `(lambda (c)
+  ;;                                           (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
 
   ;;;; Open file links in current window, rather than new ones
   ;; https://github.com/hlissner/doom-emacs/blob/develop/modules/lang/org/config.el#L632
