@@ -24,7 +24,7 @@
 (use-package dired-subtree
   :straight t
   :after dired
-  :bind (:map dired-mode-map ("TAB" . dired-subtree-toggle)))
+  :bind (:map dired-mode-map ("SPC" . dired-subtree-toggle)))
 
 ;;;; dired-narrow
 ;; https://github.com/Fuco1/dired-hacks

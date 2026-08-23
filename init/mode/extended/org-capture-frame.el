@@ -21,38 +21,35 @@
 (defun org-capture-frame>make-capture-frame (&optional capture-url)
   "Create a new frame and run org-capture. Call with emacsclient -ne '(make-capture-frame)'"
   (interactive)
-  (make-frame-on-display ":0" `((name . ,my$org-protocol-capture-frame-name)
-                                (width . 120)
-                                (height . 30)))
-  (select-frame-by-name my$org-protocol-capture-frame-name)
-  (condition-case err
-      (if capture-url (org-protocol-capture capture-url) (org-capture))
-    (error (message (format "Caught exception: [%s]" err))
-           (when (equal my$org-protocol-capture-frame-name (frame-parameter nil 'name))
-             ;; Delete the frame if there was an error, which is the case in particular
-             ;; if you pressed "q" in the template selection.
-                                        ;(delete-frame)
-             ;; This is needed to stop listening for keystrokes in the main window.
-                                        ;(keyboard-quit)
-             ))))
+  (let ((frame (make-frame-on-display ":0" `((name . ,my$org-protocol-capture-frame-name)
+                                             (width . 120)
+                                             (height . 30)))))
+    (select-frame-by-name my$org-protocol-capture-frame-name)
+    (raise-frame frame)
+    (select-frame-set-input-focus frame)
+    (message "SELECTED")
+    (condition-case err
+        (if capture-url (org-protocol-capture capture-url) (org-capture))
+      (error (message (format "Caught exception: [%s]" err))
+             (when (equal my$org-protocol-capture-frame-name (frame-parameter nil 'name))
+               ;; Delete the frame if there was an error
+               )))))
 
 (defun org-capture-frame>make-capture-html-frame (&optional capture-url)
   "Create a new frame and run org-capture. Call with emacsclient -ne '(make-capture-frame)'"
   (interactive)
-  (make-frame-on-display ":0" `((name . ,my$org-protocol-capture-frame-name)
-                                (width . 120)
-                                (height . 30)))
-  (select-frame-by-name my$org-protocol-capture-frame-name)
-  (condition-case err
-      (if capture-url (org-protocol-capture-html--with-pandoc capture-url) (org-capture))
-    (error (message (format "Caught exception: [%s]" err))
-           (when (equal my$org-protocol-capture-frame-name (frame-parameter nil 'name))
-             ;; Delete the frame if there was an error, which is the case in particular
-             ;; if you pressed "q" in the template selection.
-                                        ;(delete-frame)
-             ;; This is needed to stop listening for keystrokes in the main window.
-                                        ;(keyboard-quit)
-             ))))
+  (let ((frame (make-frame-on-display ":0" `((name . ,my$org-protocol-capture-frame-name)
+                                             (width . 120)
+                                             (height . 30)))))
+    (select-frame-by-name my$org-protocol-capture-frame-name)
+    (raise-frame frame)
+    (select-frame-set-input-focus frame)
+    (condition-case err
+        (if capture-url (org-protocol-capture-html--with-pandoc capture-url) (org-capture))
+      (error (message (format "Caught exception: [%s]" err))
+             (when (equal my$org-protocol-capture-frame-name (frame-parameter nil 'name))
+               ;; Delete the frame if there was an error
+               )))))
 
 (defun org-capture-frame/setup-org-protocol-capture-frame ()  
   (advice-add 'org-capture-place-template :after #'org-capture-frame/delete-other-windows-if-capture-frame)

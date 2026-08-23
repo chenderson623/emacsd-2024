@@ -20,7 +20,9 @@
   (:map
    dired-mode-map ("-" . dired-up-directory)
    ("(" . dired-hide-details-mode)
-   (")" . dired-hide-details-mode))
+   (")" . dired-hide-details-mode)
+   ("TAB" . dired-cycle-dired-windows) 
+   )
   :custom
   ;; -a :: all
   ;; -g :: like -l, but do not list owner
@@ -62,7 +64,18 @@
                          (not isearch-mode-end-hook-quit)
                          (eq last-input-event 'return)) ; <==========
                 (dired-find-file)))
-  (add-hook 'isearch-mode-end-hook #'quit-isearch-and-pass-return-to-dired)  
+  (add-hook 'isearch-mode-end-hook #'quit-isearch-and-pass-return-to-dired)
+
+  (defun dired-cycle-dired-windows ()
+  "Switch to the next Dired window in the selected frame."
+  (interactive)
+  (select-window
+   (cadr (seq-filter
+          (lambda (window)
+            (eq (buffer-local-value
+                 'major-mode (window-buffer window))
+                'dired-mode))
+          (window-list)))))
   )
 
 (provide 'mode/dired)

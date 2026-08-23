@@ -238,7 +238,8 @@
     (user-error "No subtree to extract; aborting")))
 
 (defun my/denote-org-extract-org-subtree ()
-  "Create new Denote note using the current Org subtree as input.
+  "This custom version prioritizes the date found in the `:CAPTURED:`
+Create new Denote note using the current Org subtree as input.
 Remove the subtree from its current file and move its contents into a
 new Denote file (a subtree is a heading with all of its contents,
 including subheadings).

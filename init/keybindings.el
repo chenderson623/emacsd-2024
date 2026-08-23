@@ -27,6 +27,11 @@
 
 (keymap-global-set "M-q" #'sc-reformat-paragraph-or-region)
 
+;;;; org mode map
+(with-eval-after-load 'org
+  (define-key org-mode-map (kbd "C-c C-v y") #'org+>copy-org-block-contents))
+
+
 (defvar my$my-leader-key "M-m"
   "My global leader key")
 

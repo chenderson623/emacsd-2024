@@ -5,11 +5,11 @@
   :straight t
   :bind ("C-c C-u" . string-inflection-all-cycle))
 
-;; (use-package expand-region
-;;   :straight t
-;;   :bind (
-;;          ("C-=" . 'er/expand-region)
-;;          ("C-+" . 'er/contract-region)))
+(use-package expand-region
+  :straight t
+  :bind (
+         ("C-S-=" . 'er/expand-region)
+         ("C-S-+" . 'er/contract-region)))
 
 (use-package expreg
   :straight t

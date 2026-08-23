@@ -7,10 +7,22 @@
               ("C-c C-o"                   . isearch-occur)
               ([escape]                    . isearch-cancel)
               ;; Edit the search string instead of jumping back
-              ([remap isearch-delete-char] . isearch-del-char))
+              ([remap isearch-delete-char] . isearch-del-char)
+              ("<S-return>" . isearch-exit-at-end)
+              ("<C-backspace>" . isearch-delete-wrong)
+              ("C-M-w" . isearch-yank-region)
+              ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
+              ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
+              ("M-s L" . consult-line-multi)            ;; needed by consult-line to detect isearch
+              ("C-'" . avy-isearch)
+              )
   :config
   (define-advice isearch-occur (:after (_regexp &optional _nlines))
     (isearch-exit))
+
+  :hook
+  (isearch-mode-end . isearch-exit-at-start)
+    
   :custom
   ;; Record isearch in minibuffer history, so C-x ESC ESC can repeat it.
   (isearch-resume-in-command-history t)
@@ -29,6 +41,14 @@
   (lazy-highlight-buffer t)
   ;; Mimic Vim
   (lazy-highlight-cleanup nil))
+
+  (defun my>avy-isearch (&optional arg)
+    "Goto isearch candidate in this window with hints."
+    (interactive "P")
+    (let ((avy-all-windows)
+          (current-prefix-arg (if arg 4)))
+      (call-interactively 'avy-isearch)))
+
 
 ;; https://github.com/dajva/rg.el
 (use-package rg
