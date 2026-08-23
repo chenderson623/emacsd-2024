@@ -61,7 +61,14 @@
     (which-key-add-key-based-replacements
       "C-c n" "Denote"
       "C-c n s" "Consult Denote"
-      "C-c n m" "Denote Menu"))
+      "C-c n m" "Denote Menu"
+      "C-c n C-d" "Denote Dired Hydra"
+      "C-c n C-o" "Find Note Hydra"
+      "C-c n C-f" "Create Note Hydra"
+      "C-c n C-n" "Note Content Hydra"
+      "C-c n C-m" "Denote Menu Hydra"
+      "C-c n C-t" "Note Content Transient"
+      ))
   :config
   ;; Remember to check the doc string of each of those variables.
   ;;(setq denote-directory (expand-file-name "~/Documents/notes/"))
