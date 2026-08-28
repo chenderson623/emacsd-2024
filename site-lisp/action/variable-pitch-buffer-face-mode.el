@@ -23,6 +23,7 @@
   '(
     ("Iosevka" 1.15)
     ("Iosevka Aile" 1.15)
+    ("Iosevka Charon" 1.15)
     ("Aporetic Sans" 1.15)
     ;; ("SauceCodePro Nerd Font" 1.15)
     ("Cabinet Grotesk" 1.0)
@@ -141,7 +142,7 @@ If BACKWARDP is non-nil, select the previous entry; otherwise select the next en
   (message "Buffer Font: %s" my$variable-pitch-buffer-face-family-local))
 
 (defun my>variable-pitch-buffer-face-current-family-entry ()
-  "Return the current font family entry from the font list." 
+  "Return the current font family entry from the font list."
   (let ((family (or my$variable-pitch-buffer-face-family-local
                     my$$variable-pitch-buffer-face-family-default)))
     (or (assoc family my$variable-pitch-buffer-face-list)
@@ -149,7 +150,7 @@ If BACKWARDP is non-nil, select the previous entry; otherwise select the next en
         (list family 1.0))))
 
 (defun my:variable-pitch-buffer-face-current-family-base-scale ()
-  "Return the current font family's normalization scale." 
+  "Return the current font family's normalization scale."
   (or (cadr (my>variable-pitch-buffer-face-current-family-entry)) 1.0))
 
 (defun my>variable-pitch-buffer-face-report-current-scales ()
@@ -282,7 +283,7 @@ If BACKWARDP is non-nil, select the previous entry; otherwise select the next en
 ;; =============================================================================
 
 (defun my:variable-pitch-buffer-face-hydra-hint ()
-  "Return the current font family, base scale, and local scale for the hydra hint." 
+  "Return the current font family, base scale, and local scale for the hydra hint."
   (let ((family (or my$variable-pitch-buffer-face-family-local
                     my$$variable-pitch-buffer-face-family-default))
         (base-scale (my:variable-pitch-buffer-face-current-family-base-scale))

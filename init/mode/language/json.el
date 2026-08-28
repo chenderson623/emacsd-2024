@@ -19,12 +19,12 @@
   (flycheck-mode +1)
   )
 
-(with-eval-after-load 'json-mode
-  (if (executable-find "jsonlint")
-      (flycheck-add-mode 'json-jsonlint 'json-mode)
-      (flycheck-add-mode 'json-jsonlint 'json-ts-mode)
-    (message "Install jsonlint with `npm install jsonlint -g`"))
-    )
+;; (with-eval-after-load 'json-mode
+;;   (if (executable-find "jsonlint")
+;;       (flycheck-add-mode 'json-jsonlint 'json-mode)
+;;       (flycheck-add-mode 'json-jsonlint 'json-ts-mode)
+;;     (message "Install jsonlint with `npm install jsonlint -g`"))
+;;     )
 
 
 (unless (executable-find "prettier")
@@ -44,7 +44,7 @@
 
 (use-package json-ts-mode
   :straight (:type built-in)
-  ;;:mode ("\\.json\\'" . json-ts-mode)  
+  ;;:mode ("\\.json\\'" . json-ts-mode)
   :init
   (unless (treesit-language-available-p 'json)
     (treesit-install-language-grammar 'json))

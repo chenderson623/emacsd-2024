@@ -20,6 +20,10 @@
           (lambda ()
             (add-to-list 'expreg-functions #'expreg--sentence)))
 
+(use-package expand-region
+  :straight t
+)
+
   (defun expreg--line ()
   "Return a list of regions containing surrounding sentences."
   (ignore-errors
