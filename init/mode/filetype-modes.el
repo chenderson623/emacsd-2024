@@ -1,11 +1,9 @@
 ;;; -*- lexical-binding: t; -*-
 
-(require 'mode/prog/treesit)
-
 ;;;; emacs-lisp
 (use-package mode/language/elisp
   :straight nil
-  ;; load at startup
+  ;; load at startup (editing the config)
   :demand t)
 
 (use-package ini-mode

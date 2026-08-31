@@ -77,7 +77,12 @@
   :hook (prog-mode text-mode markdown-mode)
   :config
   ;; load default config
-  (require 'smartparens-config))
+  (require 'smartparens-config)
+  ;; smartparens-org (via smartparens-config) auto-inserts closing
+  ;; emphasis markers (=, /, *, _, ~). Keep wrap-on-region; drop insert.
+  (with-eval-after-load 'smartparens-org
+    (dolist (pair '("*" "_" "/" "~" "="))
+      (sp-local-pair 'org-mode pair pair :actions '(:rem insert)))))
 
 (use-package whitespace-cleanup-mode
   :straight t

@@ -6,14 +6,13 @@
 ;; https://github.com/justbur/emacs-which-key
 (use-package which-key
   :straight t
-  :demand t
+  :hook (after-init . which-key-mode)
   :diminish which-key-mode
   :config
   (which-key-setup-side-window-right-bottom)
   (setq which-key-sort-order 'which-key-key-order-alpha
         which-key-side-window-max-width 0.33
-        which-key-idle-delay 0.1)
-  (which-key-mode 1))
+        which-key-idle-delay 0.1))
 
 (use-package key-chord
   :straight t

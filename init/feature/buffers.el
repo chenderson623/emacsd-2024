@@ -66,14 +66,13 @@
 ;; https://github.com/Fanael/persistent-scratch
 (use-package persistent-scratch
   :straight t
-  :demand t
+  :hook (after-init . persistent-scratch-setup-default)
   :custom
   (persistent-scratch-save-file (emacs-cache*filepath ".persistent-scratch"))
   (persistent-scratch-autosave-interval 60)
   ;;(persistent-scratch-what-to-save '(point narrowing))
   :config
-  (persistent-scratch-autosave-mode t)
-  (persistent-scratch-setup-default))
+  (persistent-scratch-autosave-mode t))
 
 (provide 'feature/buffers)
 

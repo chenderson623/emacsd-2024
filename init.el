@@ -131,6 +131,9 @@
 ;;;;; Setup straight
 ;;
 (setq straight-base-dir filepath$$emacs-shared)  ; set base directory for straight
+;; Default find-at-startup walks all package trees at boot (slow on Windows).
+;; check-on-save rebuilds when you save package sources inside Emacs.
+(setq straight-check-for-modifications '(check-on-save))
 
 ;;;;; Bootstrap straight
 (defvar bootstrap-version)

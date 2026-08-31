@@ -68,7 +68,7 @@
 
 (use-package beginend
   :straight t
-  :demand t
+  :defer 1
   :config
   (beginend-global-mode))
 

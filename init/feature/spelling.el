@@ -48,7 +48,6 @@
 
 (use-package jinx
   :straight t
-  :demand t
   :commands (jinx-mode jinx-correct))
 
 ;;;;; Spelling Goto Next Error

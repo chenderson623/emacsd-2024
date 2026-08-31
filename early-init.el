@@ -1,8 +1,8 @@
 ;;; early-init.el --- early init file  -*- lexical-binding: t; -*-
 
 ;; Uncomment this to debug.
-(setq init-file-debug t)
-(toggle-debug-on-error t)
+(setq init-file-debug nil)
+(toggle-debug-on-error nil)
 (setq messages-buffer-max-lines 100000)
 
 ;; Measure startup time

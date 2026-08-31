@@ -276,7 +276,6 @@
   
   )
 
-(require 'org)
-
+;; Org loads on first .org buffer / org command (see knx:initial-view).
 (provide 'mode/org)
 

@@ -1,27 +1,39 @@
 ;;; writing.el --- init writing-mode -*- lexical-binding: t; -*-
 
-(straight-use-package 'mixed-pitch)
-(straight-use-package 'olivetti)
-(straight-use-package 'org-appear)
-(straight-use-package 'org-modern)
-(straight-use-package 'org-superstar)
+(use-package mixed-pitch
+  :straight t
+  :defer t)
+
+(use-package olivetti
+  :straight t
+  :defer t)
+
+(use-package org-appear
+  :straight t
+  :defer t)
+
+(use-package org-modern
+  :straight t
+  :defer t)
+
+(use-package org-superstar
+  :straight t
+  :defer t)
 
 (use-package wc-mode
   :straight t
+  :defer t
   :custom
   (wc-modeline-format "[%tw words]")
-
   :config
-  (unbind-key "C-c C-w" wc-mode-map)
-)
+  (unbind-key "C-c C-w" wc-mode-map))
 
 (use-package contrib/hrs-writing-mode
   :straight nil
   :ensure nil
   :commands (hrs-writing-mode)
   :load-path "/home/chris/emacs/dev/2026-03-01--writing-mode/GOOD"
-  :defer 1
-;; TODO move  :hook (org-mode . writing-mode-repo)
+  ;; TODO move  :hook (org-mode . writing-mode-repo)
 
   :config
   (require 'mixed-pitch)
@@ -54,8 +66,7 @@
                         olivetti-mode
                         prettify-symbols-mode
                         visual-line-mode
-                        wc-mode))))
-  )
+                        wc-mode)))))
 
 ;;;###autoload
 (defun my/toggle-line-spacing ()
@@ -80,8 +91,7 @@ Version 2017-06-02"
   ;; add subtle line under the error as opposed to the ugliness before
   ;;(langtool-errline ((t (:background nil :foreground nil :inherit 'flyspell-duplicate))))
   :config
-  (setq langtool-language-tool-jar "/opt/LanguageTool-6.6-stable/languagetool-commandline.jar")
-)
+  (setq langtool-language-tool-jar "/opt/LanguageTool-6.6-stable/languagetool-commandline.jar"))
 
 ;; https://github.com/emacs-languagetool/flymake-languagetool
 (use-package flymake-languagetool
