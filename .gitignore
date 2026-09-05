@@ -19,3 +19,4 @@ nov-places
 transient/
 .vscode 
 abbrev_defs
+.github/copilot-instructions.md

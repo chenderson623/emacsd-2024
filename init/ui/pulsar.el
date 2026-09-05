@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 
 ;; https://protesilaos.com/emacs/pulsar
 (use-package pulsar

@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 
 (defvar my$fontaine-default-font-height
    (if (> (x-display-pixel-width) 2500)

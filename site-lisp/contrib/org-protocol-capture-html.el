@@ -1,4 +1,4 @@
-;;; org-protocol-capture-html.el --- Capture HTML with org-protocol
+;;; org-protocol-capture-html.el --- Capture HTML with org-protocol  -*- lexical-binding: t; -*-
 
 ;; URL: https://github.com/alphapapa/org-protocol-capture-html
 ;; Version: 0.1-pre
