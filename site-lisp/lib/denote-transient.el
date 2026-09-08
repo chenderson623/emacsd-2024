@@ -12,6 +12,11 @@
        (denote-file-is-in-denote-directory-p buffer-file-name)
        (denote-file-has-denoted-filename-p buffer-file-name)))
 
+(transient-define-group my/denote-navigation-group
+  [:class transient-row
+   ("?" "Denote Help" (lambda () (interactive) (info "denote")))
+   ("q" "Quit" transient-quit-all)])
+
 ;;;###autoload
 (transient-define-prefix transient-menu/denote ()
   "Denote Transient Menu"
@@ -38,9 +43,8 @@
      ("UF" "Use Frontmatter" denote-rename-file-using-front-matter)
      ("RD" "Rename Date (prompt)" my/denote-change-date-and-rename)
      ("RC" "Rename Date (from :CAPTURED:)" my/denote-change-date-from-captured)]
-   ["Settings & Other"
-     ("?" "Help" (lambda () (interactive) (info "denote")))]
    ]
+  my/denote-navigation-group
 
   ;; [["Create"
   ;;   ("n" "New note" denote)
