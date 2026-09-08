@@ -35,17 +35,18 @@
 (defvar my$my-leader-key "M-m"
   "My global leader key")
 
+;; (makunbound 'my$leader-prefix-map)
 (defvar-keymap my$leader-prefix-map
   :doc "My global leader key map."
   "w" (cons "Writing Mode" #'hrs-writing-mode)
   "v" (cons "Variable Font Mode" #'my>variable-pitch-buffer-face-mode)
 
-  ;; TODO make "s" be spelling keymap
 
   "s" (cons "Spellcheck Menu" #'my-transient>spellcheck-menu)
   "T" (cons "Toggles Menu" #'my-transient>toggle-menu)
 
   "f" #'find-file
+  "n" (cons "Denote Menu" #'transient-menu/denote)
 
   )
 
