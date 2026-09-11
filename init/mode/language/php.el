@@ -1,12 +1,16 @@
 ;;;-*- lexical-binding: t; -*-
 
 (eval-when-compile
-  (require 'mode/prog/treesit)
   (require 'mode/prog/flycheck)
   (require 'mode/prog/eglot)
   (require 'mode/prog/lsp-mode)
   (require 'pretty-hydra)
   )
+
+;; Runtime: extra parser load-path must be set before php-ts-mode starts.
+(require 'mode/prog/treesit)
+(unless (treesit-language-available-p 'php)
+  (treesit-install-language-grammar 'php))
 
 ;;
 ;;; Define some defaults
@@ -20,17 +24,16 @@
       "~/.local/share/php-global/vendor/bin/phpactor"
        )
 
-(setq flycheck-phpcs-standard "PSR2"
-        ;;flycheck-php-executable "/opt/local/bin/php"
-        ;;flycheck-php-phpcs-executable "~/.composer/vendor/bin/phpcs"
-        ;;flycheck-php-phpmd-executable "~/.composer/vendor/bin/phpmd"
-        )
-
+;; PSR2 was set earlier; xml config wins.
 (setq flycheck-phpcs-standard "~/.config/phpcs/phpcs.xml")
 
 ;;
 ;;; Init hook for php files
 ;;
+(defun php:local-checkers ()
+  (setq-local flycheck-local-checkers-chain '((lsp . phpstan)
+                                              (phpstan . php-phpmd))))
+
 (defun php:php-mode-init ()
   (message "PHP_MODE_HOOK")
 
@@ -40,25 +43,29 @@
   (setq-local c-basic-offset 4)
   (turn-on-auto-fill)
 
-  (electric-indent-mode)
-  (electric-pair-mode)
-  (electric-layout-mode)
+  (electric-indent-local-mode 1)
+  (electric-pair-local-mode 1)
+  (when (fboundp 'electric-layout-local-mode)
+    (electric-layout-local-mode 1))
 
   (subword-mode 1)
 
   (company-mode +1)
 
-  ;; lsp
+  ;; lsp / treesit imenu / format-all: apply to this buffer, not via a
+  ;; php-ts-mode-hook added after the mode has already started.
   (setq-local lsp-enable-imenu nil)
+  (php:local-checkers)
+  (setq-local format-all-formatters '(("PHP" (prettier "--brace-style=1tbs"))))
 
   (cond
-   ((equal php$ide-level "ac-php")
+   ((string= php$ide-level "ac-php")
     (php:ac-php-init))
-   ((equal php$ide-level "phpactor")
+   ((string= php$ide-level "phpactor")
     (php:phpactor-init))
-   ((equal php$ide-level "eglot")
+   ((string= php$ide-level "eglot")
     (php:eglot-init))
-   ((equal php$ide-level "lsp-mode")
+   ((string= php$ide-level "lsp-mode")
     (php:lsp-mode-init))
    ))
 
@@ -84,8 +91,7 @@
 ;;
 (use-package php-mode
   :straight t
-  ;;:hook (php-mode . php:php-mode-init)
-  )
+  :defer t)
 
 ;;
 ;;; php-ts-mode
@@ -103,9 +109,13 @@
   (add-to-list 'major-mode-remap-alist '(php-mode-maybe . php-ts-mode))
 
   (setq treesit-font-lock-level 4) ;; Maximum treesit font decoration
-
-  ;;(define-key php-ts-mode-map (kbd "C-c c") (cons "Composer" 'composer-prefix-map))
   )
+
+(defun php>php-ts-mode ()
+  "Enter `php-ts-mode' after this language module has loaded.
+Used from `auto-mode-alist' so treesit paths and PHP packages are ready."
+  (interactive)
+  (php-ts-mode))
 
 ;;
 ;;; --------------------- ac-php ---------------------
@@ -250,23 +260,8 @@
   ;;`("php" ,(expand-file-name "~/.local/share/php-global/vendor/felixfbecker/language-server/bin/php-language-server.php")))
   ;;'' (setq lsp-php-composer-dir "~/.config/composer")
   
-  (defun php-local-checkers()
-    (setq-local flycheck-local-checkers-chain '((lsp . phpstan)
-                                                (phpstan . php-phpmd))))
-  (defun php-disable-lsp-imenu()
-    "The imenu produced by php-ts-mode is better than what lsp intelephense outputs"
-    (setq-local lsp-enable-imenu nil))
-
-  (add-hook 'php-ts-mode-hook 'php-local-checkers)
-  (add-hook 'php-ts-mode-hook 'php-disable-lsp-imenu)
-  (add-hook 'php-ts-mode-hook (lambda() (setq-local format-all-formatters '(("PHP" (prettier "--brace-style=1tbs"))))))
-
-  ;;
-  ;;;; init for php eglot
-  ;;
   (defun php:lsp-mode-init ()
-    (lsp)
-    )  
+    (lsp))  
   )
 
 ;;
@@ -351,7 +346,7 @@
 ;; https://github.com/nlamirault/phpunit.el
 (use-package phpunit
   :straight t
-  :after (php-mode php-ts-mode)
+  :after php-ts-mode
   :bind (:map php-ts-mode-map
               ("C-t c" . phpunit-current-class)
               ("C-t t" . phpunit-current-test)))
@@ -360,14 +355,16 @@
 ;; uses: https://github.com/PHP-CS-Fixer/PHP-CS-Fixer
 ;; uses: https://github.com/purcell/emacs-reformatter
 (use-package php-cs-fixer-format
-  :after (php-mode splash)
+  :after php-ts-mode
   :straight (php-cs-fixer-format
              :host github
              :depth nil
              :repo "cfclrk/php-cs-fixer-format")
   :config
-  (setq php-cs-fixer-format-arguments (list "--config"
-                                            (concat splash-website-dir "/.php-cs-fixer.php"))))
+  (when (boundp 'splash-website-dir)
+    (setq php-cs-fixer-format-arguments
+          (list "--config"
+                (concat splash-website-dir "/.php-cs-fixer.php")))))
 
 ;; https://github.com/emacs-php/psysh.el
 (use-package psysh 
@@ -376,6 +373,7 @@
 
 (use-package dape
   :straight t
+  :commands (dape)
   :preface
   ;; By default dape shares the same keybinding prefix as `gud'
   ;; If you do not want to use any prefix, set it to nil.

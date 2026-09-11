@@ -70,13 +70,13 @@ shelling out to `pandoc'."
 
 
 ;;;; php
+;; :mode must autoload a function defined in this module. Binding
+;; php-ts-mode here would load straight/built-in php-ts-mode.elc first
+;; and skip treesit-extra-load-path in mode/language/php.
 (use-package mode/language/php
   :straight nil
-  :commands (php:php-mode-init)
-  ;;:mode ("\\.php\\'" . php-mode)
-  :mode ("\\.php\\'" . php-ts-mode)
-  :hook (php-ts-mode . php:php-mode-init)
-  :hook (php-mode . php:php-mode-init)
+  :mode ("\\.php\\'" . php>php-ts-mode)
+  :hook ((php-ts-mode php-mode) . php:php-mode-init)
   :config
   (message "Loaded mode/language/php"))
 

@@ -7,10 +7,8 @@
   :init
   ;; where to look for 'tree-sitter directory
   (setq treesit-extra-load-path (list (user-shared*filepath "tree-sitter")))
-  
   ;; Make sure `treesit-install-language-grammar' download library file at `treesit-extra-load-path'
-  (setq treesit--install-language-grammar-out-dir-history treesit-extra-load-path))
-
+  (setq treesit--install-language-grammar-out-dir-history treesit-extra-load-path)
   (setq treesit-language-source-alist
         '((bash . ("https://github.com/tree-sitter/tree-sitter-bash"))
           (c . ("https://github.com/tree-sitter/tree-sitter-c"))
@@ -30,7 +28,7 @@
           (sql . ("https://github.com/m-novikov/tree-sitter-sql"))
           (toml . ("https://github.com/tree-sitter/tree-sitter-toml"))))
   :config
-  (message "USE-PACKAGE:CONFIG: treesit")
+  (message "USE-PACKAGE:CONFIG: treesit"))
   
 
 ;; install parsers : `tree-sitter-langs-install-grammars'
