@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 ;;; BOXES-EXTRAS --- Refiling Subtrees to Proper Org Files
 ;;
 ;; Author: Howard Abrams <howard@howardabrams.com>
