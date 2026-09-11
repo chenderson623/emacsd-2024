@@ -2,8 +2,10 @@
 
 (use-package persist
   :straight t
-  :custom
-  (persist--directory-location (emacs-state*filepath "persist")))
+  :init
+  ;; defvar, not defcustom -- :custom is too late. Set before persist.el loads
+  ;; so the defvar keeps this value instead of locate-user-emacs-file.
+  (setq persist--directory-location (emacs-state*filepath "persist")))
 
 ;; https://github.com/bbatsov/crux
 (use-package crux

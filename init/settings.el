@@ -26,10 +26,19 @@
 ;;;; Bookmarks
 (setq bookmark-default-file (emacsd-local-config*filepath "bookmark-default.el"))
 
+;;;; Abbrevs (machine/local config; git-archived with ~/.config/emacs)
+(setq abbrev-file-name (emacsd-local-config*filepath "abbrev_defs"))
+
 ;;;; Transient
 (setq transient-history-file (emacs-state*filepath "transient/history.el"))
 (setq transient-levels-file  (emacs-state*filepath "transient/levels.el"))
 (setq transient-values-file  (emacs-state*filepath "transient/values.el"))
+
+;;;; Tramp (connection cache; written even if you never open remote files)
+(setq tramp-persistency-file-name (emacs-state*filepath "tramp"))
+
+;;;; request.el (curl cookie jar, etc.)
+(setq request-storage-directory (emacs-state*filepath "request"))
 
 ;;;; Use UTF-8
 (set-charset-priority 'unicode)

@@ -26,13 +26,23 @@
   ;; Silence compiler warnings as they can be pretty disruptive
   (customize-set-variable 'native-comp-deferred-compilation t)
 
-  ;; Set the right directory to store the native compilation cache
-  (setq my$emacs-eln-cache-dir (convert-standard-filename "~/.cache/emacs/eln-cache"))
+  ;; Set the right directory to store the native compilation cache.
+  ;; Must be absolute: startup-redirect-eln-cache treats relative names
+  ;; as under user-emacs-directory.
+  (setq my$emacs-eln-cache-dir
+        (expand-file-name
+         (convert-standard-filename "~/.cache/emacs/eln-cache")))
   (startup-redirect-eln-cache my$emacs-eln-cache-dir)
 
   ;; should not need this anymore. unset in startup-redirect-eln-cache
   ;;(add-to-list 'native-comp-eln-load-path my$emacs-eln-cache-dir)
   )
+
+;; Before command-line creates ~/.emacs.d/auto-save-list (settings.el is too late).
+(setq auto-save-list-file-prefix
+      (concat (expand-file-name
+               (convert-standard-filename "~/.local/state/emacs/auto-save-list"))
+              "/"))
 
 ;;;; Prefer Newer files
 ;; Prefer newer versions of files

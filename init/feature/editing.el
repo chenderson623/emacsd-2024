@@ -79,6 +79,8 @@
 
 (use-package multiple-cursors
   :straight t
+  :init
+  (setq mc/list-file (emacsd-local-config*filepath ".mc-lists.el"))
   :config
   (setq mc/always-run-for-all nil))
 

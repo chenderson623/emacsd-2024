@@ -21,6 +21,13 @@
         ;; Only check while saving and opening files
         flycheck-check-syntax-automatically '(save mode-enabled))
   :config
+  ;; Flycheck emacs-lisp runs `emacs -Q --batch`. Inherit load-path
+  ;; loads packages that advise primitives; that subprocess never
+  ;; reads early-init, so trampolines would go to ~/.emacs.d/eln-cache.
+  ;; Set after load: flycheck.el uses defconst for flycheck-emacs-args.
+  (setq flycheck-emacs-args
+        '("-Q" "--batch"
+          "--eval" "(setq native-comp-enable-subr-trampolines nil)"))
   ;; Prettify indication styles
   (when (fboundp 'define-fringe-bitmap)
     (define-fringe-bitmap 'flycheck-fringe-bitmap-arrow

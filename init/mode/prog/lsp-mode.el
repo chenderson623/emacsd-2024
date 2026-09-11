@@ -11,10 +11,12 @@
   (setq read-process-output-max (* 1024 1024)) ;; 1mb
 
   (setq lsp-keymap-prefix "C-z")
-
-  :config
+  ;; Before lsp-php.el defcustom (Intelephense storagePath).
+  (setq lsp-intelephense-storage-path (emacs-cache*filepath "lsp-cache"))
   (setq lsp-server-install-dir (emacs-cache*filepath "lsp/"))
   (setq lsp-session-file (emacs-cache*filepath ".lsp-session-v1"))
+
+  :config
 
   ;; (which-key-add-key-based-replacements "C-z F" "Workspace folders")
   ;; (which-key-add-key-based-replacements "C-z G" "Peek")
