@@ -17,7 +17,7 @@
    ("?" "Denote Help" (lambda () (interactive) (info "denote")))
    ("q" "Quit" transient-quit-all)])
 
-;;;###autoload
+;;;###autoload (autoload 'transient-menu/denote "lib/denote-transient" nil t)
 (transient-define-prefix transient-menu/denote ()
   "Denote Transient Menu"
   [[
@@ -77,7 +77,7 @@
 
   )
 
-;;;###autoload
+;;;###autoload (autoload 'transient-menu/denote-create-custom "lib/denote-transient" nil t)
 (transient-define-prefix transient-menu/denote-create-custom ()
   "Denote Create Custom Transient Menu"
   [[
@@ -92,7 +92,7 @@
     ]
   ])
 
-;;;###autoload
+;;;###autoload (autoload 'transient-menu/denote-note "lib/denote-transient" nil t)
 (transient-define-prefix transient-menu/denote-note ()
   "Denote Note Actions"
   [

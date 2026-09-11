@@ -7,7 +7,6 @@ eln-cache/
 lsp-cache/
 persist/
 request/
-tabsession.el
 tramp
 image-dired/
 .hl-save
