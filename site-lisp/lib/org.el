@@ -48,4 +48,34 @@ For instance, given the string:    What's all this then?
     (insert "\n")
     (insert body))
 
+;;;###autoload
+(defun my-org>org-unwrap-block ()
+  "Remove the #+BEGIN and #+END delimiters from the current block, leaving text."
+  (interactive)
+  ;; org-element-lineage climbs up the AST tree to find a matching block type
+  (let* ((current-element (org-element-at-point))
+         (element (org-element-lineage
+                   current-element
+                   '(quote-block special-block src-block example-block verse-block export-block)
+                   t)))
+    (if element
+        (let* ((post-blank (org-element-property :post-blank element))
+               (block-begin (org-element-property :begin element))
+               (contents-begin (org-element-property :contents-begin element))
+               (contents-end (org-element-property :contents-end element)))
+          (if (and contents-begin contents-end)
+              (save-excursion
+                (let ((inner-text (buffer-substring-no-properties contents-begin contents-end)))
+                  ;; Delete the entire block structural region
+                  (delete-region block-begin (org-element-property :end element))
+                  ;; Insert the inner text right back
+                  (goto-char block-begin)
+                  (insert inner-text)
+                  ;; Retain exact blank space padding if any existed after the block
+                  (when (> post-blank 0)
+                    (save-excursion (insert (make-string post-blank ?\n))))
+                  (message "Block safely unwrapped into regular text.")))
+            (message "Block has no inner content to unwrap.")))
+      (message "Not inside a supported Org block."))))
+
 (provide 'lib/org)
