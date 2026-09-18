@@ -61,7 +61,7 @@ If no match is found, point remains unchanged."
 
 ;;;###autoload
 (defun +navigate>org-link-on-line ()
-  (interactvive)
+  (interactive)
   (+navigate>regex-on-line "\\[\\[")
   )
 
@@ -115,6 +115,35 @@ If no match is found, point remains unchanged."
         (forward-line 0)
         (when (looking-at "^#\\+END_QUOTE")
           (replace-match "#+END_SRC"))))))
+
+;;;###autoload
+(defun +org>convert-quote-to-plain-text ()
+  "Convert the QUOTE block at point to plain text by removing the delimiters."
+  (interactive)
+  (save-excursion
+    (let* ((case-fold-search nil)
+           (begin (progn
+                    (unless (re-search-backward "^#\\+BEGIN_QUOTE[ \\t]*$" nil t)
+                      (error "No #+BEGIN_QUOTE block found"))
+                    (line-beginning-position)))
+           (end (progn
+                  (unless (re-search-forward "^#\\+END_QUOTE[ \\t]*$" nil t)
+                    (error "No matching #+END_QUOTE found"))
+                  (line-beginning-position)))
+           (body-start (save-excursion
+                         (goto-char begin)
+                         (forward-line 1)
+                         (point)))
+           (body-end (save-excursion
+                       (goto-char end)
+                       (point)))
+           (body (buffer-substring-no-properties body-start body-end)))
+      (delete-region begin (save-excursion
+                            (goto-char end)
+                            (forward-line 1)
+                            (point)))
+      (goto-char begin)
+      (insert body))))
 
 ;;;###autoload
 (defun +org>convert-quote-to-emacs-lisp-block ()
