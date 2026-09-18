@@ -38,8 +38,7 @@ For instance, given the string:    What's all this then?
       (--map (insert (format "#+PROPERTY: %s %s \n" (cl-first it) (cl-second it))) properties))
 
     ;; My auto-insert often adds an initial headline for a subtree, and in this
-    ;; case, I don't want that... Yeah, this isn't really globally applicable,
-    ;; but it shouldn't cause a problem for others.
+    ;; case, I don't want that
     (when (re-search-forward "^\\* [0-9]$" nil t)
       (replace-match ""))
 
