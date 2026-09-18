@@ -103,8 +103,6 @@
   (setq denote-silo-directories my$denote-directories)
 )
 
-;; https://github.com/protesilaos/consult-denote
-;; https://protesilaos.com/emacs/consult-denote
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;; Consult Denote
@@ -127,7 +125,6 @@
   :config
   (consult-denote-mode 1))
 
-;; https://github.com/namilus/denote-menu
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;; Denote Menu
@@ -151,7 +148,22 @@
   :init 
   (define-prefix-command 'my-denote-menu-prefix-map nil "Denote Menu"))
 
-;; https://github.com/protesilaos/denote-org
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;;; Denote Review
+;;  https://codeberg.org/mattof/denote-review
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package denote-review
+  :straight
+  (denote-review :type git :host codeberg :repo "mattof/denote-review")
+  :straight t
+  :commands (denote-review-display-list denote-review-set-date denote-review-set-date-dired-marked-files)
+  :bind (
+         :map my-denote-prefix-map
+              ("r" . denote-review-display-list))
+  )
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;; Denote Org
