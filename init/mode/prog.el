@@ -6,6 +6,24 @@
   :config
   (setq display-line-numbers-width 4))
 
+(use-package highlight-symbol
+  :straight t
+  :diminish highlight-symbol-mode
+
+  :bind
+  (:map global-map
+  ("C-c C-p" . highlight-symbol-prev)
+  ("C-c C-n" . highlight-symbol-next)
+  ("C-c C-r" . highlight-symbol-query-replace))
+
+  :hook
+  (prog-mode . highlight-symbol-mode)
+
+  :custom
+  (highlight-symbol-highlight-single-occurrence 'nil)
+  (highlight-symbol-idle-delay 0.5)
+  (highlight-symbol-ignore-list '("^end$" "^def$" "^class$" "^module$")))
+
 (use-package auto-highlight-symbol
   :straight t  
   :hook (prog-mode . auto-highlight-symbol-mode)
