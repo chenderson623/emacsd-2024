@@ -17,8 +17,8 @@
    ("?" "Denote Help" (lambda () (interactive) (info "denote")))
    ("q" "Quit" transient-quit-all)])
 
-;;;###autoload (autoload 'transient-menu/denote "lib/denote-transient" nil t)
-(transient-define-prefix transient-menu/denote ()
+;;;###autoload (autoload 'my-tmenu>denote "lib/denote-transient" nil t)
+(transient-define-prefix my-tmenu>denote ()
   "Denote Transient Menu"
   [[
     ("." tsuffix/denote-set-directory)

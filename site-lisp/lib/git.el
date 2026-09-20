@@ -1,11 +1,16 @@
 ;;; -*- lexical-binding: t; -*-
 
-(require 'lib/git-url)
+(defun git-url-parse-to-author-project (git-url)
+  "Parse a Git repository URL and return \=author~project\= format."
+  (when (string-match "^\\(https?://\\|git@\\)?\\([^/]+\\)/\\(.+?\\)/\\(.+?\\)\\(/\\|$\\)" git-url)
+    (let ((author (match-string 3 git-url))
+          (project (match-string 4 git-url)))
+      (format "%s~%s" author (string-remove-suffix ".git" project)))))
 
 ;; adopted from: https://xenodium.com/emacs-clone-git-repo-from-clipboard/
 ;; changed to prompt for a target directory and to name the target directory author~project
 ;;;###autoload
-(defun git-action>clone-clipboard-url ()
+(defun my-git>clone-clipboard-url ()
   "Clone git URL in clipboard asynchronously and open in dired when finished."
   (interactive)
   (cl-assert (string-match-p "^\\(http\\|https\\|ssh\\)://" (current-kill 0)) nil "No URL in clipboard")
@@ -41,5 +46,5 @@
                                      (user-error (format "%s\n%s" command output))))))
     (set-process-filter proc #'comint-output-filter)))
 
-(provide 'action/git)
+(provide 'lib/git)
 

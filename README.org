@@ -21,6 +21,10 @@ A symbol prefixed with my~ indicates it is a mode.
 
 A symbol prefixed with my& indicates it is a special symbol like faces.
 
+** Transient menus
+
+my-tmenu>MENU_NAME
+
 * Functionalized filepaths
 
 user-home*filepath    ~/
