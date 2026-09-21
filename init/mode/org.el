@@ -130,15 +130,19 @@
     (add-to-list 'org-modules 'org-protocol t))
 
   ;;
-  ;;;; elec-pair
+  ;;;; No automatic pairing in Org
   ;;
-  ;; (require 'elec-pair)
-  
-  ;; (add-hook 'org-mode-hook (lambda ()  ;; don't pair < symbols
-  ;;                            (message "ORG_MODE_HOOK")
-  ;;                            (setq-local electric-pair-inhibit-predicate
-  ;;                                        `(lambda (c)
-  ;;                                           (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
+  ;; Org derives from text-mode; smartparens is on `text-mode-hook' and
+  ;; treats `"` as a pair (inserting `\"` via escape). Turn off all
+  ;; pairing minors in Org buffers.
+  (defun my/org-disable-auto-pairing ()
+    "Disable smartparens and electric-pair in Org buffers."
+    (when (bound-and-true-p smartparens-mode)
+      (smartparens-mode -1))
+    (when (bound-and-true-p electric-pair-mode)
+      (electric-pair-local-mode -1)))
+
+  (add-hook 'org-mode-hook #'my/org-disable-auto-pairing)
 
   ;;;; Open file links in current window, rather than new ones
   ;; https://github.com/hlissner/doom-emacs/blob/develop/modules/lang/org/config.el#L632

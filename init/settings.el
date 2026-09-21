@@ -216,7 +216,7 @@
   :straight nil
   :no-require t
   ;; TODO move prog-mode hooks to prog setup, or filetype setup
-  :hook ((prog-mode org-mode) . electric-pair-mode)
+  :hook (prog-mode . electric-pair-mode)
   :config
   (setq electric-pair-preserve-balance t
         electric-pair-skip-whitespace nil
