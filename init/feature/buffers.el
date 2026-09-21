@@ -43,17 +43,23 @@
   
   (popper-mode +1))
 
-;; Enforce rules for popups.
+;; Enforce rules for popups (only listed buffers; do not catch-all).
+;; A catch-all default made Transient/debug use generic splits (often
+;; horizontal on Emacs 31 wide frames). popper-display-control nil
+;; defers placement to these rules and display-buffer-alist elsewhere.
 ;; https://depp.brause.cc/shackle/.
 (use-package shackle
     :straight t
     :defer 1
     :commands shackle-mode
   :custom
-  (shackle-default-rule '(:select t))
+  (shackle-default-rule '(:ignore t))
   (shackle-rules
    '((compilation-mode :select nil :size 0.6)
      ("\\`\\*Messages" :select t :align t :size 0.6)
+     (" \\*transient\\*" :regexp t :size 0.25 :noselect t :align bottom)
+     ("\\`\\*Backtrace\\'" :regexp t :size 0.33 :select t :align bottom)
+     ("\\`\\*Debugger\\'" :regexp t :size 0.33 :select t :align bottom)
      ("\\`\\*company-coq:" :regexp t :noselect t)
      ("\\`\\*fetch" :regexp t :size 0.25 :noselect t :align bottom)
      ("\\`\\*Org Help" :regexp t :size 0.25 :noselect t :align top)

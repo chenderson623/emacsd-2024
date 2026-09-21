@@ -33,6 +33,11 @@
 (setq transient-history-file (emacs-state*filepath "transient/history.el"))
 (setq transient-levels-file  (emacs-state*filepath "transient/levels.el"))
 (setq transient-values-file  (emacs-state*filepath "transient/values.el"))
+(setq transient-display-buffer-action
+      '(display-buffer-in-side-window
+        (side . bottom)
+        (dedicated . t)
+        (inhibit-same-window . t)))
 
 ;;;; Tramp (connection cache; written even if you never open remote files)
 (setq tramp-persistency-file-name (emacs-state*filepath "tramp"))
@@ -85,6 +90,9 @@
  ;; a time (instead of 5 at default). Simply hold down shift to move twice as
  ;; fast, or hold down control to move 3x as fast. Perfect for trackpads.
  mouse-wheel-scroll-amount '(2 ((shift) . 4) ((control) . 6)))
+
+;; Emacs 31 prefers horizontal splits on wide frames; keep popups below.
+(setq split-window-preferred-direction 'vertical)
 
 ;; When we split open a new window, we usually want to jump to the new window.
 (advice-add #'split-window-below :after (lambda (&rest _) (other-window 1)))
