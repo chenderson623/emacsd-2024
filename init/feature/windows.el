@@ -117,14 +117,15 @@
 (global-set-key (kbd "C-c w") 'feature-windows>hydra/body)
 
 
-(transient-define-prefix feature-windows>transient-menu ()
+(transient-define-prefix my-tmenu>windows ()
   "Most commonly used window commands"
-  [["Splits"
+   [["Splits"
     ("s" "Horizontal" split-window-below)
     ("v" "Vertical"   split-window-right)
+    ("3" "Split current right" my-windows>split-current-right)
     ("b" "Balance"    balance-windows)
     ("f" "Fit"        fit-window-to-buffer)
-    ("r" "Rotate"     rotate-window-split)
+;;    ("r" "Rotate"     rotate-window-split)
     ]
    ["Window"
     ("c" "Clone Indirect" clone-indirect-buffer)
@@ -147,49 +148,26 @@
     ("C-<left>" "Winner Undo" winner-undo :transient t)
     ("C-<right>" "Winner Redo" winner-redo :transient t)]])
 
-(defun lem-split-window-right-and-focus ()
+(defun my-windows>split-current-right ()
+  "Make this the only window, split it to the right, and select the new window.
+The new window shows the same buffer."
+  (interactive)
+  (delete-other-windows)
+  (select-window (split-window-right)))
+
+(defun my-windows>split-window-right-and-focus ()
   "Split the window horizontally and focus the new window."
   (interactive)
   (require 'windmove)
   (split-window-right)
   (windmove-right))
 
-(defun lem-split-window-below-and-focus ()
+(defun my-windows>split-window-below-and-focus ()
   "Split the window vertically and focus the new window."
   (interactive)
   (require 'windmove)
   (split-window-below)
   (windmove-down))
-
-(defun toggle-window-split ()
-  "Toggle the window splitting style when you have 2 windows."
-  (interactive)
-  (cond
-   ((= (count-windows) 2)
-    (let* ((this-win-buffer (window-buffer))
-	       (next-win-buffer (window-buffer (next-window)))
-	       (this-win-edges (window-edges (selected-window)))
-	       (next-win-edges (window-edges (next-window)))
-	       (this-win-2nd (not (and (<= (car this-win-edges)
-					                   (car next-win-edges))
-				                   (<= (cadr this-win-edges)
-					                   (cadr next-win-edges)))))
-	       (splitter
-	        (if (= (car this-win-edges)
-		           (car (window-edges (next-window))))
-		        'split-window-horizontally
-		      'split-window-vertically)))
-	  (delete-other-windows)
-	  (let ((first-win (selected-window)))
-	    (funcall splitter)
-	    (if this-win-2nd (other-window 1))
-	    (set-window-buffer (selected-window) this-win-buffer)
-	    (set-window-buffer (next-window) next-win-buffer)
-	    (select-window first-win)
-	    (if this-win-2nd (other-window 1)))))
-   ;; Give an error if there are more than 2 windows.
-   (t
-    (message "toggle-window-split only support 2 windows."))))
 
 (provide 'core/windows)
 ;;; windows.el ends here
