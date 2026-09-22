@@ -39,21 +39,23 @@
           help-mode
           compilation-mode))
 
-  (setq popper-display-control nil)
-  
+  ;; Popper-owned popups open at the bottom (default). Was nil while Shackle
+  ;; supplied placement rules; Shackle is commented out for now.
+  (setq popper-display-control t)
+  ;; (setq popper-display-control nil)
+
   (popper-mode +1))
 
-;; Enforce rules for popups (only listed buffers; do not catch-all).
-;; A catch-all default made Transient/debug use generic splits (often
-;; horizontal on Emacs 31 wide frames). popper-display-control nil
-;; defers placement to these rules and display-buffer-alist elsewhere.
+;; Shackle (popup placement via display-buffer-alist) -- disabled for now.
+;; Flycheck and Transient use their own display-buffer settings in
+;; init/mode/prog/flycheck.el and init/settings.el.
 ;; https://depp.brause.cc/shackle/.
-(use-package shackle
+#|(use-package shackle
     :straight t
     :defer 1
     :commands shackle-mode
   :custom
-  (shackle-default-rule '(:ignore t))
+  (shackle-default-rule nil)
   (shackle-rules
    '((compilation-mode :select nil :size 0.6)
      ("\\`\\*Messages" :select t :align t :size 0.6)
@@ -66,7 +68,7 @@
      ("\\`\\*Flycheck" :regexp t :size 0.2 :noselect t :align bottom)
      ("\\`\\*?magit-diff" :regexp t :align bottom :noselect t)))
   :config
-  (shackle-mode 1))
+  (shackle-mode 1))|#
 
 ;;; persistent scratch
 ;; https://github.com/Fanael/persistent-scratch
