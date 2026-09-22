@@ -50,25 +50,25 @@
 ;; Flycheck and Transient use their own display-buffer settings in
 ;; init/mode/prog/flycheck.el and init/settings.el.
 ;; https://depp.brause.cc/shackle/.
-#|(use-package shackle
-    :straight t
-    :defer 1
-    :commands shackle-mode
-  :custom
-  (shackle-default-rule nil)
-  (shackle-rules
-   '((compilation-mode :select nil :size 0.6)
-     ("\\`\\*Messages" :select t :align t :size 0.6)
-     (" \\*transient\\*" :regexp t :size 0.25 :noselect t :align bottom)
-     ("\\`\\*Backtrace\\'" :regexp t :size 0.33 :select t :align bottom)
-     ("\\`\\*Debugger\\'" :regexp t :size 0.33 :select t :align bottom)
-     ("\\`\\*company-coq:" :regexp t :noselect t)
-     ("\\`\\*fetch" :regexp t :size 0.25 :noselect t :align bottom)
-     ("\\`\\*Org Help" :regexp t :size 0.25 :noselect t :align top)
-     ("\\`\\*Flycheck" :regexp t :size 0.2 :noselect t :align bottom)
-     ("\\`\\*?magit-diff" :regexp t :align bottom :noselect t)))
-  :config
-  (shackle-mode 1))|#
+;; (use-package shackle
+;;     :straight t
+;;     :defer 1
+;;     :commands shackle-mode
+;;   :custom
+;;   (shackle-default-rule nil)
+;;   (shackle-rules
+;;    '((compilation-mode :select nil :size 0.6)
+;;      ("\\`\\*Messages" :select t :align t :size 0.6)
+;;      (" \\*transient\\*" :regexp t :size 0.25 :noselect t :align bottom)
+;;      ("\\`\\*Backtrace\\'" :regexp t :size 0.33 :select t :align bottom)
+;;      ("\\`\\*Debugger\\'" :regexp t :size 0.33 :select t :align bottom)
+;;      ("\\`\\*company-coq:" :regexp t :noselect t)
+;;      ("\\`\\*fetch" :regexp t :size 0.25 :noselect t :align bottom)
+;;      ("\\`\\*Org Help" :regexp t :size 0.25 :noselect t :align top)
+;;      ("\\`\\*Flycheck" :regexp t :size 0.2 :noselect t :align bottom)
+;;      ("\\`\\*?magit-diff" :regexp t :align bottom :noselect t)))
+;;   :config
+;;   (shackle-mode 1))
 
 ;;; persistent scratch
 ;; https://github.com/Fanael/persistent-scratch
