@@ -76,8 +76,10 @@
   :commands org-refile
   :config
 
-  (defadvice org-capture-refile (after save-after-refile-advice activate)
+  (defun org-extensions/save-after-capture-refile (&rest _)
     (org-save-all-org-buffers))
+
+  (advice-add 'org-capture-refile :after #'org-extensions/save-after-capture-refile)
 
   ;; FROM: https://yiming.dev/blog/2018/03/02/my-org-refile-workflow/
   (defun +org/opened-buffer-files ()

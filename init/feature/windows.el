@@ -1,14 +1,5 @@
 ;;; -*- lexical-binding: t; -*-
 
-(use-package ace-window
-  :straight t
-  :commands (ace-window
-             ace-swap-window
-             aw-flip-window)
-  :custom
-  (aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l) "Use home row for selecting.")
-  (aw-scope 'frame "Highlight only current frame."))
-
 (use-package windresize
   :straight t
   :commands windresize)
@@ -43,11 +34,25 @@
    ;;("C-M-<down>" . windmove-down)
    ))
 
+(use-package ace-link
+  :straight t
+  :bind
+  ("M-o" . ace-link-org)
+  :config
+  (ace-link-setup-default)
+)
+
 (use-package ace-window
   :straight t
   :bind
   ("<f2>" . ace-window)
   ("M-2" . ace-window)
+  :commands (ace-window
+             ace-swap-window
+             aw-flip-window)
+  :custom
+  (aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l) "Use home row for selecting.")
+  (aw-scope 'frame "Highlight only current frame.")
   :config
 
   ;; (defvar aw-dispatch-alist
