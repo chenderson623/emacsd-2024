@@ -72,51 +72,6 @@
 
   )
 
-;;
-;; Window related
-;; https://github.com/abo-abo/hydra/wiki/Window-Management
-(defhydra feature-windows>hydra (
-                        :exit nil
-                        :pre (progn
-                               (require 'windmove)
-                               (require 'ace-window)
-                               (require 'windresize)))
-  "window-related"
-  ("h" windmove-left "Left" :column "Move")
-  ("j" windmove-down "Down" :column "Move")
-  ("k" windmove-up "Up" :column "Move")
-  ("l" windmove-right "Right" :column "Move")
-  ("a" ace-window "Ace" :column "Move" :exit t)
-  ;;
-  ("o" other-window "Other" :column "Cycle")
-  ("n" next-multiframe-window "Next" :column "Cycle")
-  ("p" previous-multiframe-window "Prev" :column "Cycle")
-  ;;
-  ("w" windresize "Resize" :column "Resize" :exit t)
-  ("e" enlarge-window-horizontally "<Enlarge>" :column "Resize")
-  ("C-e" enlarge-window "Enlarge" :column "Resize")
-  ("s" shrink-window-horizontally "<Shrink>" :column "Resize")
-  ("C-s" shrink-window "Shrink" :column "Resize")
-  ;;
-  ("0" delete-window "Close" :column "Split")
-  ("1" delete-other-windows "Only 1" :column "Split")
-  ("2" split-window-below "/New" :column "Split")
-  ("3" split-window-right "|New" :column "Split")
-  ("-" split-window-below "/New" :column "Split")
-  ("|" split-window-right "|New" :column "Split")
-  ;; This is user-defined function.
-  ("t" toggle-window-split "Transpose" :column "Split")
-  ("S" ace-swap-window "Swap" :column "Split")
-  ;;
-  ("u" winner-undo "Undo" :column "Winner")
-  ("r" winner-redo "Redo" :column "Winner")
-  ;;
-  ("q" nil "Quit" :column "Misc")
-  ("C-g" nil "Quit" :column "Misc"))
-
-(global-set-key (kbd "C-c w") 'feature-windows>hydra/body)
-
-
 (transient-define-prefix my-tmenu>windows ()
   "Most commonly used window commands"
    [["Splits"
@@ -147,6 +102,8 @@
    ["Undo/Redo"
     ("C-<left>" "Winner Undo" winner-undo :transient t)
     ("C-<right>" "Winner Redo" winner-redo :transient t)]])
+
+(global-set-key (kbd "C-c w") 'my-tmenu>windows)
 
 (defun my-windows>split-current-right ()
   "Make this the only window, split it to the right, and select the new window.
