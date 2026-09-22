@@ -144,6 +144,55 @@
 
   (add-hook 'org-mode-hook #'my/org-disable-auto-pairing)
 
+  ;;
+  ;;;; Markdown list markers inside source blocks
+  ;;
+  ;; Org's outline regexp treats a column-0 "* " as a headline, including
+  ;; inside #+begin_src.  Rewriting those markers to "- " on yank keeps
+  ;; the block intact and matches the list syntax used for GitLab MRs.
+  (defun my/org-in-markdown-src-block-p ()
+    "Return non-nil when point is inside a markdown source block."
+    (and (org-in-src-block-p 'inside)
+         (let ((lang (org-element-property :language (org-element-at-point))))
+           (and (stringp lang)
+                (member (downcase lang) '("markdown" "md"))))))
+
+  (defun my/org-markdown-list-stars-to-dashes (beg end)
+    "Replace Markdown '* ' list markers with '- ' between BEG and END.
+Leave emphasis (`*italic*`, `**bold**`) and thematic breaks (`* * *`) alone."
+    (save-excursion
+      (goto-char (max beg end))
+      (while (re-search-backward
+              "^\\([ \t]*\\)\\(\\*+\\)\\([ \t]+\\)\\(.*\\)$"
+              (min beg end) t)
+        (unless (string-match-p "\\`\\(?:\\*[ \t]*\\)*\\*\\'" (match-string 4))
+          (replace-match "\\1-\\3\\4")))))
+
+  (defun my/org-yank-markdown-lists-as-dashes (orig-fun &optional arg)
+    "Yank, and inside a markdown src block turn '* ' lists into '- '.
+A plain `yank' is used there so `org-yank' does not treat the paste as a subtree."
+    (if (not (my/org-in-markdown-src-block-p))
+        (funcall orig-fun arg)
+      (let ((beg (point)))
+        (yank arg)
+        (my/org-markdown-list-stars-to-dashes beg (point)))))
+
+  (advice-add 'org-yank :around #'my/org-yank-markdown-lists-as-dashes)
+
+  ;; GitLab Markdown.  org-edit-special then uses gfm-mode (tables,
+  ;; strikethrough, task lists).  `C-c C-v y' copies the block body.
+  (add-to-list 'org-src-lang-modes '("markdown" . gfm))
+  (add-to-list 'org-src-lang-modes '("md" . gfm))
+
+  (defun my/org-src-markdown-show-urls ()
+    "Show link targets while editing a Markdown source block.
+`markdown-hide-urls' stays on for Markdown files."
+    (when (derived-mode-p 'markdown-mode)
+      (setq markdown-hide-urls nil)
+      (font-lock-flush)))
+
+  (add-hook 'org-src-mode-hook #'my/org-src-markdown-show-urls)
+
   ;;;; Open file links in current window, rather than new ones
   ;; https://github.com/hlissner/doom-emacs/blob/develop/modules/lang/org/config.el#L632
   ;;(setf (alist-get 'file org-link-frame-setup) #'find-file)
