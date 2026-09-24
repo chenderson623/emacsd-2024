@@ -1,5 +1,7 @@
 ;;; spelling.el -*- lexical-binding: t; -*-
 
+(require 'transient)
+
 ;;;###autoload
 (defun my-spelling>ispell-goto-next-error ()
   "Custom function to spell check next highlighted word"
@@ -60,7 +62,7 @@
                     (call-interactively 'jinx-correct-word))))
 
 ;;;###autoload (autoload 'my-tmenu>spelling "lib/spelling" nil t)
-(transient-define-prefix my-tmenu>spellling ()
+(transient-define-prefix my-tmenu>spelling ()
   "Transient menu for switching spell checkers."
   ["Spelling"
    ["Spell Checkers"

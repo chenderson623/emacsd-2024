@@ -1,7 +1,7 @@
 ;;; -*- lexical-binding: t; -*-
 
 ;;;###autoload
-(defun directory-action/create-timestamped-directory (directory-name)
+(defun my-directory>create-timestamped-directory (directory-name)
   "Create a new directory with a timestamp prefix and sanitized name."
   (interactive "sEnter directory name: ")
   (let* ((sanitized-name (replace-regexp-in-string "[^A-Za-z0-9_-]" "-" (replace-regexp-in-string " " "_" directory-name)))
@@ -10,11 +10,8 @@
     (make-directory new-directory)
     (message "Created directory: %s" new-directory)))
 
-;;(when (memq window-system '(mac ns x))
-;;  (exec-path-from-shell-initialize))
-
 ;;;###autoload
-(defun my/fd-dired-recent-files (dir)
+(defun my-directory>fd-dired-recent-files (dir)
   "Recursively list the 20 most recently modified files in DIR using fd."
   (interactive "DDirectory: ")
   (let* ((fd-executable (or (executable-find "fd")
@@ -40,5 +37,5 @@
                       exit-code (buffer-name process-buffer))))
       (kill-buffer process-buffer))))
 
-(provide 'action/directory)
+(provide 'lib/directory)
 ;;; directory-functions.el ends here
