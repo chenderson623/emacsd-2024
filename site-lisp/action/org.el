@@ -165,6 +165,10 @@ If no match is found, point remains unchanged."
                 ;; Remove tags
                 (when tags
                     (org-set-tags nil))
+                ;; Remove notification count prefix
+                (setq title (replace-regexp-in-string
+                       "\\`([0-9]+)[[:space:]]+" "" title))
+
                 ;; Remove 'at [hash]' if present
                 (setq title (replace-regexp-in-string " at [a-f0-9]+" "" title))
 
@@ -176,7 +180,6 @@ If no match is found, point remains unchanged."
                                 (after (match-string 2 title)))
                         (setq title (format "%s · %s" after before))))
                 (org-edit-headline title)))
-
 
 ;;;###autoload
 (defun org+>copy-src-block-content ()
