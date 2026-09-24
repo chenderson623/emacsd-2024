@@ -2,6 +2,16 @@
 
 (defvar my$org-protocol-capture-frame-name "*Org Capture*")
 
+(defun org-capture-frame/inhibit-which-key-p ()
+  "Prevent which-key from rendering in an Org Protocol capture frame."
+  (and (frame-live-p (selected-frame))
+       (equal my$org-protocol-capture-frame-name
+              (frame-parameter nil 'name))))
+
+(with-eval-after-load 'which-key
+  (add-hook 'which-key-inhibit-display-hook
+            #'org-capture-frame/inhibit-which-key-p))
+
 (defun org-capture-frame/delete-other-windows-if-capture-frame (&rest args)
   "Delete the extra window if we are in a capture frame"
   (when (equal my$org-protocol-capture-frame-name (frame-parameter nil 'name))
