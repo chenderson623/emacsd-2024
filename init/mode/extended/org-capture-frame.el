@@ -17,6 +17,14 @@
   (when (equal my$org-protocol-capture-frame-name (frame-parameter nil 'name))
     (delete-other-windows)))
 
+(defun org-capture-frame/focus-capture-frame (&rest args)
+  "Give keyboard focus to the capture frame after its buffer is displayed."
+  (when (and (frame-live-p (selected-frame))
+             (equal my$org-protocol-capture-frame-name
+                    (frame-parameter nil 'name)))
+    (raise-frame)
+    (select-frame-set-input-focus (selected-frame))))
+
 (defun org-capture-frame/delete-capture-frame-if-not-refile (&rest args)
   "Advise capture-finalize to close the frame"
   (when (and (equal my$org-protocol-capture-frame-name (frame-parameter nil 'name))
@@ -63,6 +71,7 @@
 
 (defun org-capture-frame/setup-org-protocol-capture-frame ()  
   (advice-add 'org-capture-place-template :after #'org-capture-frame/delete-other-windows-if-capture-frame)
+  (advice-add 'org-capture-place-template :after #'org-capture-frame/focus-capture-frame)
   (advice-add 'switch-to-buffer-other-window :after #'org-capture-frame/delete-other-windows-if-capture-frame)
   
   (advice-add 'org-capture-finalize :after #'org-capture-frame/delete-capture-frame-if-not-refile)

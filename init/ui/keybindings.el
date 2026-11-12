@@ -12,6 +12,7 @@
   (which-key-setup-side-window-right-bottom)
   (setq which-key-sort-order 'which-key-key-order-alpha
         which-key-side-window-max-width 0.33
+        which-key-max-description-length 20
         which-key-idle-delay 0.1))
 
 (use-package key-chord

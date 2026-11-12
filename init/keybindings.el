@@ -46,6 +46,7 @@
 
   "f" #'find-file
   "n" (cons "Denote Menu" #'my-tmenu>denote)
+  "c" (cons "Browser Captures Menu" #'my-tmenu>browser-captures-refinement)
 
   )
 
