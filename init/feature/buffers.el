@@ -1,16 +1,35 @@
 ;;; -*- lexical-binding: t; -*-
 
 (use-package ibuffer
-  :straight nil
+  :straight (:type built-in)
   :commands (ibuffer ibuffer-jump)
+  :bind ("C-x C-b" . ibuffer)
   :hook
-  ((ibuffer-mode . hl-line-mode)
-   ))
+  (
+   (ibuffer-mode . hl-line-mode)
+   )
+  :config
+  (setq ibuffer-show-empty-filter-groups nil
+        ibuffer-filter-group-name-face '(:inherit (success bold)))
+  (define-ibuffer-column size
+    (:name "Size"
+           :inline t
+           :header-mouse-map ibuffer-size-header-map)
+    (file-size-human-readable (buffer-size)))
+  )
+
+(use-package ibuffer-sidebar
+  :straight t
+  :commands (ibuffer-sidebar-toggle-sidebar)
+  :config
+  ;;(setq ibuffer-sidebar-use-custom-font t)
+  ;;(setq ibuffer-sidebar-face `(:family "Helvetica" :height 140))
+  )
 
 (use-package ace-jump-buffer
   :straight t
   :commands (ace-jump-buffer ace-jump-buffer-other-window ace-jump-same-mode-buffers)
-    :bind
+  :bind
   (:map goto-map
         ("b" . ace-jump-buffer)))
 
